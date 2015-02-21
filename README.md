@@ -3,4 +3,4 @@ An interactive quiz generating website for multiple users. This website allows u
 friends to interact about their performance and request challenges.
 
 ## Authors
-Guy Amdur, Sam Gonzales Portilla, Kelsey Young, Eliezer Abate
+Guy Amdur, Sam Gonzalez Portilla, Kelsey Young, Eliezer Abate
