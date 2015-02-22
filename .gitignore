@@ -1,0 +1,8 @@
+# ignore all bin and target directories
+
+bin/
+build/
+.classpath
+.project
+.settings
+.metadata
