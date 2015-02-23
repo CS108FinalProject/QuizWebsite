@@ -2,7 +2,7 @@
 
 bin/
 build/
-.classpath
-.project
-.settings
-.metadata
+*.classpath
+*.project
+*.settings
+*.metadata
