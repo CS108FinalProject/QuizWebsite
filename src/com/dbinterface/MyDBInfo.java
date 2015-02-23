@@ -8,10 +8,10 @@ package com.dbinterface;
 	 */
 	public class MyDBInfo {
 		
-		public static final String MYSQL_USERNAME = "ccs108yourStudentID";
-		public static final String MYSQL_PASSWORD = "";
+		public static final String MYSQL_USERNAME = "ccs108eliezer";
+		public static final String MYSQL_PASSWORD = "eeriesee";
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_yourStudentID";
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_eliezer";
 
 	}
 
