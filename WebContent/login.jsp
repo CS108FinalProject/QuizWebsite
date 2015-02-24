@@ -7,6 +7,6 @@
 <title>Welcome to ExQUIZit!</title>
 </head>
 <body>
-	
+	<div>Enter user name and login</div>
 </body>
 </html>
