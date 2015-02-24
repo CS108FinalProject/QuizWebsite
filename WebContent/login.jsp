@@ -6,7 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Welcome to ExQUIZit!</title>
 </head>
-<body>
-	<div>Enter user name and login</div>
+<body>	
 </body>
 </html>
