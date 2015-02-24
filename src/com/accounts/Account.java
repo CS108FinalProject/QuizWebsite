@@ -8,10 +8,22 @@ import java.util.Set;
 import com.dbinterface.DatabaseStub;
 import com.util.Util;
 
+/**
+ * Contains user account information. Talks to the database interface layer
+ * to obtain and set fields.
+ * @author Sam
+ *
+ */
 public class Account {
 	
 	private final String userName;
 	
+	/**
+	 * Adds a new user account entry to the database with the passed userName and password,
+	 * sets the isAdmin value to false by default. Throws an exception if user already exists.
+	 * @param userName
+	 * @param password
+	 */
 	public Account(String userName, String password) {
 		Util.validateString(userName);
 		Util.validateString(password);
@@ -33,6 +45,13 @@ public class Account {
 		DatabaseStub.addRow("Accounts", row);
 	}
 	
+	
+	/**
+	 * Provides an interface to interact with the Accounts table of the database.
+	 * Expects the passed userName to already exists in the database. Throws an exception
+	 * if it doesn't. 
+	 * @param userName
+	 */
 	public Account(String userName) {
 		Util.validateString(userName);
 		
@@ -48,10 +67,12 @@ public class Account {
 		return userName;
 	}
 	
+	// Returns a "SHA" hash representation of the passed string.
 	private String getHash(String password) {
 		return "";
 	}
 
+	
 	public boolean passwordMatches(String password) {
 		return false;
 	}
