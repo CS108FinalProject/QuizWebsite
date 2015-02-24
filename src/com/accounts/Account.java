@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.dbinterface.DatabaseStub;
 import com.util.Util;
@@ -29,10 +28,18 @@ public class Account {
 	private static final String FRIEND = "friend";
 	private static final String PENDING = "pending";
 	
+	private static final String MESSAGES = "Messages";
+	private static final String SENDER = "sender";
+	private static final String RECIPIENT = "recipient";
+	private static final String CONTENT = "content";
+	private static final String TYPE = "type";
+	private static final String DATE = "date";
+	private static final String READ = "read";
+	
 	private static final String STRING = "String";
 	private static final String BOOLEAN = "boolean";
 	
-	private final String userName;
+	private String userName;
 	
 	/**
 	 * Adds a new user account entry to the database with the passed userName and password,
@@ -80,6 +87,21 @@ public class Account {
 		this.userName = userName;
 	}
 	
+	
+	/**
+	 * Removes this user account from the database and sets the userName to null
+	 * so it can no longer be used.
+	 */
+	public void removeAccount() {
+		int removed = DatabaseStub.removeRows(ACCOUNTS, USERNAME, userName);
+		
+		// Only 1 row should be removed.
+		if (removed != 1) {
+			throw new RuntimeException("Problem removing rows. Removed " + removed + " rows");
+		}
+		userName = null;
+	}
+
 	
 	/**
 	 * @return the user name for this accounts.
@@ -286,18 +308,69 @@ public class Account {
 		}
 	}
 	
-	
-	public boolean sendMessage(Message message) {
-		return false;
+	/**
+	 * Adds the passed message as a new entry in the database
+	 * and marks it as read = false.
+	 * @param message
+	 */
+	public void sendMessage(Message message) {
+		Map<String, Object> row = new HashMap<String, Object>();
+		row.put(SENDER, message.getSender());
+		row.put(CONTENT, message.getContent());
+		row.put(RECIPIENT, message.getRecipient());
+		row.put(TYPE, message.getType());
+		row.put(DATE, message.getDate());
+		row.put(READ, message.isRead());
+		DatabaseStub.addRow(MESSAGES, row);
 	}
 	
-	public boolean receiveMessage(Message message) {
-		return false;
+	
+	/**
+	 * Updates the database to show this message as read = true.
+	 * @param message
+	 */
+	public void readMessage(Message message) {
+		String recipientName = message.getRecipient().getUserName();
+		int modified = DatabaseStub.setValues(MESSAGES, recipientName, userName, 
+				DATE, message.getDate(), READ, true);
+		
+		if (modified != 1) {
+			throw new RuntimeException("Problem modifying rows. Modified " + modified + " rows");
+		}
 	}
 	
-	public Set<Message> getMessages() {
+	
+	public void removeMessage(Message message) {
+		
+	}
+	
+	public List<Message> getSentMessages() {
 		return null;
 	}
+	
+	
+	public List<Message> getReceivedMessages() {
+		return null;
+	}
+	
+	
+	/**
+	 * @return a list of all userNames in the Accounts table, or null if the table doesn't exist.
+	 */
+	public static List<String> getAllUserNames() {
+		List<String> userNames = new ArrayList<String>();
+		
+		List<Map<String, Object>> table = DatabaseStub.getTable(ACCOUNTS);
+		if (table == null) return null;
+		
+		for (Map<String, Object> account : table) {
+			Util.validateObject(account.get(USERNAME), STRING);
+			userNames.add((String) account.get(USERNAME));
+		}
+		return userNames;
+	}
+	
+	
 	
 	
 	//----------------------------Helper Methods-------------------------------//

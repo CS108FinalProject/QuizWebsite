@@ -35,6 +35,17 @@ public class DatabaseStub {
 	
 	
 	/**
+	 * Returns the whole table. Each row is a Map.
+	 * Returns null if there is no such table or an empty list if the table is empty.
+	 * @param tableName
+	 * @return
+	 */
+	public static List<Map<String, Object>> getTable(String tableName) {
+		return null;
+	}
+	
+	
+	/**
 	 * Should add the passed row to the specified table. Check correct type for each Object.
 	 * Use the Util.validateObject method for this.
 	 * @param tableName
@@ -64,6 +75,25 @@ public class DatabaseStub {
 			String columnGuide2, String guideValue2) {
 		return 0;
 	}
+	
+	
+	/**
+	 * Same as previous but with only 1 specifier.
+	 * @param tableName
+	 * @param columnGuide
+	 * @param guideValue
+	 * @return
+	 */
+	public static int removeRows(String tableName, String columnGuide, String guideValue) {
+		return 0;
+	}
+	
+	
+	/**
+	 * Same as previous but this looks for and deleted the row that matches all parameters in the map.
+	 * @param row
+	 */
+	public static void removeRow(Map<String, Object> row) {}
 	
 	
 	/**
