@@ -4,15 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ExQuizit!</title>
+<title>ReLogin</title>
 </head>
-<body>	
-	<h1>Welcome to ExQuizit, Login!</h1>
+<body>
+	<h1>Please log in with a valid username and password.</h1>
 	<form action = "LoginServlet" method = "POST">
 		<p>User: <input type = "text" name = "user"/></p>
 		<p>Password:<input type = "text" name = "password"/></p>
 		<input type = "submit"/>
 	</form>
-	<p>New User? <a href = "registration.jsp">Register here!</a></p>
+	<p>New User? <a href = "registration.html">register here!</a></p>
 </body>
 </html>

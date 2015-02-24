@@ -4,15 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ExQuizit!</title>
+<title>ReRegister</title>
 </head>
-<body>	
-	<h1>Welcome to ExQuizit, Login!</h1>
-	<form action = "LoginServlet" method = "POST">
+<body>
+<h1>Sorry the username, <%= request.getParameter("user") %>, is already in use.</h1>
+<p>Please, Enter another username and password.</p>
+	<form action = "RegistrationServlet" method = "POST">
 		<p>User: <input type = "text" name = "user"/></p>
 		<p>Password:<input type = "text" name = "password"/></p>
 		<input type = "submit"/>
 	</form>
-	<p>New User? <a href = "registration.jsp">Register here!</a></p>
 </body>
 </html>
