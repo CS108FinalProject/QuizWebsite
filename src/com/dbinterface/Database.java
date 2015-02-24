@@ -1,14 +1,12 @@
 package com.dbinterface;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
  * This is a program that will provide an interface
  * for interacting with a remote mySql database
  * @author eliezer
- * @date Feb/21/2015 (last edit)
+ * @date Feb/23/2015 (last edit)
  * @time 8:18PM 
  */
 public class Database {
@@ -61,31 +59,35 @@ public class Database {
 				// Good, do nothing!
 			} else if ( key.equals( "double") ) {
 				// Actually don't need this right now.
-				String value = columnTypeAndName.get(key);
-				try {
-					Double d = Double.parseDouble(value);
-				} catch ( NumberFormatException e) {
-					throw new RuntimeException("Value for type \"double\" is invalid");
-				}
+//				String value = columnTypeAndName.get(key);
+//				try {
+//					Double d = Double.parseDouble(value);
+//				} catch ( NumberFormatException e) {
+//					throw new RuntimeException("Value for type \"double\" is invalid");
+//				}
 			} else if ( key.equals( "int") ) {
-				String value = columnTypeAndName.get(key);
-				try {
-					Integer i = Integer.parseInt(value);
-				} catch ( NumberFormatException e) {
-					throw new RuntimeException("Value for type \"int\" is invalid");
-				}
+//				String value = columnTypeAndName.get(key);
+//				try {
+//					Integer i = Integer.parseInt(value);
+//				} catch ( NumberFormatException e) {
+//					throw new RuntimeException("Value for type \"int\" is invalid");
+//				}
 			} else if ( key.equals( "long") ) {
-				String value = columnTypeAndName.get(key);
-				try {
-					Long l = Long.parseLong(value);
-				} catch ( NumberFormatException e) {
-					throw new RuntimeException("Value for type \"long\" is invalid");
-				}
+//				try {
+//					Long l = Long.parseLong(value);
+//				} catch ( NumberFormatException e) {
+//					throw new RuntimeException("Value for type \"long\" is invalid");
+//				}
 			} else {
 				throw new RuntimeException( key +  " is an invalid datatype" );
 			}
 		}
 		return true;
 	}
+	
+	/**
+	 * Allows the client to add a row to the table based on the
+	 * legal name and type specified in the heading.
+	 */
 	
 }

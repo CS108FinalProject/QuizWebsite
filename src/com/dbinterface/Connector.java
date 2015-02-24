@@ -17,15 +17,15 @@ import java.sql.Statement;
  *
  */
 public class Connector {
-	/**
+	/*
 	 * Connection object responsible for mysql connection.
 	 */
-	Connection con;
+	private Connection con;
 	
-	/**
+	/*
 	 * Statement object responsible for sql queries.
 	 */
-	Statement stmt;
+	private Statement stmt;
 	
 	/**
 	 * Name of remote mysql account.
