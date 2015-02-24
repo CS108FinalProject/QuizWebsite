@@ -21,6 +21,7 @@ public class AccountManager {
 			AccountStub account = new AccountStub(username,password);
 		} catch (RuntimeException ex) {
 			
+			
 		}
 	}
 	

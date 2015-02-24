@@ -21,6 +21,7 @@ public class AccountStub {
 	// The Message fields are: sender, recipient, content and type.
 	public void sendMessage(MessageStub message) {
 		
+		
 	}
 	
 	// Checks whether a given string matches its user
