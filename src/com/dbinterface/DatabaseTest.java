@@ -1,10 +1,12 @@
 package com.dbinterface;
 
+
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +18,6 @@ public class DatabaseTest {
 		db = new Database();
 	}
 	
-	/*
-	 * Checks to see if showTables prints the tables 
-	 * in the database
-	 */
-	@Test
-	public void test0() {
-		System.out.println( db.displayTables() );
-	}
 	/*
 	 * Tests RuntimeException on null values
 	 */
@@ -39,7 +33,7 @@ public class DatabaseTest {
 	@Test(expected = RuntimeException.class) 
 	public void test2() {
 		Map<String, String> columnTypeAndName = new HashMap<String, String>();
-		columnTypeAndName.put("university", "String" );
+		columnTypeAndName.put("university", "string" );
 		columnTypeAndName.put("price" , "double");
 		db.createTable("", columnTypeAndName);
 	}
@@ -50,22 +44,30 @@ public class DatabaseTest {
 	@Test(expected = RuntimeException.class) 
 	public void test3() {
 		Map<String, String> columnTypeAndName = new HashMap<String, String>();
-		columnTypeAndName.put("university", "String" );
-		columnTypeAndName.put("price" , "Double");
+		columnTypeAndName.put("university", "string" );
+		columnTypeAndName.put("price" , "double");
 		db.createTable("yourTable", columnTypeAndName);
 		
 	}
 	
 	/*
-	 * Check remove table method
+	 * Test if table exists. Note database may have changed since
+	 * last use so, some of these tests might fail. So it's important
+	 * to manually check the state of the database while testing.
 	 */
-	@Test
+	@Test 
 	public void test4() {
-		db.removeTable("today");
-		System.out.println( db.displayTables() );
+		assertEquals( true,Database.tableExists("yesterday"));
+		assertEquals( false, Database.tableExists("tomorrow"));
+		assertEquals( true,Database.tableExists("products"));
 	}
 	
+	/*
+	 * Simple Tests for getTable
+	 */
+	@Test
+	public void getTableTest() {
+		assertEquals(null, db.getTable(null));
+	}
 	
-	
-
 }
