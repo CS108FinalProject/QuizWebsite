@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dbinterface.DatabaseStub;
+import com.dbinterface.Database;
 import com.util.Util;
 
 /**
@@ -53,7 +53,7 @@ public class Account {
 		Util.validateString(password);
 		
 		// Ensure account doesn't already exists.
-		if (DatabaseStub.getValues(ACCOUNTS, USERNAME, userName, USERNAME) != null) {
+		if (Database.getValues(ACCOUNTS, USERNAME, userName, USERNAME) != null) {
 			throw new RuntimeException("Username: " + userName + "already exists");
 		}
 		
@@ -67,7 +67,7 @@ public class Account {
 		row.put(PASSWORD, hashedPassword);
 		row.put(IS_ADMIN, false);
 		
-		DatabaseStub.addRow(ACCOUNTS, row);
+		Database.addRow(ACCOUNTS, row);
 	}
 	
 	
@@ -81,7 +81,7 @@ public class Account {
 		Util.validateString(userName);
 		
 		// Make sure userName exists in DB.
-		if (DatabaseStub.getValues(ACCOUNTS, USERNAME, userName, USERNAME) == null) {
+		if (Database.getValues(ACCOUNTS, USERNAME, userName, USERNAME) == null) {
 			throw new RuntimeException("Cannot find Username: " + userName);
 		}
 		this.userName = userName;
@@ -93,7 +93,7 @@ public class Account {
 	 * so it can no longer be used.
 	 */
 	public void removeAccount() {
-		int removed = DatabaseStub.removeRows(ACCOUNTS, USERNAME, userName);
+		int removed = Database.removeRows(ACCOUNTS, USERNAME, userName);
 		
 		// Only 1 row should be removed.
 		if (removed != 1) {
@@ -119,7 +119,7 @@ public class Account {
 	 */
 	public boolean passwordMatches(String password) throws NoSuchAlgorithmException {
 		// Get info from the Database.
-		List<Object> currentPasswordList = DatabaseStub.getValues(ACCOUNTS, USERNAME, userName, PASSWORD);
+		List<Object> currentPasswordList = Database.getValues(ACCOUNTS, USERNAME, userName, PASSWORD);
 		
 		// Problem with DB if there is more than one.
 		if (currentPasswordList.size() != 1) {
@@ -140,7 +140,7 @@ public class Account {
 	 */
 	public void resetPassword(String newPassword) throws NoSuchAlgorithmException {
 		Util.validateString(newPassword);
-		int modified = DatabaseStub.setValues(ACCOUNTS, USERNAME, userName, PASSWORD, 
+		int modified = Database.setValues(ACCOUNTS, USERNAME, userName, PASSWORD, 
 				getHash(newPassword));
 		
 		if (modified != 1) {
@@ -154,7 +154,7 @@ public class Account {
 	 */
 	public boolean isAdmin() {
 		// Get info from the Database.
-		List<Object> adminList = DatabaseStub.getValues(ACCOUNTS, USERNAME, userName, IS_ADMIN);
+		List<Object> adminList = Database.getValues(ACCOUNTS, USERNAME, userName, IS_ADMIN);
 		
 		// Problem with DB if there is more than one.
 		if (adminList.size() != 1) {
@@ -172,7 +172,7 @@ public class Account {
 	 * @param isAdmin true to make administrator, false otherwise.
 	 */
 	public void setAdmin(boolean isAdmin) {
-		DatabaseStub.setValues(ACCOUNTS, USERNAME, userName, IS_ADMIN, true);
+		Database.setValues(ACCOUNTS, USERNAME, userName, IS_ADMIN, true);
 	}
 
 	
@@ -181,7 +181,7 @@ public class Account {
 	 * @return a list of Account objects for the friends of this user, or null if there are non.
 	 */
 	public List<Account> getFriends() {
-		List<Object> friendNames = DatabaseStub.getValues(FRIENDS, USERNAME, userName, STATUS, 
+		List<Object> friendNames = Database.getValues(FRIENDS, USERNAME, userName, STATUS, 
 				"friends", FRIEND);
 		
 		if (friendNames == null) return null;
@@ -221,7 +221,7 @@ public class Account {
 	 */
 	public boolean friendshipPending(Account account) {
 		String friendName = account.getUserName();
-		List<Object> statusList = DatabaseStub.getValues(FRIENDS, USERNAME, userName, 
+		List<Object> statusList = Database.getValues(FRIENDS, USERNAME, userName, 
 				FRIEND, friendName, STATUS);
 		
 		if (statusList == null) return false;
@@ -263,10 +263,10 @@ public class Account {
 			row.put(USERNAME, userName);
 			row.put(FRIEND, account.getUserName());
 			row.put(STATUS, "friends");
-			DatabaseStub.addRow(FRIENDS, row);
+			Database.addRow(FRIENDS, row);
 			
 			// Update the database entry for the user who initiated the friendship.
-			int modified = DatabaseStub.setValues(FRIENDS, USERNAME, account.getUserName(), 
+			int modified = Database.setValues(FRIENDS, USERNAME, account.getUserName(), 
 					FRIEND, userName, STATUS, "friends");
 
 			// Only 1 value should be modified.
@@ -281,7 +281,7 @@ public class Account {
 			row.put(USERNAME, userName);
 			row.put(FRIEND, account.getUserName());
 			row.put(STATUS, PENDING);
-			DatabaseStub.addRow(FRIENDS, row);
+			Database.addRow(FRIENDS, row);
 		}
 	}
 	
@@ -299,8 +299,8 @@ public class Account {
 		
 		String friendName = account.getUserName();
 		
-		int removed = DatabaseStub.removeRows(FRIENDS, USERNAME, userName, FRIEND, friendName);
-		removed += DatabaseStub.removeRows(FRIENDS, USERNAME, friendName, FRIEND, userName);
+		int removed = Database.removeRows(FRIENDS, USERNAME, userName, FRIEND, friendName);
+		removed += Database.removeRows(FRIENDS, USERNAME, friendName, FRIEND, userName);
 		
 		// Only 2 rows should be removed.
 		if (removed != 2) {
@@ -321,7 +321,7 @@ public class Account {
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
 		row.put(READ, message.isRead());
-		DatabaseStub.addRow(MESSAGES, row);
+		Database.addRow(MESSAGES, row);
 	}
 	
 	
@@ -331,7 +331,7 @@ public class Account {
 	 */
 	public void readMessage(Message message) {
 		String recipientName = message.getRecipient().getUserName();
-		int modified = DatabaseStub.setValues(MESSAGES, recipientName, userName, 
+		int modified = Database.setValues(MESSAGES, recipientName, userName, 
 				DATE, message.getDate(), READ, true);
 		
 		if (modified != 1) {
@@ -360,11 +360,12 @@ public class Account {
 	public static List<String> getAllUserNames() {
 		List<String> userNames = new ArrayList<String>();
 		
-		List<Map<String, Object>> table = DatabaseStub.getTable(ACCOUNTS);
+		List<Map<String, Object>> table = Database.getTable(ACCOUNTS);
 		if (table == null) return null;
 		
 		for (Map<String, Object> account : table) {
 			Util.validateObject(account.get(USERNAME), STRING);
+			
 			userNames.add((String) account.get(USERNAME));
 		}
 		return userNames;
