@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,11 @@ import com.util.Util;
 
 /**
  * This is a program that will provide an interface
- * for interacting with a remote mySql database
+ * for interacting with a remote mySql database.
+ * 
+ * ***NOTE: YOU MUST INSTANTIATE A DATABASE OBJECT
+ *    IN ORDER TO ESTABLISH A CONNECTION EVEN IF ONLY\
+ *    STATIC METHODS ARE BEING USED***
  * @author eliezer 
  */
 public class Database {
@@ -155,7 +160,7 @@ public class Database {
 		// know we have atleast one column
 		int count = 0;
 		for (String key : columnTypeAndName.keySet()) {
-			if ( columnTypeAndName.get(key).equals( "string") ) {
+			if ( columnTypeAndName.get(key).equalsIgnoreCase( "string") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
@@ -163,7 +168,7 @@ public class Database {
 				} else {
 					output += key + " CHAR(64),\n";
 				}
-			} else if ( columnTypeAndName.get(key).equals( "double") ) {
+			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
@@ -171,8 +176,8 @@ public class Database {
 				} else {
 					output += key + " DOUBLE(50, 5),\n";
 				}
-			} else if ( columnTypeAndName.get(key).equals( "long") ||
-					columnTypeAndName.get(key).equals( "integer")) {
+			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
+					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
@@ -215,6 +220,30 @@ public class Database {
 		return true;
 	}
 	
+	//Helper
+	// get columnName and Type for given table
+	private static Map<String, String> getColumnNameAndType(String tableName) {
+		Map<String, String> map = new HashMap<String, String>();
+		if ( tableExists( tableName ) ) {
+			String count = "SELECT * FROM " + tableName + ";";
+			ResultSet rs;
+			try {
+				rs = stmt.executeQuery(count);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				for(int i = 1; i <= rsmd.getColumnCount(); i++) {
+					String columnName = rsmd.getColumnName(i);
+					String type = rsmd.getColumnClassName(i).substring(10).toLowerCase();
+					map.put(columnName, type);
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}
+		return map;
+		
+	}
+	
 	// TO-DO
 	/**
 	 * Should add the passed row to the specified table. Check correct type for each Object.
@@ -226,9 +255,126 @@ public class Database {
 	public static void addRow(String tableName, Map<String, Object> row) {
 		if ( tableName == null ) {
 			throw new RuntimeException("Table is null.");
-		} else if ( tableExists( tableName) ) {
+		} else if ( !tableExists(tableName ) ) {
+			throw new RuntimeException(tableName + " is not a valid table");
+		} else {
+			if ( row == null ) {
+				throw new RuntimeException("Null value passed for row");
+			}
 			
+			int columnCount = getColumnCount(tableName);
+			// each map entry must correspond to a column
+			if ( row.size() != columnCount ) {
+				throw new RuntimeException("Wrong number of entries in row");
+			}
+			Iterator it = row.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        String key = (String) pair.getKey();
+		        Object value = pair.getValue();
+		        String type = value.getClass().toString().substring(16).toLowerCase();
+		        Map<String, String> types = getColumnNameAndType(tableName);
+		        System.out.println( types.toString() );
+		        if ( !types.containsKey(key) ) {
+		        	throw new RuntimeException("Row does not contain this column name");
+		        } else {
+		        	if ( !types.get(key).equals(type) ) {
+		        		System.out.println( types.get(key) + "\n" + type);
+		        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
+		        		+ types.get(key) + " but received: " + type);
+		        	}
+ 		        }
+		    }
+		    // if we get here we know our row content is good
+		    // check if the table has not been deleted since our last processing
+		    if ( tableExists(tableName) ) {
+		    	try {
+					stmt.executeUpdate(insertQuery(tableName, row));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
 		}
+	}
+	
+	// Private helper
+	// insert query
+	private static String insertQuery(String tableName, Map<String, Object> row ) {
+		String output = "";
+		output += "INSERT INTO " + tableName + " (\n";
+		Set<String> keys = row.keySet();
+		int columns = getColumnCount(tableName);
+		int count = 0;
+		for(String key : keys) {
+			count++;
+			if ( count == columns ) { output += key + ")\n"; }
+			else {
+				output += key + ",";
+			}
+		}
+		output += "VALUES (";
+		Collection<Object> values = row.values();
+		output = formatValues(values, output);
+				
+		return output;
+	}
+	
+	// Helper | format's the 
+	// values query
+	private static String formatValues(Collection<Object> values, String output) {
+		for (Object val : values) {
+			String type = val.getClass().toString().substring(16).toLowerCase();
+			if ( type.equals("integer") || type.equals("long") ) {
+				output += val + ",";
+			} else if ( type.equals("string") ) {
+				output += "\"" + val + "\",";
+			}
+		}
+		output = output.replaceAll(",$", "");
+		output += ");";
+		return output;
+	}
+	
+	// Private method that gets
+	// row count of table
+	private static int getRowCount(String tableName) {
+		int row = 0;
+		if ( tableExists( tableName ) ) {
+			String count = "SELECT COUNT(*) FROM " + tableName + ";";
+			ResultSet rs;
+			try {
+				rs = stmt.executeQuery(count);
+				rs.next();
+				row = rs.getInt("COUNT(*)"); 
+			} catch (SQLException e) {
+				System.out.println( "Unable to count rows in table");
+				e.printStackTrace();
+			}
+			return row;
+		}
+		return row;
+	}
+	
+	// Private method that obtains
+	// the number of columns in a table
+	private static int getColumnCount(String tableName) {
+		int column = 0;
+		if ( tableExists( tableName ) ) {
+			String count = "SELECT * FROM " + tableName + ";";
+			ResultSet rs;
+			try {
+				rs = stmt.executeQuery(count);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				column = rsmd.getColumnCount();
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			return column;
+		}
+		return column;
 	}
 	
 	/**
@@ -263,12 +409,8 @@ public class Database {
 		if ( !tableExists(tableName) ) return null;
 		String query = "SELECT * FROM " + tableName + ";";
 		
-		// Get table count first
-		String count = "SELECT COUNT(*) FROM " + tableName + ";";
 		try {
-			ResultSet rs = stmt.executeQuery(count);
-			rs.next();
-			int c = rs.getInt("COUNT(*)"); 
+			int c = getRowCount(tableName);
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			if ( c == 0 ) { return list; } // empty list
 			else {
@@ -298,11 +440,26 @@ public class Database {
 	
 	public static void main( String [] args ) {
 		Database db = new Database();
-		List<Map<String, Object>> list = Database.getTable("universities");
-		System.out.println( list.toString() );
+//		List<Map<String, Object>> list = Database.getTable("universities");
+//		Map<String, String> m = db.getColumnNameAndType("products");
+		Map<String, Object> m1 = new HashMap<String, Object>();
+		m1.put("university","IVC" );
+		m1.put("metropolis", "Irvine");
+		//System.out.println( insertQuery("universities", m1 ));
+		Database.addRow("universities", m1);
+		
+		Map<String, Object> metro = new HashMap<String, Object>();
+		metro.put("metropolis", "Irvine");
+		metro.put("continent", "North America");
+		metro.put("population", (long) 200000);
+		
+		
+		Database.addRow("metropolises", metro);
+		
 	}
+	
 	//Helper
-	public static Object getObject(String className, String value) {
+	private static Object getObject(String className, String value) {
 		if ( className == "java.lang.String") { return value; } 
 		else if ( className == "java.lang.Long") {
 			return Long.parseLong(value);

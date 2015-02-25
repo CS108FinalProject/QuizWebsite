@@ -70,4 +70,16 @@ public class DatabaseTest {
 		assertEquals(null, db.getTable(null));
 	}
 	
+	/*
+	 * Simple tests for addRow
+	 */
+	@Test
+	public void addRowTest() {
+		Map<String, Object> metro = new HashMap<String, Object>();
+		metro.put("metropolis", "Addis Ababa");
+		metro.put("continent", "Africa");
+		metro.put("population", (long) 3000000);
+		Database.addRow("metropolises", metro);
+	}
+	
 }
