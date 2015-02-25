@@ -1,11 +1,9 @@
 package com.accounts;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 
-import com.dbinterface.Database;
+import com.util.Util;
 
 public class AccountManager {
 	
@@ -13,41 +11,51 @@ public class AccountManager {
 		
 	}
 	
-	public void createAccount(String username, String password) {
-		//Util.validateString(username);
-		//Util.validateString(password);
+	public void createAccount(String username, String password) throws NoSuchAlgorithmException {
+		Util.validateString(username);
+		Util.validateString(password);
 		 
 		try {
-			AccountStub account = new AccountStub(username,password);
+			Account account = new Account(username,password);
 		} catch (RuntimeException ex) {
 			
 			
 		}
 	}
 	
-	public boolean passwordMatches(String username, String password) {
-		//Util.validateString(username);
-		//Util.validateString(password);
+	
+	/**
+	 * Checks if a userName is taken
+	 * @param userName
+	 * @return true if it is, false otherwise
+	 */
+	public boolean accountExists(String username) {
+		return false;
+	}
+	
+	public boolean passwordMatches(String username, String password) throws NoSuchAlgorithmException {
+		Util.validateString(username);
+		Util.validateString(password);
 		
-		AccountStub account = new AccountStub(username,password);
+		Account account = new Account(username);
 		return account.passwordMatches(password);
 	}
 	
 	public void removeAccount(String username) {
-		AccountStub account = new AccountStub(username);
-		account.removeAccount(username);
+		Account account = new Account(username);
+		account.removeAccount();
 	}
 	
-	public List<String> getFriends(String username) {
-		AccountStub account = new AccountStub(username);
-		return getFriends(username);
+	public List<Account> getFriends(String username) {
+		Account account = new Account(username);
+		return account.getFriends();
 	}
 	
-	public void sendMessage(String sender, String recipient, String content, String type) {
-		AccountStub sender_account = new AccountStub(sender);
-		AccountStub recipient_account = new AccountStub(recipient);
-		MessageStub message = new MessageStub(sender,recipient,content,type);
-		sender_account.sendMessage(message);
-		//recipient_account.receiveMessage(message);
+	
+	public void sendMessage(String sender, String recipient, String content, String type, String date) {
+		Message message = new Message(sender, recipient, content, type, date, false);
+		
+		Account senderAccount = new Account(sender);
+		senderAccount.sendMessage(message);
 	}
 }

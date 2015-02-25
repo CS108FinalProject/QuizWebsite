@@ -1,7 +1,5 @@
 package com.accounts;
 
-import java.util.Date;
-
 /**
  * Used as a data structure, provides encapsulation for message information.
  * @author Sam
@@ -9,33 +7,35 @@ import java.util.Date;
  */
 public class Message {
 	
-	private Account sender;
-	private Account recipient;
+	private String sender;
+	private String recipient;
 	private String content;
 	private String type;
-	private Date date;
+	private String date;
 	private boolean read;
 	
-	public Message(Account sender, Account recipient, String content, String type, boolean read) {
+	public Message(String sender, String recipient, String content, String type, 
+			String date, boolean read) {
+		
 		this.sender = sender;
 		this.recipient = recipient;
 		this.content = content;
 		this.type = type;
-		date = new Date(System.currentTimeMillis());
+		this.date = date;
 		this.read = read;
 	}
 
 	/**
 	 * @return the sender
 	 */
-	public Account getSender() {
+	public String getSender() {
 		return sender;
 	}
 
 	/**
 	 * @return the recipient
 	 */
-	public Account getRecipient() {
+	public String getRecipient() {
 		return recipient;
 	}
 
@@ -57,7 +57,7 @@ public class Message {
 	 * @return the date
 	 */
 	public String getDate() {
-		return date.toString();
+		return date;
 	}
 
 	/**

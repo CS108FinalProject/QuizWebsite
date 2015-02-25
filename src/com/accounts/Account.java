@@ -308,6 +308,7 @@ public class Account {
 		}
 	}
 	
+	
 	/**
 	 * Adds the passed message as a new entry in the database
 	 * and marks it as read = false.
@@ -330,7 +331,7 @@ public class Account {
 	 * @param message
 	 */
 	public void readMessage(Message message) {
-		String recipientName = message.getRecipient().getUserName();
+		String recipientName = message.getRecipient();
 		int modified = Database.setValues(MESSAGES, recipientName, userName, 
 				DATE, message.getDate(), READ, true);
 		
@@ -340,17 +341,79 @@ public class Account {
 	}
 	
 	
+	/**
+	 * Removes the passed message entry from the database.
+	 * @param message
+	 */
 	public void removeMessage(Message message) {
-		
+		Map<String, Object> row = new HashMap<String, Object>();
+		row.put(SENDER, message.getSender());
+		row.put(CONTENT, message.getContent());
+		row.put(RECIPIENT, message.getRecipient());
+		row.put(TYPE, message.getType());
+		row.put(DATE, message.getDate());
+		row.put(READ, message.isRead());
+		Database.removeRow(row);
 	}
 	
+	
+	/**
+	 * Returns a list of messages that this user has sent.
+	 * @return
+	 */
 	public List<Message> getSentMessages() {
-		return null;
+		List<Message> result = new ArrayList<Message>();
+		List<Map<String, Object>> messages = Database.getRows(MESSAGES, SENDER, userName);
+		if (messages == null) return result;
+		
+		for (Map<String, Object> row : messages) {
+			Util.validateObject(row.get(SENDER), STRING);
+			Util.validateObject(row.get(RECIPIENT), STRING);
+			Util.validateObject(row.get(CONTENT), STRING);
+			Util.validateObject(row.get(TYPE), STRING);
+			Util.validateObject(row.get(DATE), STRING);
+			Util.validateObject(row.get(READ), BOOLEAN);
+			
+			String sender = (String) row.get(SENDER);
+			String recipient = (String) row.get(RECIPIENT);
+			String content = (String) row.get(CONTENT);
+			String type = (String) row.get(TYPE);
+			String date = (String) row.get(DATE);
+			boolean read = (Boolean) row.get(READ);
+			
+			result.add(new Message(sender, recipient, content, type, date, read));
+		}
+		return result;
 	}
 	
 	
+	/**
+	 * Returns a list of messages that this user has received.
+	 * @return
+	 */
 	public List<Message> getReceivedMessages() {
-		return null;
+		List<Message> result = new ArrayList<Message>();
+		List<Map<String, Object>> messages = Database.getRows(MESSAGES, RECIPIENT, userName);
+		if (messages == null) return result;
+		
+		for (Map<String, Object> row : messages) {
+			Util.validateObject(row.get(SENDER), STRING);
+			Util.validateObject(row.get(RECIPIENT), STRING);
+			Util.validateObject(row.get(CONTENT), STRING);
+			Util.validateObject(row.get(TYPE), STRING);
+			Util.validateObject(row.get(DATE), STRING);
+			Util.validateObject(row.get(READ), BOOLEAN);
+			
+			String sender = (String) row.get(SENDER);
+			String recipient = (String) row.get(RECIPIENT);
+			String content = (String) row.get(CONTENT);
+			String type = (String) row.get(TYPE);
+			String date = (String) row.get(DATE);
+			boolean read = (Boolean) row.get(READ);
+			
+			result.add(new Message(sender, recipient, content, type, date, read));
+		}
+		return result;
 	}
 	
 	
