@@ -247,7 +247,6 @@ public class Database {
 	// TO-DO
 	/**
 	 * Should add the passed row to the specified table. Check correct type for each Object.
-	 * Use the Util.validateObject method for this.
 	 * @param tableName
 	 * @param row key = column name, value = table value
 	 * throw exception on failure (type missmatch, etc...)
