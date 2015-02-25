@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
+import com.dbinterface.DatabaseConstants;
 import com.util.Util;
 
 /**
@@ -16,28 +17,7 @@ import com.util.Util;
  * @author Sam
  *
  */
-public class Account {
-	
-	private static final String ACCOUNTS = "Accounts";
-	private static final String USERNAME = "userName";
-	private static final String PASSWORD = "password";
-	private static final String IS_ADMIN = "isAdmin";
-
-	private static final String FRIENDS = "Friends";
-	private static final String STATUS = "status";
-	private static final String FRIEND = "friend";
-	private static final String PENDING = "pending";
-	
-	private static final String MESSAGES = "Messages";
-	private static final String SENDER = "sender";
-	private static final String RECIPIENT = "recipient";
-	private static final String CONTENT = "content";
-	private static final String TYPE = "type";
-	private static final String DATE = "date";
-	private static final String READ = "read";
-	
-	private static final String STRING = "String";
-	private static final String BOOLEAN = "boolean";
+public class Account implements DatabaseConstants {
 	
 	private String userName;
 	
@@ -418,20 +398,19 @@ public class Account {
 	
 	
 	/**
-	 * @return a list of all userNames in the Accounts table, or null if the table doesn't exist.
+	 * @return a list of all user Accounts, or null if the table doesn't exist.
 	 */
-	public static List<String> getAllUserNames() {
-		List<String> userNames = new ArrayList<String>();
+	public static List<Account> getAllUsers() {
+		List<Account> users = new ArrayList<Account>();
 		
 		List<Map<String, Object>> table = Database.getTable(ACCOUNTS);
 		if (table == null) return null;
 		
 		for (Map<String, Object> account : table) {
 			Util.validateObject(account.get(USERNAME), STRING);
-			
-			userNames.add((String) account.get(USERNAME));
+			users.add(new Account((String) account.get(USERNAME))); 
 		}
-		return userNames;
+		return users;
 	}
 	
 	
