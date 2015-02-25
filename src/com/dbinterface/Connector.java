@@ -13,7 +13,6 @@ import java.sql.Statement;
  * the connection; closing the connection; and returning
  * a statement object that a client can use to make queries.
  * @author eliezer
- * @date Feb/23/2014 2:20PM (last change)
  *
  */
 public class Connector {
