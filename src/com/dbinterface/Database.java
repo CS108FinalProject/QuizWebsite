@@ -459,24 +459,8 @@ public class Database implements Constants {
 	}
 	
 	public static void main( String [] args ) {
-		Database db = new Database();
-//		List<Map<String, Object>> list = Database.getTable("universities");
-//		Map<String, String> m = db.getColumnNameAndType("products");
-		Map<String, Object> m1 = new HashMap<String, Object>();
-		m1.put("university","IVC" );
-		m1.put("metropolis", "Irvine");
-		//System.out.println( insertQuery("universities", m1 ));
-		Database.addRow("universities", m1);
-		
-		Map<String, Object> metro = new HashMap<String, Object>();
-		metro.put("metropolis", "Irvine");
-		metro.put("continent", "North America");
-		metro.put("population", (long) 200000);
-		
-		Database.getRows("metropolises", "population", (long) 200000);
-		
-		//Database.addRow("metropolises", metro);
-		
+		new Database();
+		System.out.println(getColumnType(ACCOUNTS, USERNAME));
 	}
 	
 	//Helper
@@ -634,25 +618,7 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Return a list of values that match the specified location.
-	 * @param tableName
-	 * @param columnGuide name of the column that will be used to determine the row
-	 * @param guideValue all the rows that have this in value in the "columnGuide column" should be explored
-	 * @param columnToGet once the rows has been located, the columnToGet is the name of the column that should be 
-	 * 			obtained in these rows
-	 * @return the value at location
-	 * 
-	 * Example: similar to previous but you are returning instead of modifying. Return null if nothing found.
-	 * 
-	 */
-	// TO-DO
-	public static List<Object> getValues(String tableName, String columnGuide, String guideValue, String columnToGet) {
-		return null;
-	}
-	
-	
-	/**
-	 * Same as the previous method but now it has 2 specifiers.
+	 * Returns a list of specified values from the database. (1 specifier)
 	 * 
 	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
 	 * 
@@ -660,20 +626,93 @@ public class Database implements Constants {
 	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
 	 * Return the list or null if nothing was found.
 	 * 
-	 * @param tableName
-	 * @param columnGuide1
-	 * @param guideValue1
-	 * @param columnGuide2
-	 * @param guideValue2
-	 * @param columnToGet
-	 * @return
+	 * @param tableName the requested table
+	 * @param columnGuide1 the first specified column
+	 * @param guideValue1 the first specified value
+	 * @param columnGuide2 the second specified column
+	 * @param guideValue2 the second specified value
+	 * @param columnToGet the column where the returned values will be in.
+	 * @return a list of objects matching the specification.
 	 */
-	// TO-DO
-	public static List<Object> getValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2, 
-			String guideValue2, String columnToGet) {
+	public static List<Object> getValues(String tableName, String columnGuide, String guideValue, String columnToGet) {
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateString(columnToGet);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		List<Object> result = new ArrayList<Object>();
+		
+		String query = "";
+		try {
+			query = "SELECT * FROM " + tableName + " WHERE \"" + columnGuide + "\" = \"" + guideValue + "\"";
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				result.add(rs.getObject(columnToGet));
+			}
 			
-		return null;
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+			
+		if (result.size() == 0) return null;
+		return result;
 	}
+	
+	
+	/**
+	 * Returns a list of specified values from the database. (2 specifiers)
+	 * 
+	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
+	 * 
+	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" and under the
+	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
+	 * Return the list or null if nothing was found.
+	 * 
+	 * @param tableName the requested table
+	 * @param columnGuide1 the first specified column
+	 * @param guideValue1 the first specified value
+	 * @param columnGuide2 the second specified column
+	 * @param guideValue2 the second specified value
+	 * @param columnToGet the column where the returned values will be in.
+	 * @return a list of objects matching the specification.
+	 */
+	public static List<Object> getValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2, 
+			Object guideValue2, String columnToGet) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateString(columnToGet);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		List<Object> result = new ArrayList<Object>();
+		
+		String query = "";
+		try {
+			query = "SELECT * FROM " + tableName + " WHERE \"" + columnGuide1 
+					+ "\" = \"" + guideValue1 + "\" AND \"" + columnGuide2 + "\" = \"" + guideValue2 + "\"";
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				result.add(rs.getObject(columnToGet));
+			}
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+			
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
 	
 	/**
 	 * Closes the database connection
@@ -683,31 +722,44 @@ public class Database implements Constants {
 	}
 	
 	
+	/*
+	 * Given a table and column name it returns the column type.
+	 * Throws a runtime exception if the table or columns do not exist.
+	 */
 	private static String getColumnType(String tableName, String columnName) {
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
 		}
-		
 		
 		String query = "";
 		String type = "";
 		try {
 			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
 			ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
+			rs.next();
 			type = rs.getString(DB_TYPE);
 			
 			
 		} catch (SQLException e) {
 			throw new RuntimeException("Problem executing query: " + query);
 		}
-		return null;
 		
+		return getTypeFromDBType(type);
 	}
 	
 	
+	/*
+	 * Given a DBType in String form, returns a regular type in String form.
+	 * Returns null if the passed string is not a DB_TYPE.
+	 */
 	private static String getTypeFromDBType(String dbType) {
-		//if (dbType.equals(DB_STRING)) return STRING;
-		return null;
+		Util.validateString(dbType);
+		if (dbType.equalsIgnoreCase(DB_STRING)) return STRING;
+		if (dbType.equalsIgnoreCase(DB_BOOLEAN)) return BOOLEAN;
+		if (dbType.equalsIgnoreCase(DB_DOUBLE)) return DOUBLE;
+		if (dbType.equalsIgnoreCase(DB_INT)) return INT;
+		if (dbType.equalsIgnoreCase(DB_LONG)) return LONG;
+		throw new RuntimeException("Passed type " + dbType + " is not a valid DBType.");
 	}
 	
 	
