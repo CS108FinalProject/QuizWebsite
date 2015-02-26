@@ -34,5 +34,10 @@ public interface Constants {
 	public static final String INT = "int";
 	public static final String DOUBLE = "double";
 	public static final String LONG = "long";
+	
+	// Message Types
+	public static final String MESSAGE_FRIEND_REQUEST = "friend_request";
+	public static final String MESSAGE_CHALLENGE = "challenge";
+	public static final String MESSAGE_NOTE = "note";
 
 }
