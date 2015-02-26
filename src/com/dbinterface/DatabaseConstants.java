@@ -29,10 +29,18 @@ public interface DatabaseConstants {
 	public static final String READ = "read";
 	
 	// Types
-	public static final String STRING = "String";
+	public static final String STRING = "string";
 	public static final String BOOLEAN = "boolean";
 	public static final String INT = "int";
 	public static final String DOUBLE = "double";
 	public static final String LONG = "long";
+	
+	// Database datatypes
+	public static final String DB_STRING = "CHAR(64)";
+	public static final String DB_INT = "BIGINT";
+	public static final String DB_BOOLEAN = "TINYINT(1)";
+	public static final String DB_DOUBLE = "DOUBLE(50, 5)";
+	public static final String DB_LONG = "BIGINT";
+	
 
 }
