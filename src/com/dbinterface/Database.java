@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.util.Constants;
 import com.util.Util;
 
 
@@ -25,7 +26,7 @@ import com.util.Util;
  *    STATIC METHODS ARE BEING USED***
  * @author eliezer 
  */
-public class Database {
+public class Database implements Constants {
 	private static Statement stmt;
 	private Connector con;
 	
@@ -114,7 +115,8 @@ public class Database {
  		System.out.println( columnTypeAndName.size() );
  		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
- 		}
+
+		}
  		
  			// make live query to check current Tables
  		Set<String> tables = new HashSet<String>();
@@ -165,34 +167,34 @@ public class Database {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DatabaseConstants.DB_STRING + "\n";
+					output += key + DB_STRING + "\n";
 				} else {
-					output += key + DatabaseConstants.DB_STRING + ",\n";
+					output += key + DB_STRING + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DatabaseConstants.DB_DOUBLE + "\n";
+					output += key + DB_DOUBLE + "\n";
 				} else {
-					output += key + DatabaseConstants.DB_DOUBLE + ",\n";
+					output += key + DB_DOUBLE + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
 					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DatabaseConstants.DB_INT + "\n";
+					output += key + DB_INT + "\n";
 				} else {
-					output += key + DatabaseConstants.DB_INT + ",\n";
+					output += key + DB_INT + ",\n";
 				}
 			}  else if ( columnTypeAndName.get(key).equals( "boolean")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DatabaseConstants.DB_BOOLEAN + "\n";
+					output += key + DB_BOOLEAN + "\n";
 				} else {
-					output += key + DatabaseConstants.DB_BOOLEAN + ",\n";
+					output += key + DB_BOOLEAN + ",\n";
 				}
 			}  
 		}
@@ -663,6 +665,7 @@ public class Database {
 	// TO-DO
 	public static List<Object> getValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2, 
 			String guideValue2, String columnToGet) {
+			
 		return null;
 	}
 	
@@ -671,6 +674,46 @@ public class Database {
 	 */
 	public void close() {
 		con.close();
+	}
+	
+	
+	private static String getColumnType(String tableName, String columnName) {
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		
+		String query = "";
+		String type = "";
+		try {
+			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
+			ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
+			type = rs.getString(DB_TYPE);
+			
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		return null;
+		
+	}
+	
+	
+	private static String getTypeFromDBType(String dbType) {
+		//if (dbType.equals(DB_STRING)) return STRING;
+		return null;
+	}
+	
+	
+	// Given an integer value returns its equivalent boolean form.
+	private static boolean getBooleanFromInt(int value) {
+		return value == 1;
+	}
+	
+	// Given a boolean value returns its equivalent int form.
+	private static int getIntFromBoolean(boolean value) {
+		if (value) return 1;
+		return 0;
 	}
 
 }
