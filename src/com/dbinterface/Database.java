@@ -585,27 +585,46 @@ public class Database implements Constants {
 
 	
 	/**
-	 * Modify the passed value in the specified table location.
+	 * Modifies the passed value in the specified table location.
 	 * @param tableName 
 	 * @param columnGuide name of the column that will be used to determine the row that should be modified  
 	 * @param guideValue all the rows that have this in value in the "columnGuide column" should be modified
 	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
 	 * 			modified in these rows
 	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
-	 * 
-	 * Should throw exception on failure (type missmatch, etc...)
+	 * @return amount of values that were modified
 	 * 
 	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
 	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
 	 * to be "thisIsMyNewPassword" 
-	 * 
-	 * Should return the amount of rows that it modified.
-	 * 
 	 */
-	// TO-DO
-	public static int setValues(String tableName, String columnGuide, String guideValue,
+	public static int setValues(String tableName, String columnGuide, Object guideValue,
 			String columnToBeSet, Object columnToBeSetValue) {
-		return 0;
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateString(columnToBeSet);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		String query = "";
+		try {
+			query = "UPDATE " + tableName + " SET " + columnToBeSet + " = \"" 
+					+ columnToBeSetValue + "\" WHERE " + columnGuide + " = \"" + guideValue + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+			
+		List<Object> values = getValues(tableName, columnGuide, guideValue, columnToBeSet, 
+				columnToBeSetValue, columnToBeSet);
+		
+		return values.size();
 	}
 	
 	
@@ -657,7 +676,7 @@ public class Database implements Constants {
 		
 		String query = "";
 		try {
-			query = "SELECT * FROM " + tableName + " WHERE \"" + columnGuide + "\" = \"" + guideValue + "\"";
+			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				result.add(rs.getObject(columnToGet));
@@ -707,8 +726,8 @@ public class Database implements Constants {
 		
 		String query = "";
 		try {
-			query = "SELECT * FROM " + tableName + " WHERE \"" + columnGuide1 
-					+ "\" = \"" + guideValue1 + "\" AND \"" + columnGuide2 + "\" = \"" + guideValue2 + "\"";
+			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide1 
+					+ " = \"" + guideValue1 + "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				result.add(rs.getObject(columnToGet));
