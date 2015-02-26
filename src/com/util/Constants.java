@@ -1,11 +1,11 @@
-package com.dbinterface;
+package com.util;
 
 /**
  * Holds the constants that are used to access the Database.
  * @author Sam
  *
  */
-public interface DatabaseConstants {
+public interface Constants {
 	
 	// Accounts table
 	public static final String ACCOUNTS = "Accounts";
@@ -29,7 +29,7 @@ public interface DatabaseConstants {
 	public static final String READ = "read";
 	
 	// Types
-	public static final String STRING = "String";
+	public static final String STRING = "String"; 
 	public static final String BOOLEAN = "boolean";
 	public static final String INT = "int";
 	public static final String DOUBLE = "double";
