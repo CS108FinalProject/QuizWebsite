@@ -113,6 +113,7 @@ public class Database {
  		String SQLQuery = "";
  		if ( columnTypeAndNameValid( columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
+ 			System.out.println(SQLQuery);
 		}
  		
  			// make live query to check current Tables
@@ -623,6 +624,16 @@ public class Database {
 	 */
 	public void close() {
 		con.close();
+	}
+	
+	
+	private static boolean getBooleanFromInt(int value) {
+		return value == 1;
+	}
+	
+	private static int getIntFromBoolean(boolean value) {
+		if (value) return 1;
+		return 0;
 	}
 
 }
