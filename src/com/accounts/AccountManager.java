@@ -6,16 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
+import com.util.Util;
 
 public class AccountManager {
 	
+	/**
+	 * Constructor
+	 */
 	public AccountManager() {
 		
 	}
 	
+	/**
+	 * Creates an account and updates the account table in the DB
+	 * @param username
+	 * @param password
+	 */
 	public void createAccount(String username, String password) {
-		//Util.validateString(username);
-		//Util.validateString(password);
+		Util.validateString(username);
+		Util.validateString(password);
 		 
 		try {
 			AccountStub account = new AccountStub(username,password);
@@ -25,30 +34,61 @@ public class AccountManager {
 		}
 	}
 	
+	/**
+	 * Checks whether a given string matches its user
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public boolean passwordMatches(String username, String password) {
-		//Util.validateString(username);
-		//Util.validateString(password);
+		Util.validateString(username);
+		Util.validateString(password);
 		
 		AccountStub account = new AccountStub(username,password);
 		return account.passwordMatches(password);
 	}
 	
+	/**
+	 * Removes the account from the DB by deleting its row
+	 * @param username
+	 */
 	public void removeAccount(String username) {
+		Util.validateString(username);
+		
 		AccountStub account = new AccountStub(username);
 		account.removeAccount(username);
 	}
 	
+	/**
+	 * Returns list of user's friends
+	 * @param username
+	 * @return
+	 */
 	public List<String> getFriends(String username) {
+		Util.validateString(username);
+		
 		AccountStub account = new AccountStub(username);
-		return getFriends(username);
+		return account.getFriends(username);
 	}
 	
+	/**
+	 * Sends a given message according to its fields.
+	 * The Message fields are: sender, recipient, content and type.
+	 * @param sender
+	 * @param recipient
+	 * @param content
+	 * @param type
+	 */
 	public void sendMessage(String sender, String recipient, String content, String type) {
+		Util.validateString(sender);
+		Util.validateString(recipient);
+		Util.validateString(content);
+		Util.validateString(type);
+		
 		AccountStub sender_account = new AccountStub(sender);
 		AccountStub recipient_account = new AccountStub(recipient);
-		MessageStub message = new MessageStub(sender,recipient,content,type);
+		Message message = new Message(sender,recipient,content,type);
 		sender_account.sendMessage(message);
-		//recipient_account.receiveMessage(message);
 	}
 	
 	// Hashes a given string using SHA algorithm
@@ -73,7 +113,6 @@ public class AccountManager {
 				buff.append(Integer.toString(val, 16));
 			}
 			return buff.toString();
-			
 		}
 		
 		/*

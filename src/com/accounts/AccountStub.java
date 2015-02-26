@@ -1,5 +1,7 @@
 package com.accounts;
 
+import java.util.List;
+
 public class AccountStub {
 	
 	// Constructor 1
@@ -19,8 +21,12 @@ public class AccountStub {
 	
 	// Sends a given message according to its fields.
 	// The Message fields are: sender, recipient, content and type.
-	public void sendMessage(MessageStub message) {
+	public void sendMessage(Message message) {
 		
+	}
+	
+	public List<String> getFriends(String username) {
+		return null;
 	}
 	
 	// Checks whether a given string matches its user
