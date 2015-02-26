@@ -1,7 +1,7 @@
 package com.util;
 
 /**
- * Holds the constants that are used to access the Database.
+ * Holds the constants that are used throughout the project.
  * @author Sam
  *
  */
@@ -38,4 +38,9 @@ public interface Constants {
 	// Columns table
 	public static final String DB_TYPE = "Type";
 
+	// Message Types
+	public static final String MESSAGE_FRIEND_REQUEST = "friend_request";
+	public static final String MESSAGE_CHALLENGE = "challenge";
+	public static final String MESSAGE_NOTE = "note";
+	
 }
