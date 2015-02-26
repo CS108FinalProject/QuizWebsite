@@ -459,7 +459,7 @@ public class Database implements Constants {
 	
 	public static void main( String [] args ) {
 		new Database();
-		System.out.println(getColumnType(ACCOUNTS, USERNAME));
+		System.out.println(getValues("metropolises", "continent", "Africa", "population"));
 	}
 	
 	//Helper
@@ -642,7 +642,7 @@ public class Database implements Constants {
 		
 		String query = "";
 		try {
-			query = "SELECT * FROM " + tableName + " WHERE \"" + columnGuide + "\" = \"" + guideValue + "\"";
+			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				result.add(rs.getObject(columnToGet));
@@ -729,7 +729,7 @@ public class Database implements Constants {
 		String type = "";
 		try {
 			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
-			ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
+			ResultSet rs = stmt.executeQuery(query);
 			rs.next();
 			type = rs.getString(DB_TYPE);
 			
