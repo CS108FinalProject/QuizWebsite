@@ -333,7 +333,7 @@ public class Account implements Constants {
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
 		row.put(READ, message.isRead());
-		Database.removeRow(row);
+		Database.removeRows(MESSAGES, row);
 	}
 	
 	
