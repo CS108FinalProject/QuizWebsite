@@ -1,4 +1,4 @@
-package com.pages;
+package com.accounts;
 
 import com.dbinterface.*;
 
@@ -12,14 +12,14 @@ import javax.servlet.annotation.WebListener;
  *
  */
 @WebListener
-public class servletContext implements ServletContextListener {
+public class ServletContext implements ServletContextListener {
 
 	
 
     /**
      * Default constructor. 
      */
-    public servletContext() {
+    public ServletContext() {
         // TODO Auto-generated constructor stub
     }
 

@@ -1,4 +1,4 @@
-package com.pages;
+package com.accounts;
 
 import java.io.IOException;
 
