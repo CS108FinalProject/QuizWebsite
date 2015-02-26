@@ -209,31 +209,26 @@ public class Database implements Constants {
 			throw new RuntimeException("The table needs atleast 1 column.");
 		}
 
-		Set<String> s = columnTypeAndName.keySet();
-	    Iterator it = columnTypeAndName.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        String columnName = (String) pair.getKey();
-	        String columnType = (String) pair.getValue();
+	    for (String columnName : columnTypeAndName.keySet()) {
+	    	String columnType = columnTypeAndName.get(columnName);
 	        columnType = columnType.toLowerCase();
-	        if ( columnName.isEmpty() ) {
-	        	throw new RuntimeException("ColumnName cannot be empty");
-	        } else {
-	        	if ( columnType.equals("string") || columnType.equals("double") ) {
-	        		// okay 
-	        	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
-	        		// okay
-	        	} else if ( columnType.equals("integer")  ) {
-	        		// okay
-	        	} else {
-	        		throw new RuntimeException(columnType + " is an invalid data type");
-	        	}
-	        }
+	        
+	        Util.validateString(columnName);
+	        Util.validateString(columnType);
+	        
+        	if ( columnType.equals("string") || columnType.equals("double") ) {
+        		// okay 
+        	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
+        		// okay
+        	} else if ( columnType.equals("integer")  ) {
+        		// okay
+        	} else {
+        		throw new RuntimeException(columnType + " is an invalid data type");
+        	}
 	    }
-		
-		
 		return true;
 	}
+	
 	
 	//Helper
 	// get columnName and Type for given table
