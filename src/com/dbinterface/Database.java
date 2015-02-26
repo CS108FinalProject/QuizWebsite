@@ -115,8 +115,7 @@ public class Database implements Constants {
  		System.out.println( columnTypeAndName.size() );
  		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
-
-		}
+ 		}
  		
  			// make live query to check current Tables
  		Set<String> tables = new HashSet<String>();
@@ -135,11 +134,13 @@ public class Database implements Constants {
  		
  			// checks if the table already exists in the database
  		if ( tables.contains( tableName ) ) {
+ 			System.out.println( tables.toString() );
  			throw new RuntimeException("The table: \"" + tableName + "\" already exists in the database.");
  		}
  		
  		//*****************TABLE CREATION******************//
  		try {
+ 			System.out.println( SQLQuery );
 			stmt.executeUpdate(SQLQuery);
 		} catch (SQLException e) {
 			System.out.println("Failed to execute query");
@@ -167,34 +168,34 @@ public class Database implements Constants {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DB_STRING + "\n";
+					output += key + " " + DB_STRING + "\n";
 				} else {
-					output += key + DB_STRING + ",\n";
+					output += key + " " + DB_STRING + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DB_DOUBLE + "\n";
+					output += key + " " + DB_DOUBLE + "\n";
 				} else {
-					output += key + DB_DOUBLE + ",\n";
+					output += key +  " " + DB_DOUBLE + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
 					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DB_INT + "\n";
+					output += key +  " " + DB_INT + "\n";
 				} else {
-					output += key + DB_INT + ",\n";
+					output += key + " " + DB_INT + ",\n";
 				}
 			}  else if ( columnTypeAndName.get(key).equals( "boolean")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + DB_BOOLEAN + "\n";
+					output += key + " " + DB_BOOLEAN + "\n";
 				} else {
-					output += key + DB_BOOLEAN + ",\n";
+					output += key + " " + DB_BOOLEAN + ",\n";
 				}
 			}  
 		}
@@ -220,6 +221,7 @@ public class Database implements Constants {
 	        Map.Entry pair = (Map.Entry)it.next();
 	        String columnName = (String) pair.getKey();
 	        String columnType = (String) pair.getValue();
+	        columnType = columnType.toLowerCase();
 	        if ( columnName.isEmpty() ) {
 	        	throw new RuntimeException("ColumnName cannot be empty");
 	        } else {
@@ -233,7 +235,6 @@ public class Database implements Constants {
 	        		throw new RuntimeException(columnType + " is an invalid data type");
 	        	}
 	        }
-	        //it.remove(); // avoids a ConcurrentModificationException
 	    }
 		
 		
@@ -575,8 +576,13 @@ public class Database implements Constants {
 		// Know passed type is a valid at this point; implement sql query
 		String query = "SELECT * FROM " + tableName + " WHERE " + 
 						columnName + " = " + value + ";";
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+//				rs.getOb
+//				map.put(key, value)
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

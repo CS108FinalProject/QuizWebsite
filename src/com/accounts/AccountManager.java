@@ -44,7 +44,7 @@ public class AccountManager implements Constants {
 			columns.put(TYPE, STRING);
 			columns.put(DATE, STRING);
 			columns.put(READ, BOOLEAN);
-			Database.createTable(ACCOUNTS, columns);
+			Database.createTable(MESSAGES, columns);
 		}
 	}
 	

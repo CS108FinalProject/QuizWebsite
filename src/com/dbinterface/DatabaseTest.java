@@ -60,6 +60,7 @@ public class DatabaseTest {
 		assertEquals( true,Database.tableExists("yesterday"));
 		assertEquals( false, Database.tableExists("tomorrow"));
 		assertEquals( true,Database.tableExists("products"));
+		assertEquals( true, Database.tableExists("Accounts"));
 	}
 	
 	/*
