@@ -34,5 +34,8 @@ public interface Constants {
 	public static final String INT = "int";
 	public static final String DOUBLE = "double";
 	public static final String LONG = "long";
+	
+	// Columns table
+	public static final String DB_TYPE = "Type";
 
 }

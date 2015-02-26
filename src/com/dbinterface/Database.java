@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.util.Constants;
 import com.util.Util;
 
 
@@ -25,7 +26,7 @@ import com.util.Util;
  *    STATIC METHODS ARE BEING USED***
  * @author eliezer 
  */
-public class Database {
+public class Database implements Constants {
 	private static Statement stmt;
 	private Connector con;
 	
@@ -616,6 +617,7 @@ public class Database {
 	// TO-DO
 	public static List<Object> getValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2, 
 			String guideValue2, String columnToGet) {
+			
 		return null;
 	}
 	
@@ -627,10 +629,40 @@ public class Database {
 	}
 	
 	
+	private static String getColumnType(String tableName, String columnName) {
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		
+		String query = "";
+		String type = "";
+		try {
+			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
+			ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
+			type = rs.getString(DB_TYPE);
+			
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		return null;
+		
+	}
+	
+	
+	private static String getTypeFromDBType(String dbType) {
+		//if (dbType.equals(DB_STRING)) return STRING;
+		return null;
+	}
+	
+	
+	// Given an integer value returns its equivalent boolean form.
 	private static boolean getBooleanFromInt(int value) {
 		return value == 1;
 	}
 	
+	// Given a boolean value returns its equivalent int form.
 	private static int getIntFromBoolean(boolean value) {
 		if (value) return 1;
 		return 0;
