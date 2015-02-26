@@ -21,7 +21,7 @@ import com.util.Util;
  * This is a program that will provide an interface
  * for interacting with a remote mySql database.
  * 
- * @author eliezer 
+ * @author eliezer && Sam
  */
 public class Database implements Constants {
 	private static Statement stmt;
@@ -511,33 +511,117 @@ public class Database implements Constants {
 	 * and "Sam" under the "Friend" column and removes them. 
 	 *  
 	 */
-	// TO-DO
-	public static int removeRows(String tableName, String columnGuide1, String guideValue1, 
-			String columnGuide2, String guideValue2) {
-		return 0;
+	public static int removeRows(String tableName, String columnGuide1, Object guideValue1, 
+			String columnGuide2, Object guideValue2) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		if (guideValue1 instanceof Boolean) guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+		if (guideValue2 instanceof Boolean) guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+		
+		String query = "";
+		try {
+			query = "DELETE FROM " + tableName + " WHERE " + columnGuide1 
+					+ " = \"" + guideValue1 + "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		return rowCount - getRowCount(tableName);
 	}
 	
 	
 	/**
-	 * Same as previous but with only 1 specifier.
+	 * In the specified table, removes all the rows that match the given description.
 	 * @param tableName
-	 * @param columnGuide
-	 * @param guideValue
-	 * @return
+	 * @param columnGuide name of the column that will be used to determine the row  
+	 * @param guideValue value that columnGuide column should have in order for row to match
+	 * @return number of rows removed.
+	 * 
+	 * Example:
+	 * removeRows("Friends", "userName", "Eliezer");
+	 * 
+	 * finds all the rows in the "Friends" table that have "Eliezer" under the "userName" column,
+	 * and removes them. 
 	 */
-	// TO-DO
-	public static int removeRows(String tableName, String columnGuide, String guideValue) {
-		return 0;
+	public static int removeRows(String tableName, String columnGuide, Object guideValue) {
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		if (guideValue instanceof Boolean) guideValue = getIntFromBoolean((Boolean) guideValue);
+		
+		String query = "";
+		try {
+			query = "DELETE FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		return rowCount - getRowCount(tableName);
 	}
 	
 	
+
 	/**
-	 * Same as previous but this looks for and deleted the row that matches all parameters in the map.
-	 * @param row
+	 * In the specified table, removes all the rows that match the given description.
+	 * @param tableName
+	 * @param row Map that has all the corresponding columns and values to match  
+	 * @return number of rows removed.
 	 */
-	// TO-DO
-	public static int removeRows(Map<String, Object> row) {
-		return 0;
+	public static int removeRows(String tableName, Map<String, Object> row) {
+		Util.validateString(tableName);
+		
+		if (row == null) throw new NullPointerException();
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		normalizeObjectMapForDB(row);
+		
+		String query = "DELETE FROM " + tableName + " WHERE ";
+		try {
+			String trail = " AND ";
+			for (String columnGuide : row.keySet()) {
+				query += columnGuide + " = \"" + row.get(columnGuide) + "\"" + trail;
+			}
+			
+			query = query.substring(0, query.length() - trail.length());
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		return rowCount - getRowCount(tableName);
 	}
 	
 	
