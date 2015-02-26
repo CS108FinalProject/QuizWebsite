@@ -1,132 +1,131 @@
 package com.accounts;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
+import com.dbinterface.DatabaseConstants;
 import com.util.Util;
 
-public class AccountManager {
+/**
+ * Provides access to main user account functionality.
+ * @author Guy && Sam
+ */
+public class AccountManager implements DatabaseConstants {
 	
 	/**
-	 * Constructor
+	 * Checks if the necessary DB tables for Account operations exist, and creates them
+	 * if they don't. 
 	 */
-	public AccountManager() {
+	public static void initTables() {
+		if (!Database.tableExists(ACCOUNTS)) {
+			Map<String, String> columns = new HashMap<String, String>();
+			columns.put(USERNAME, STRING);
+			columns.put(PASSWORD, STRING);
+			columns.put(IS_ADMIN, BOOLEAN);
+			Database.createTable(ACCOUNTS, columns);
+		}
 		
-	}
-	
-	/**
-	 * Creates an account and updates the account table in the DB
-	 * @param username
-	 * @param password
-	 */
-	public void createAccount(String username, String password) {
-		Util.validateString(username);
-		Util.validateString(password);
-		 
-		try {
-			AccountStub account = new AccountStub(username,password);
-		} catch (RuntimeException ex) {
-			
-			
+		if (!Database.tableExists(FRIENDS)) {
+			Map<String, String> columns = new HashMap<String, String>();
+			columns.put(USERNAME, STRING);
+			columns.put(FRIEND, STRING);
+			columns.put(STATUS, STRING);
+			Database.createTable(FRIENDS, columns);
+		}
+		
+		if (!Database.tableExists(MESSAGES)) {
+			Map<String, String> columns = new HashMap<String, String>();
+			columns.put(SENDER, STRING);
+			columns.put(RECIPIENT, STRING);
+			columns.put(CONTENT, STRING);
+			columns.put(TYPE, STRING);
+			columns.put(DATE, STRING);
+			columns.put(READ, BOOLEAN);
+			Database.createTable(ACCOUNTS, columns);
 		}
 	}
 	
+	
 	/**
-	 * Checks whether a given string matches its user
+	 * Creates a new user account with the given username and password.
+	 * Throws a RuntimeException if the username already exists.
 	 * @param username
 	 * @param password
-	 * @return
+	 * @return the newly created account
+	 * @throws NoSuchAlgorithmException
 	 */
-	public boolean passwordMatches(String username, String password) {
+	public static Account createAccount(String username, String password) throws NoSuchAlgorithmException {
 		Util.validateString(username);
 		Util.validateString(password);
-		
-		AccountStub account = new AccountStub(username,password);
+		return new Account(username, password);
+	}
+	
+	
+	/**
+	 * Given a username, returns its account.
+	 * Throws a RuntimeException if the account doesn't exist.
+	 * @param username
+	 * @return
+	 */
+	public static Account getAccount(String username) {
+		Util.validateString(username);
+		return new Account(username);
+	}
+	
+	
+	/**
+	 * Removes the account that belongs to the passed username.
+	 * Throws a RuntimeException if the account doesn't exist.
+	 * @param username
+	 */
+	public static void removeAccount(String username) {
+		Util.validateString(username);
+		Account account = new Account(username);
+		account.removeAccount();
+	}
+	
+	
+	/**
+	 * Checks if an account exists for the passed username.
+	 * @param userName
+	 * @return true if it does, false otherwise
+	 */
+	public static boolean accountExists(String username) {
+		Util.validateString(username);
+		try {
+			new Account(username);
+		} catch (RuntimeException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Checks for password match.
+	 * @param username
+	 * @param password
+	 * @return true if the account exists and the stored password matches the passed one, false otherwise.
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static boolean passwordMatches(String username, String password) throws NoSuchAlgorithmException {
+		Util.validateString(username);
+		Util.validateString(password);
+	
+		if (!accountExists(username)) return false;
+		Account account = new Account(username);
 		return account.passwordMatches(password);
 	}
 	
-	/**
-	 * Removes the account from the DB by deleting its row
-	 * @param username
-	 */
-	public void removeAccount(String username) {
-		Util.validateString(username);
-		
-		AccountStub account = new AccountStub(username);
-		account.removeAccount(username);
-	}
 	
 	/**
-	 * Returns list of user's friends
-	 * @param username
-	 * @return
+	 * Returns a list of all user Accounts.
+	 * @return a list of all user Accounts.
 	 */
-	public List<String> getFriends(String username) {
-		Util.validateString(username);
-		
-		AccountStub account = new AccountStub(username);
-		return account.getFriends(username);
+	public static List<Account> getAllUsers() {
+		return Account.getAllUsers();
 	}
-	
-	/**
-	 * Sends a given message according to its fields.
-	 * The Message fields are: sender, recipient, content and type.
-	 * @param sender
-	 * @param recipient
-	 * @param content
-	 * @param type
-	 */
-	public void sendMessage(String sender, String recipient, String content, String type) {
-		Util.validateString(sender);
-		Util.validateString(recipient);
-		Util.validateString(content);
-		Util.validateString(type);
-		
-		AccountStub sender_account = new AccountStub(sender);
-		AccountStub recipient_account = new AccountStub(recipient);
-		Message message = new Message(sender,recipient,content,type);
-		sender_account.sendMessage(message);
-	}
-	
-	// Hashes a given string using SHA algorithm
-		private static String hash_string(String str) throws NoSuchAlgorithmException {
-			MessageDigest md = MessageDigest.getInstance("SHA");
-			md.update(str.getBytes());
-		    byte[] digest = md.digest();
-			return hexToString(digest);
-		}
-		
-		/*
-		 Given a byte[] array, produces a hex String,
-		 such as "234a6f". with 2 chars for each byte in the array.
-		 (provided code)
-		*/
-		public static String hexToString(byte[] bytes) {
-			StringBuffer buff = new StringBuffer();
-			for (int i=0; i<bytes.length; i++) {
-				int val = bytes[i];
-				val = val & 0xff;  // remove higher bits, sign
-				if (val<16) buff.append('0'); // leading 0
-				buff.append(Integer.toString(val, 16));
-			}
-			return buff.toString();
-		}
-		
-		/*
-		 Given a string of hex byte values such as "24a26f", creates
-		 a byte[] array of those values, one byte value -128..127
-		 for each 2 chars.
-		 (provided code)
-		*/
-		public static byte[] hexToArray(String hex) {
-			byte[] result = new byte[hex.length()/2];
-			for (int i=0; i<hex.length(); i+=2) {
-				result[i/2] = (byte) Integer.parseInt(hex.substring(i, i+2), 16);
-			}
-			return result;
-		}
-	
 }
