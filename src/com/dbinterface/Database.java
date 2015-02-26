@@ -112,7 +112,6 @@ public class Database implements Constants {
 		
  		// Ensure that columnTypes are valid
  		String SQLQuery = "";
- 		System.out.println( columnTypeAndName.size() );
  		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
  		}
@@ -134,13 +133,11 @@ public class Database implements Constants {
  		
  			// checks if the table already exists in the database
  		if ( tables.contains( tableName ) ) {
- 			System.out.println( tables.toString() );
  			throw new RuntimeException("The table: \"" + tableName + "\" already exists in the database.");
  		}
  		
  		//*****************TABLE CREATION******************//
  		try {
- 			System.out.println( SQLQuery );
 			stmt.executeUpdate(SQLQuery);
 		} catch (SQLException e) {
 			System.out.println("Failed to execute query");
@@ -294,12 +291,10 @@ public class Database implements Constants {
 		        Object value = pair.getValue();
 		        String type = value.getClass().toString().substring(16).toLowerCase();
 		        Map<String, String> types = getColumnNameAndType(tableName);
-		        System.out.println( types.toString() );
 		        if ( !types.containsKey(key) ) {
 		        	throw new RuntimeException("Row does not contain this column name");
 		        } else {
 		        	if ( !types.get(key).equals(type) ) {
-		        		System.out.println( types.get(key) + "\n" + type);
 		        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
 		        		+ types.get(key) + " but received: " + type);
 		        	}
@@ -390,8 +385,7 @@ public class Database implements Constants {
 			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
-			}
-			
+			}		
 			return column;
 		}
 		return column;
@@ -459,8 +453,8 @@ public class Database implements Constants {
 	}
 	
 	public static void main( String [] args ) {
-		new Database();
-		System.out.println(getColumnType(ACCOUNTS, USERNAME));
+//		new Database();
+//		System.out.println(getColumnType(ACCOUNTS, USERNAME));
 	}
 	
 	//Helper
@@ -537,6 +531,8 @@ public class Database implements Constants {
 	 */
 	// TO-DO
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
 		if ( !tableExists(tableName) ) { 
 			throw new RuntimeException(tableName + " does not exist in the database.");
 		} else if ( tableName == null ) { 
@@ -544,8 +540,11 @@ public class Database implements Constants {
 		} else if ( columnName == null ) { throw new RuntimeException(columnName + " is Null");}
 		else if ( value == null ) { throw new RuntimeException(value + " is NULL"); }
 		
+		// validate object type
+		String type = getColumnType(tableName, columnName);
+		Util.validateObject(value, type);
+		
 		Map<String, String> m = getColumnNameAndType(tableName);
-		System.out.println( m.toString() );
 		if (!m.containsKey(columnName) ) {
 			throw new RuntimeException( columnName + " is not a valid column in " 
 					+ tableName );
@@ -559,14 +558,24 @@ public class Database implements Constants {
 		
 		// Know passed type is a valid at this point; implement sql query
 		String query = "SELECT * FROM " + tableName + " WHERE " + 
-						columnName + " = " + value + ";";
-		Map<String, Object> map = new HashMap<String, Object>();
+						columnName + " = " + "\"" + value + "\"" + ";";
+		System.out.println( query);
+		
 		try {
 			ResultSet rs = stmt.executeQuery(query);
+			Map<String, String> columnTypes = getColumnNameAndType(tableName);
 			while (rs.next() ) {
-//				rs.getOb
-//				map.put(key, value)
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int c = getColumnCount(tableName);
+				for(int i = 1; i <= c; i++) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+					list.add(map);
+				}
 			}
+			return list;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -735,7 +744,7 @@ public class Database implements Constants {
 		String type = "";
 		try {
 			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
-			ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
+			ResultSet rs = stmt.executeQuery(query);
 			rs.next();
 			type = rs.getString(DB_TYPE);
 			

@@ -4,6 +4,7 @@ package com.dbinterface;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert.*;
@@ -81,6 +82,14 @@ public class DatabaseTest {
 		metro.put("continent", "Africa");
 		metro.put("population", (long) 3000000);
 		Database.addRow("metropolises", metro);
+	}
+	
+	/*
+	 * Test getRows
+	 */
+	@Test 
+	public void getRowsTest() {
+		List<Map<String, Object>> map = Database.getRows("universities",  "metropolis", "London");
 	}
 	
 }
