@@ -109,11 +109,12 @@ public class Database {
 			throw new RuntimeException("tableName is empty");
 		}
 		
- 			// Ensure that columnTypes are valid
+ 		// Ensure that columnTypes are valid
  		String SQLQuery = "";
- 		if ( columnTypeAndNameValid( columnTypeAndName ) ) {
+ 		System.out.println( columnTypeAndName.size() );
+ 		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
-		}
+ 		}
  		
  			// make live query to check current Tables
  		Set<String> tables = new HashSet<String>();
@@ -150,7 +151,7 @@ public class Database {
 	private static String getCreationQuery(String tableName, Map<String, String> columnTypeAndName ) {
 		if ( columnTypeAndName == null ) {
 			throw new RuntimeException("columnTypeAndName is null.");
-		} else if ( columnTypeAndName.size() == 0 ) {
+		} else if ( columnTypeAndName.isEmpty() ) {
 			throw new RuntimeException("The table needs atleast 1 column.");
 		}
 		
@@ -164,34 +165,34 @@ public class Database {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " CHAR(64)\n";
+					output += key + DatabaseConstants.DB_STRING + "\n";
 				} else {
-					output += key + " CHAR(64),\n";
+					output += key + DatabaseConstants.DB_STRING + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " DOUBLE(50, 5)\n";
+					output += key + DatabaseConstants.DB_DOUBLE + "\n";
 				} else {
-					output += key + " DOUBLE(50, 5),\n";
+					output += key + DatabaseConstants.DB_DOUBLE + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
 					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " BIGINT\n";
+					output += key + DatabaseConstants.DB_INT + "\n";
 				} else {
-					output += key + " BIGINT,\n";
+					output += key + DatabaseConstants.DB_INT + ",\n";
 				}
 			}  else if ( columnTypeAndName.get(key).equals( "boolean")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " TINYINT(1)\n";
+					output += key + DatabaseConstants.DB_BOOLEAN + "\n";
 				} else {
-					output += key + " TINYINT(1),\n";
+					output += key + DatabaseConstants.DB_BOOLEAN + ",\n";
 				}
 			}  
 		}
@@ -204,7 +205,7 @@ public class Database {
 	/*
 	 * Checks to see if the map's keys contain valid datatypes
 	 */
-	private static boolean columnTypeAndNameValid( Map<String, String> columnTypeAndName) {
+	private static boolean columnTypeAndNameValid( String tableName, Map<String, String> columnTypeAndName) {
 		if ( columnTypeAndName == null ) {
 			throw new RuntimeException("columnTypeAndName is null.");
 		} else if ( columnTypeAndName.size() == 0 ) {
@@ -212,11 +213,28 @@ public class Database {
 		}
 
 		Set<String> s = columnTypeAndName.keySet();
-		for (String key : s) {
-			Util.validateObject(key, columnTypeAndName.get(key));
-		throw new RuntimeException( key.toString() +  " is an invalid datatype" );
-			
-		}
+	    Iterator it = columnTypeAndName.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        String columnName = (String) pair.getKey();
+	        String columnType = (String) pair.getValue();
+	        if ( columnName.isEmpty() ) {
+	        	throw new RuntimeException("ColumnName cannot be empty");
+	        } else {
+	        	if ( columnType.equals("string") || columnType.equals("double") ) {
+	        		// okay 
+	        	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
+	        		// okay
+	        	} else if ( columnType.equals("integer")  ) {
+	        		// okay
+	        	} else {
+	        		throw new RuntimeException(columnType + " is an invalid data type");
+	        	}
+	        }
+	        //it.remove(); // avoids a ConcurrentModificationException
+	    }
+		
+		
 		return true;
 	}
 	
@@ -452,8 +470,9 @@ public class Database {
 		metro.put("continent", "North America");
 		metro.put("population", (long) 200000);
 		
+		Database.getRows("metropolises", "population", (long) 200000);
 		
-		Database.addRow("metropolises", metro);
+		//Database.addRow("metropolises", metro);
 		
 	}
 	
@@ -531,6 +550,35 @@ public class Database {
 	 */
 	// TO-DO
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
+		if ( !tableExists(tableName) ) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		} else if ( tableName == null ) { 
+			throw new RuntimeException(tableName + " is a NULL value.");
+		} else if ( columnName == null ) { throw new RuntimeException(columnName + " is Null");}
+		else if ( value == null ) { throw new RuntimeException(value + " is NULL"); }
+		
+		Map<String, String> m = getColumnNameAndType(tableName);
+		System.out.println( m.toString() );
+		if (!m.containsKey(columnName) ) {
+			throw new RuntimeException( columnName + " is not a valid column in " 
+					+ tableName );
+		}
+		String columnType = m.get(columnName);
+		String passedObjType =  value.getClass().toString().substring(16).toLowerCase();
+		if ( !columnType.equals(passedObjType) ) {
+			throw new RuntimeException( "Expected: " + columnType + " but received: "
+					+ passedObjType);
+		}
+		
+		// Know passed type is a valid at this point; implement sql query
+		String query = "SELECT * FROM " + tableName + " WHERE " + 
+						columnName + " = " + value + ";";
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
