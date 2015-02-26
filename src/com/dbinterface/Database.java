@@ -21,9 +21,6 @@ import com.util.Util;
  * This is a program that will provide an interface
  * for interacting with a remote mySql database.
  * 
- * ***NOTE: YOU MUST INSTANTIATE A DATABASE OBJECT
- *    IN ORDER TO ESTABLISH A CONNECTION EVEN IF ONLY\
- *    STATIC METHODS ARE BEING USED***
  * @author eliezer 
  */
 public class Database implements Constants {
@@ -290,6 +287,15 @@ public class Database implements Constants {
 		        String key = (String) pair.getKey();
 		        Object value = pair.getValue();
 		        String type = value.getClass().toString().substring(16).toLowerCase();
+		        
+		        // Turn boolean to integer for DB compatibility. (added by Sam)
+		        if (type.equals(BOOLEAN)) {
+		        	value = getIntFromBoolean((Boolean) value);
+		        	type = value.getClass().toString().substring(16).toLowerCase();
+		        }
+		        //--------------------------------------------------------------
+		        
+		        
 		        Map<String, String> types = getColumnNameAndType(tableName);
 		        if ( !types.containsKey(key) ) {
 		        	throw new RuntimeException("Row does not contain this column name");
@@ -300,6 +306,12 @@ public class Database implements Constants {
 		        	}
  		        }
 		    }
+		    
+		    // Transform map for DB compatibility. (added by Sam)
+		    normalizeObjectMapForDB(row);
+		    //---------------------------------------------------
+		    
+		    
 		    // if we get here we know our row content is good
 		    // check if the table has not been deleted since our last processing
 		    if ( tableExists(tableName) ) {
@@ -453,8 +465,17 @@ public class Database implements Constants {
 	}
 	
 	public static void main( String [] args ) {
-//		new Database();
-//		System.out.println(getColumnType(ACCOUNTS, USERNAME));
+		new Database();
+		
+//		Map<String, Object> row = new HashMap<String, Object>();
+//		row.put(USERNAME, "Hi");
+//		row.put(IS_ADMIN, true);
+//		row.put(FRIEND, false);
+//		addRow("TestBoolean", row);
+		
+		
+		
+		
 	}
 	
 	//Helper
@@ -472,6 +493,8 @@ public class Database implements Constants {
 			throw new RuntimeException("Row contains an invalid type");
 		}
 	}
+	
+	
 	/**
 	 * In the specified table, removes all the rows that match the given description.
 	 * @param tableName
@@ -513,7 +536,9 @@ public class Database implements Constants {
 	 * @param row
 	 */
 	// TO-DO
-	public static void removeRow(Map<String, Object> row) {}
+	public static int removeRows(Map<String, Object> row) {
+		return 0;
+	}
 	
 	
 	/**
@@ -611,6 +636,19 @@ public class Database implements Constants {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
 		}
 		
+		// Interface boolean.
+		boolean guideValueSwitch = false;
+		if (guideValue instanceof Boolean) {
+			guideValue = getIntFromBoolean((Boolean) guideValue);
+			guideValueSwitch = true;
+		}
+		
+		boolean columnToBeSetValueSwitch = false;
+		if (columnToBeSetValue instanceof Boolean) {
+			columnToBeSetValue = getIntFromBoolean((Boolean) columnToBeSetValue);
+			columnToBeSetValueSwitch = true;
+		}
+		
 		String query = "";
 		try {
 			query = "UPDATE " + tableName + " SET " + columnToBeSet + " = \"" 
@@ -619,6 +657,13 @@ public class Database implements Constants {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (guideValueSwitch) {
+			guideValue = getBooleanFromInt((Integer) guideValue);
+		}
+		if (columnToBeSetValueSwitch) {
+			columnToBeSetValue = getBooleanFromInt((Integer) columnToBeSetValue);
 		}
 			
 		List<Object> values = getValues(tableName, columnGuide, guideValue, columnToBeSet, 
@@ -629,19 +674,76 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Same as the previous but now with 2 specifiers.
-	 * @param tableName
-	 * @param columnGuide1
-	 * @param guideValue1
-	 * @param columnGuide2
-	 * @param guideValue2
-	 * @param columnToBeSet
-	 * @param columnToBeSetValue
+	 * Modifies the passed value in the specified table location.
+	 * @param tableName 
+	 * @param columnGuide1 name of the first column that will be used to determine the row that should be modified  
+	 * @param guideValue1 all the rows that have this in value in the "columnGuide1 column" should be modified
+	 * @param columnGuide2 name of the second column that will be used to determine the row that should be modified  
+	 * @param guideValue2 all the rows that have this in value in the "columnGuide2 column" should be modified
+	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
+	 * 			modified in these rows
+	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
+	 * @return amount of values that were modified
+	 * 
+	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
+	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
+	 * to be "thisIsMyNewPassword" 
 	 */
-	// TO-DO
-	public static int setValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2,
-			String guideValue2, String columnToBeSet, Object columnToBeSetValue) {
-		return 0;
+	public static int setValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2,
+			Object guideValue2, String columnToBeSet, Object columnToBeSetValue) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateString(columnToBeSet);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Interface boolean.
+		boolean guideValueSwitch1 = false;
+		if (guideValue1 instanceof Boolean) {
+			guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+			guideValueSwitch1 = true;
+		}
+		
+		boolean guideValueSwitch2 = false;
+		if (guideValue2 instanceof Boolean) {
+			guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+			guideValueSwitch2 = true;
+		}
+		
+		if (columnToBeSetValue instanceof Boolean) {
+			columnToBeSetValue = getIntFromBoolean((Boolean) columnToBeSetValue);
+		}
+		
+		String query = "";
+		try {
+			query = "UPDATE " + tableName + " SET " + columnToBeSet + " = \"" 
+					+ columnToBeSetValue + "\" WHERE " + columnGuide1 + " = \"" + guideValue1 
+					+ "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
+			
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (guideValueSwitch1) {
+			guideValue1 = getBooleanFromInt((Integer) guideValue1);
+		}
+		if (guideValueSwitch2) {
+			guideValue2 = getBooleanFromInt((Integer) guideValue2);
+		}
+			
+		List<Object> values = getValues(tableName, columnGuide1, guideValue1, columnGuide2, 
+				guideValue2, columnToBeSet);
+		
+		return values.size();
 	}
 	
 	
@@ -662,7 +764,7 @@ public class Database implements Constants {
 	 * @param columnToGet the column where the returned values will be in.
 	 * @return a list of objects matching the specification.
 	 */
-	public static List<Object> getValues(String tableName, String columnGuide, String guideValue, String columnToGet) {
+	public static List<Object> getValues(String tableName, String columnGuide, Object guideValue, String columnToGet) {
 		Util.validateString(tableName);
 		Util.validateString(columnGuide);
 		Util.validateString(columnToGet);
@@ -672,6 +774,9 @@ public class Database implements Constants {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
 		}
 		
+		// Interface boolean.
+		if (guideValue instanceof Boolean) guideValue = getIntFromBoolean((Boolean) guideValue);
+		
 		List<Object> result = new ArrayList<Object>();
 		
 		String query = "";
@@ -679,7 +784,12 @@ public class Database implements Constants {
 			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				result.add(rs.getObject(columnToGet));
+				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
+					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
+				
+				} else {
+					result.add(rs.getObject(columnToGet));
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -722,6 +832,10 @@ public class Database implements Constants {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
 		}
 		
+		// Interface boolean.
+		if (guideValue1 instanceof Boolean) guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+		if (guideValue2 instanceof Boolean) guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+		
 		List<Object> result = new ArrayList<Object>();
 		
 		String query = "";
@@ -730,7 +844,12 @@ public class Database implements Constants {
 					+ " = \"" + guideValue1 + "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				result.add(rs.getObject(columnToGet));
+				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
+					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
+				
+				} else {
+					result.add(rs.getObject(columnToGet));
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -778,7 +897,7 @@ public class Database implements Constants {
 	
 	/*
 	 * Given a DBType in String form, returns a regular type in String form.
-	 * Returns null if the passed string is not a DB_TYPE.
+	 * Throws an exception if the passed string is not a DB_TYPE.
 	 */
 	private static String getTypeFromDBType(String dbType) {
 		Util.validateString(dbType);
@@ -796,10 +915,52 @@ public class Database implements Constants {
 		return value == 1;
 	}
 	
+	
 	// Given a boolean value returns its equivalent int form.
 	private static int getIntFromBoolean(boolean value) {
 		if (value) return 1;
 		return 0;
 	}
+	
+	
+	/*
+	 * Given a map that may have boolean values in integer form, converts those values
+	 * into actual booleans so that it is compatible with the outside world. To be used
+	 * when returning a map to the outside world.
+	 */
+	private static void normalizeObjectMap(String tableName, Map<String, Object> map) {
+		Util.validateString(tableName);
+		
+		// Get the name and type of the columns in the table.
+		Map<String, String> nameAndType = getColumnNameAndType(tableName);
+		
+		for (String name : nameAndType.keySet()) {
+			if (nameAndType.get(name).equals(BOOLEAN)) {
+				
+				// If the value is flagged as boolean, make sure it's an integer and transform it.
+				Util.validateObject(map.get(name), INT);
+				boolean value = getBooleanFromInt((Integer)map.get(name));
+				map.put(name, value);
+			}
+		}
+	}
+	
+	
+	/*
+	 * Given a map that may have boolean values, it changes those values to integers so that
+	 * the map is database compatible. To be used when receiving a map from the outside.
+	 */
+	private static void normalizeObjectMapForDB(Map<String, Object> map) {
+		for (String name : map.keySet()) {
+			if (Util.getType(map.get(name)).equals(BOOLEAN)) {
 
+				// If the value is boolean, make it an integer so that it is DB compatible.
+				int value = getIntFromBoolean((Boolean)map.get(name));
+				map.put(name, value);
+			}
+		}
+	}
+	
+	
+	
 }

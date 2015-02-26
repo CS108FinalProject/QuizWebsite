@@ -29,9 +29,9 @@ public interface Constants {
 	public static final String READ = "read";
 	
 	// Types
-	public static final String STRING = "String"; 
+	public static final String STRING = "string"; 
 	public static final String BOOLEAN = "boolean";
-	public static final String INT = "int";
+	public static final String INT = "integer";
 	public static final String DOUBLE = "double";
 	public static final String LONG = "long";
 	
