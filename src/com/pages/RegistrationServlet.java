@@ -1,6 +1,8 @@
 package com.pages;
+import com.accounts.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,8 +37,35 @@ public class RegistrationServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
-		dispatch.forward(request, response);
+		response.setContentType("text/html; charset=UTF-8");	
+		
+		String username = request.getParameter("user");
+		String password = request.getParameter("password");
+		
+		
+		//Redirect if username not valid
+		if (!username.equals("Kelsey")) {
+		//if (AccountManager.accountExists(username)) {
+			RequestDispatcher dispatch = request.getRequestDispatcher("registration.jsp");
+			request.setAttribute("errMsg", "<h1>Sorry, the username, "+username+", already exists. Please choose another.</h1>");
+			dispatch.forward(request, response);
+		} else {
+			//Try to create new account with input info
+			
+			/*
+			try {
+				AccountManager.createAccount(username,password);
+			} catch (NoSuchAlgorithmException e) {
+				//Need to redirect to site homepage(login.jsp) if our password can not be saved correctly
+				request.setAttribute("errMsg", "<h1>We are currently updating our security systems. To ensure your safety, accounts can not be created at this time.</h1>");
+				RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+				dispatch.forward(request, response);
+			}
+			*/
+			//redirect to new users' homepage if account created successfully
+			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
+			dispatch.forward(request, response);
+		}
 	}
 
 }

@@ -7,11 +7,17 @@
 <title>Register</title>
 </head>
 <body>
-	<h1>Enter your desired username and password!</h1>
+	<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%if (errMsg == null) { %>
+		<%="<h1>Enter your desired username and password!</h1>"%>
+	<%} else {%>
+		<%= errMsg%>
+	<%}%>
 	<form action = "RegistrationServlet" method = "POST">
 		<p>User: <input type = "text" name = "user"/></p>
-		<p>Password:<input type = "text" name = "password"/></p>
+		<p>Password:<input type = "password" name = "password"/></p>
 		<input type = "submit"/>
 	</form>
 </body>
 </html>
+

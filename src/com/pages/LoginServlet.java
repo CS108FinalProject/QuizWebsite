@@ -1,4 +1,6 @@
 package com.pages;
+import com.accounts.*;
+import java.security.*;
 
 import java.io.IOException;
 
@@ -37,18 +39,22 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");	
 
-		//AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
-		String accounts = (String)getServletContext().getAttribute("accounts");
-		String user = request.getParameter("user");
+		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		//if (accounts.hasAccount(user) && accounts.correctPassword(user, password)) 
-		if (accounts.equals("Kelsey")) {
-			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
-			dispatch.forward(request, response);
-		} else {
+
+		if (AccountManager.accountExists(username)) {
+			try {
+				if(AccountManager.passwordMatches(username, password)) {
+					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
+					dispatch.forward(request, response);
+				}
+			} catch (NoSuchAlgorithmException e) {			
+			}
+		}
 			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
 			dispatch.forward(request, response);
-		}
+	
 	}
 
 }

@@ -9,8 +9,8 @@
 <body>	
 	<h1>Welcome to ExQuizit, Login!</h1>
 	<form action = "LoginServlet" method = "POST">
-		<p>User: <input type = "text" name = "user"/></p>
-		<p>Password:<input type = "text" name = "password"/></p>
+		<p>User: <input type = "text" name = "username"/></p>
+		<p>Password:<input type = "password" name = "password"/></p>
 		<input type = "submit"/>
 	</form>
 	<p>New User? <a href = "registration.jsp">Register here!</a></p>

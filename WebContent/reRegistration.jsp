@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ReRegister</title>
+<title>ReRegistration</title>
 </head>
 <body>
-<h1>Sorry the username, <%= request.getParameter("user") %>, is already in use.</h1>
 <p>Please, Enter another username and password.</p>
 	<form action = "RegistrationServlet" method = "POST">
 		<p>User: <input type = "text" name = "user"/></p>
