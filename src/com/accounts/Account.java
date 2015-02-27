@@ -341,8 +341,8 @@ public class Account implements Constants {
 	 * Returns a list of messages that this user has sent.
 	 * @return
 	 */
-	public List<Message> getSentMessages() {
-		List<Message> result = new ArrayList<Message>();
+	public ArrayList<Message> getSentMessages() {
+		ArrayList<Message> result = new ArrayList<Message>();
 		List<Map<String, Object>> messages = Database.getRows(MESSAGES, SENDER, userName);
 		if (messages == null) return result;
 		
@@ -371,8 +371,8 @@ public class Account implements Constants {
 	 * Returns a list of messages that this user has received.
 	 * @return
 	 */
-	public List<Message> getReceivedMessages() {
-		List<Message> result = new ArrayList<Message>();
+	public ArrayList<Message> getReceivedMessages() {
+		ArrayList<Message> result = new ArrayList<Message>();
 		List<Map<String, Object>> messages = Database.getRows(MESSAGES, RECIPIENT, userName);
 		if (messages == null) return result;
 		
