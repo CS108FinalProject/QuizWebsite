@@ -1,0 +1,35 @@
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
+<%@ page import="com.accounts.Account, com.accounts.AccountManager, com.accounts.Message, com.util.Constants, java.util.*, java.sql.*" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Insert title here</title>
+</head>
+<body>
+	<%String name = (String)getServletContext().getAttribute("accounts");%>
+	<h1>Here are your messages, <%=name%></h1>
+	<ul>
+		<%
+			Account account = AccountManager.getAccount(name);
+			List<Message> messages = account.getReceivedMessages();
+			for (Message msg : messages) {
+				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
+					out.println("<form action=\"FriendRequestServlet\" method=\"post\">"); 
+					out.println("<li><p>" + msg.getSender() + "sent you a friend request!</p>");
+					out.println("<input type=\"submit\" value=\"Confirm\", name=\"confirmed\"> <input type=\"submit\" value=\"Decline\", name=\"declined\">");
+					out.println("</form>");
+				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {
+					// go to challenge page
+				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) {
+					out.println("<li><p>" + msg.getSender() + " says: " + msg.getContent() + "</p>");
+					// add read msg button
+				}
+				
+				
+			}
+		%>
+	</ul>	
+</body>
+</html>

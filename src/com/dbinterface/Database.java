@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.util.Constants;
 import com.util.Util;
 
 
@@ -20,12 +21,9 @@ import com.util.Util;
  * This is a program that will provide an interface
  * for interacting with a remote mySql database.
  * 
- * ***NOTE: YOU MUST INSTANTIATE A DATABASE OBJECT
- *    IN ORDER TO ESTABLISH A CONNECTION EVEN IF ONLY\
- *    STATIC METHODS ARE BEING USED***
- * @author eliezer 
+ * @author eliezer && Sam
  */
-public class Database {
+public class Database implements Constants {
 	private static Statement stmt;
 	private Connector con;
 	
@@ -109,11 +107,11 @@ public class Database {
 			throw new RuntimeException("tableName is empty");
 		}
 		
- 			// Ensure that columnTypes are valid
+ 		// Ensure that columnTypes are valid
  		String SQLQuery = "";
- 		if ( columnTypeAndNameValid( columnTypeAndName ) ) {
+ 		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
-		}
+ 		}
  		
  			// make live query to check current Tables
  		Set<String> tables = new HashSet<String>();
@@ -150,7 +148,7 @@ public class Database {
 	private static String getCreationQuery(String tableName, Map<String, String> columnTypeAndName ) {
 		if ( columnTypeAndName == null ) {
 			throw new RuntimeException("columnTypeAndName is null.");
-		} else if ( columnTypeAndName.size() == 0 ) {
+		} else if ( columnTypeAndName.isEmpty() ) {
 			throw new RuntimeException("The table needs atleast 1 column.");
 		}
 		
@@ -164,34 +162,34 @@ public class Database {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " CHAR(64)\n";
+					output += key + " " + DB_STRING + "\n";
 				} else {
-					output += key + " CHAR(64),\n";
+					output += key + " " + DB_STRING + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " DOUBLE(50, 5)\n";
+					output += key + " " + DB_DOUBLE + "\n";
 				} else {
-					output += key + " DOUBLE(50, 5),\n";
+					output += key +  " " + DB_DOUBLE + ",\n";
 				}
 			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
 					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " BIGINT\n";
+					output += key +  " " + DB_INT + "\n";
 				} else {
-					output += key + " BIGINT,\n";
+					output += key + " " + DB_INT + ",\n";
 				}
 			}  else if ( columnTypeAndName.get(key).equals( "boolean")) {
 				count++;
 				if ( count == columnTypeAndName.size() ) {
 					// no comma
-					output += key + " TINYINT(1)\n";
+					output += key + " " + DB_BOOLEAN + "\n";
 				} else {
-					output += key + " TINYINT(1),\n";
+					output += key + " " + DB_BOOLEAN + ",\n";
 				}
 			}  
 		}
@@ -204,21 +202,33 @@ public class Database {
 	/*
 	 * Checks to see if the map's keys contain valid datatypes
 	 */
-	private static boolean columnTypeAndNameValid( Map<String, String> columnTypeAndName) {
+	private static boolean columnTypeAndNameValid( String tableName, Map<String, String> columnTypeAndName) {
 		if ( columnTypeAndName == null ) {
 			throw new RuntimeException("columnTypeAndName is null.");
 		} else if ( columnTypeAndName.size() == 0 ) {
 			throw new RuntimeException("The table needs atleast 1 column.");
 		}
 
-		Set<String> s = columnTypeAndName.keySet();
-		for (String key : s) {
-			Util.validateObject(key, columnTypeAndName.get(key));
-		throw new RuntimeException( key.toString() +  " is an invalid datatype" );
-			
-		}
+	    for (String columnName : columnTypeAndName.keySet()) {
+	    	String columnType = columnTypeAndName.get(columnName);
+	        columnType = columnType.toLowerCase();
+	        
+	        Util.validateString(columnName);
+	        Util.validateString(columnType);
+	        
+        	if ( columnType.equals("string") || columnType.equals("double") ) {
+        		// okay 
+        	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
+        		// okay
+        	} else if ( columnType.equals("integer")  ) {
+        		// okay
+        	} else {
+        		throw new RuntimeException(columnType + " is an invalid data type");
+        	}
+	    }
 		return true;
 	}
+	
 	
 	//Helper
 	// get columnName and Type for given table
@@ -272,18 +282,31 @@ public class Database {
 		        String key = (String) pair.getKey();
 		        Object value = pair.getValue();
 		        String type = value.getClass().toString().substring(16).toLowerCase();
+		        
+		        // Turn boolean to integer for DB compatibility. (added by Sam)
+		        if (type.equals(BOOLEAN)) {
+		        	value = getIntFromBoolean((Boolean) value);
+		        	type = value.getClass().toString().substring(16).toLowerCase();
+		        }
+		        //--------------------------------------------------------------
+		        
+		        
 		        Map<String, String> types = getColumnNameAndType(tableName);
-		        System.out.println( types.toString() );
 		        if ( !types.containsKey(key) ) {
 		        	throw new RuntimeException("Row does not contain this column name");
 		        } else {
 		        	if ( !types.get(key).equals(type) ) {
-		        		System.out.println( types.get(key) + "\n" + type);
 		        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
 		        		+ types.get(key) + " but received: " + type);
 		        	}
  		        }
 		    }
+		    
+		    // Transform map for DB compatibility. (added by Sam)
+		    normalizeObjectMapForDB(row);
+		    //---------------------------------------------------
+		    
+		    
 		    // if we get here we know our row content is good
 		    // check if the table has not been deleted since our last processing
 		    if ( tableExists(tableName) ) {
@@ -369,8 +392,7 @@ public class Database {
 			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
-			}
-			
+			}		
 			return column;
 		}
 		return column;
@@ -438,22 +460,16 @@ public class Database {
 	}
 	
 	public static void main( String [] args ) {
-		Database db = new Database();
-//		List<Map<String, Object>> list = Database.getTable("universities");
-//		Map<String, String> m = db.getColumnNameAndType("products");
-		Map<String, Object> m1 = new HashMap<String, Object>();
-		m1.put("university","IVC" );
-		m1.put("metropolis", "Irvine");
-		//System.out.println( insertQuery("universities", m1 ));
-		Database.addRow("universities", m1);
+		new Database();
 		
-		Map<String, Object> metro = new HashMap<String, Object>();
-		metro.put("metropolis", "Irvine");
-		metro.put("continent", "North America");
-		metro.put("population", (long) 200000);
+//		Map<String, Object> row = new HashMap<String, Object>();
+//		row.put(USERNAME, "Hi");
+//		row.put(IS_ADMIN, true);
+//		row.put(FRIEND, false);
+//		addRow("TestBoolean", row);
 		
 		
-		Database.addRow("metropolises", metro);
+		
 		
 	}
 	
@@ -472,6 +488,8 @@ public class Database {
 			throw new RuntimeException("Row contains an invalid type");
 		}
 	}
+	
+	
 	/**
 	 * In the specified table, removes all the rows that match the given description.
 	 * @param tableName
@@ -488,32 +506,118 @@ public class Database {
 	 * and "Sam" under the "Friend" column and removes them. 
 	 *  
 	 */
-	// TO-DO
-	public static int removeRows(String tableName, String columnGuide1, String guideValue1, 
-			String columnGuide2, String guideValue2) {
-		return 0;
+	public static int removeRows(String tableName, String columnGuide1, Object guideValue1, 
+			String columnGuide2, Object guideValue2) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		if (guideValue1 instanceof Boolean) guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+		if (guideValue2 instanceof Boolean) guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+		
+		String query = "";
+		try {
+			query = "DELETE FROM " + tableName + " WHERE " + columnGuide1 
+					+ " = \"" + guideValue1 + "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		return rowCount - getRowCount(tableName);
 	}
 	
 	
 	/**
-	 * Same as previous but with only 1 specifier.
+	 * In the specified table, removes all the rows that match the given description.
 	 * @param tableName
-	 * @param columnGuide
-	 * @param guideValue
-	 * @return
+	 * @param columnGuide name of the column that will be used to determine the row  
+	 * @param guideValue value that columnGuide column should have in order for row to match
+	 * @return number of rows removed.
+	 * 
+	 * Example:
+	 * removeRows("Friends", "userName", "Eliezer");
+	 * 
+	 * finds all the rows in the "Friends" table that have "Eliezer" under the "userName" column,
+	 * and removes them. 
 	 */
-	// TO-DO
-	public static int removeRows(String tableName, String columnGuide, String guideValue) {
-		return 0;
+	public static int removeRows(String tableName, String columnGuide, Object guideValue) {
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		if (guideValue instanceof Boolean) guideValue = getIntFromBoolean((Boolean) guideValue);
+		
+		String query = "";
+		try {
+			query = "DELETE FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		return rowCount - getRowCount(tableName);
 	}
 	
 	
+
 	/**
-	 * Same as previous but this looks for and deleted the row that matches all parameters in the map.
-	 * @param row
+	 * In the specified table, removes all the rows that match the given description.
+	 * @param tableName
+	 * @param row Map that has all the corresponding columns and values to match  
+	 * @return number of rows removed.
 	 */
-	// TO-DO
-	public static void removeRow(Map<String, Object> row) {}
+	public static int removeRows(String tableName, Map<String, Object> row) {
+		Util.validateString(tableName);
+		
+		if (row == null) throw new NullPointerException();
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Get amount of rows before deletion.
+		int rowCount = getRowCount(tableName);
+		
+		// Interface boolean.
+		normalizeObjectMapForDB(row);
+		
+		String query = "DELETE FROM " + tableName + " WHERE ";
+		try {
+			String trail = " AND ";
+			for (String columnGuide : row.keySet()) {
+				query += columnGuide + " = \"" + row.get(columnGuide) + "\"" + trail;
+			}
+			
+			query = query.substring(0, query.length() - trail.length());
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		return rowCount - getRowCount(tableName);
+	}
 	
 	
 	/**
@@ -531,72 +635,199 @@ public class Database {
 	 */
 	// TO-DO
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		if ( !tableExists(tableName) ) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		} else if ( tableName == null ) { 
+			throw new RuntimeException(tableName + " is a NULL value.");
+		} else if ( columnName == null ) { throw new RuntimeException(columnName + " is Null");}
+		else if ( value == null ) { throw new RuntimeException(value + " is NULL"); }
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName);
+		Util.validateObject(value, type);
+		
+		Map<String, String> m = getColumnNameAndType(tableName);
+		if (!m.containsKey(columnName) ) {
+			throw new RuntimeException( columnName + " is not a valid column in " 
+					+ tableName );
+		}
+		String columnType = m.get(columnName);
+		String passedObjType =  value.getClass().toString().substring(16).toLowerCase();
+		if ( !columnType.equals(passedObjType) ) {
+			throw new RuntimeException( "Expected: " + columnType + " but received: "
+					+ passedObjType);
+		}
+		
+		// Know passed type is a valid at this point; implement sql query
+		String query = "SELECT * FROM " + tableName + " WHERE " + 
+						columnName + " = " + "\"" + value + "\"" + ";";
+		System.out.println( query);
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			Map<String, String> columnTypes = getColumnNameAndType(tableName);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int c = getColumnCount(tableName);
+				for(int i = 1; i <= c; i++) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+					list.add(map);
+				}
+			}
+			return list;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	
 	/**
-	 * Modify the passed value in the specified table location.
+	 * Modifies the passed value in the specified table location.
 	 * @param tableName 
 	 * @param columnGuide name of the column that will be used to determine the row that should be modified  
 	 * @param guideValue all the rows that have this in value in the "columnGuide column" should be modified
 	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
 	 * 			modified in these rows
 	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
-	 * 
-	 * Should throw exception on failure (type missmatch, etc...)
+	 * @return amount of values that were modified
 	 * 
 	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
 	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
 	 * to be "thisIsMyNewPassword" 
-	 * 
-	 * Should return the amount of rows that it modified.
-	 * 
 	 */
-	// TO-DO
-	public static int setValues(String tableName, String columnGuide, String guideValue,
+	public static int setValues(String tableName, String columnGuide, Object guideValue,
 			String columnToBeSet, Object columnToBeSetValue) {
-		return 0;
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateString(columnToBeSet);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Interface boolean.
+		boolean guideValueSwitch = false;
+		if (guideValue instanceof Boolean) {
+			guideValue = getIntFromBoolean((Boolean) guideValue);
+			guideValueSwitch = true;
+		}
+		
+		boolean columnToBeSetValueSwitch = false;
+		if (columnToBeSetValue instanceof Boolean) {
+			columnToBeSetValue = getIntFromBoolean((Boolean) columnToBeSetValue);
+			columnToBeSetValueSwitch = true;
+		}
+		
+		String query = "";
+		try {
+			query = "UPDATE " + tableName + " SET " + columnToBeSet + " = \"" 
+					+ columnToBeSetValue + "\" WHERE " + columnGuide + " = \"" + guideValue + "\"";
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (guideValueSwitch) {
+			guideValue = getBooleanFromInt((Integer) guideValue);
+		}
+		if (columnToBeSetValueSwitch) {
+			columnToBeSetValue = getBooleanFromInt((Integer) columnToBeSetValue);
+		}
+			
+		List<Object> values = getValues(tableName, columnGuide, guideValue, columnToBeSet, 
+				columnToBeSetValue, columnToBeSet);
+		
+		return values.size();
 	}
 	
 	
 	/**
-	 * Same as the previous but now with 2 specifiers.
-	 * @param tableName
-	 * @param columnGuide1
-	 * @param guideValue1
-	 * @param columnGuide2
-	 * @param guideValue2
-	 * @param columnToBeSet
-	 * @param columnToBeSetValue
-	 */
-	// TO-DO
-	public static int setValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2,
-			String guideValue2, String columnToBeSet, Object columnToBeSetValue) {
-		return 0;
-	}
-	
-	
-	/**
-	 * Return a list of values that match the specified location.
-	 * @param tableName
-	 * @param columnGuide name of the column that will be used to determine the row
-	 * @param guideValue all the rows that have this in value in the "columnGuide column" should be explored
-	 * @param columnToGet once the rows has been located, the columnToGet is the name of the column that should be 
-	 * 			obtained in these rows
-	 * @return the value at location
+	 * Modifies the passed value in the specified table location.
+	 * @param tableName 
+	 * @param columnGuide1 name of the first column that will be used to determine the row that should be modified  
+	 * @param guideValue1 all the rows that have this in value in the "columnGuide1 column" should be modified
+	 * @param columnGuide2 name of the second column that will be used to determine the row that should be modified  
+	 * @param guideValue2 all the rows that have this in value in the "columnGuide2 column" should be modified
+	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
+	 * 			modified in these rows
+	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
+	 * @return amount of values that were modified
 	 * 
-	 * Example: similar to previous but you are returning instead of modifying. Return null if nothing found.
-	 * 
+	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
+	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
+	 * to be "thisIsMyNewPassword" 
 	 */
-	// TO-DO
-	public static List<Object> getValues(String tableName, String columnGuide, String guideValue, String columnToGet) {
-		return null;
+	public static int setValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2,
+			Object guideValue2, String columnToBeSet, Object columnToBeSetValue) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateString(columnToBeSet);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Interface boolean.
+		boolean guideValueSwitch1 = false;
+		if (guideValue1 instanceof Boolean) {
+			guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+			guideValueSwitch1 = true;
+		}
+		
+		boolean guideValueSwitch2 = false;
+		if (guideValue2 instanceof Boolean) {
+			guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+			guideValueSwitch2 = true;
+		}
+		
+		if (columnToBeSetValue instanceof Boolean) {
+			columnToBeSetValue = getIntFromBoolean((Boolean) columnToBeSetValue);
+		}
+		
+		String query = "";
+		try {
+			query = "UPDATE " + tableName + " SET " + columnToBeSet + " = \"" 
+					+ columnToBeSetValue + "\" WHERE " + columnGuide1 + " = \"" + guideValue1 
+					+ "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
+			
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (guideValueSwitch1) {
+			guideValue1 = getBooleanFromInt((Integer) guideValue1);
+		}
+		if (guideValueSwitch2) {
+			guideValue2 = getBooleanFromInt((Integer) guideValue2);
+		}
+			
+		List<Object> values = getValues(tableName, columnGuide1, guideValue1, columnGuide2, 
+				guideValue2, columnToBeSet);
+		
+		return values.size();
 	}
 	
 	
 	/**
-	 * Same as the previous method but now it has 2 specifiers.
+	 * Returns a list of specified values from the database. (1 specifier)
 	 * 
 	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
 	 * 
@@ -604,19 +835,110 @@ public class Database {
 	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
 	 * Return the list or null if nothing was found.
 	 * 
-	 * @param tableName
-	 * @param columnGuide1
-	 * @param guideValue1
-	 * @param columnGuide2
-	 * @param guideValue2
-	 * @param columnToGet
-	 * @return
+	 * @param tableName the requested table
+	 * @param columnGuide1 the first specified column
+	 * @param guideValue1 the first specified value
+	 * @param columnGuide2 the second specified column
+	 * @param guideValue2 the second specified value
+	 * @param columnToGet the column where the returned values will be in.
+	 * @return a list of objects matching the specification.
 	 */
-	// TO-DO
-	public static List<Object> getValues(String tableName, String columnGuide1, String guideValue1, String columnGuide2, 
-			String guideValue2, String columnToGet) {
-		return null;
+	public static List<Object> getValues(String tableName, String columnGuide, Object guideValue, String columnToGet) {
+		Util.validateString(tableName);
+		Util.validateString(columnGuide);
+		Util.validateString(columnToGet);
+		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Interface boolean.
+		if (guideValue instanceof Boolean) guideValue = getIntFromBoolean((Boolean) guideValue);
+		
+		List<Object> result = new ArrayList<Object>();
+		
+		String query = "";
+		try {
+			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
+					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
+				
+				} else {
+					result.add(rs.getObject(columnToGet));
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+			
+		if (result.size() == 0) return null;
+		return result;
 	}
+	
+	
+	/**
+	 * Returns a list of specified values from the database. (2 specifiers)
+	 * 
+	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
+	 * 
+	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" and under the
+	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
+	 * Return the list or null if nothing was found.
+	 * 
+	 * @param tableName the requested table
+	 * @param columnGuide1 the first specified column
+	 * @param guideValue1 the first specified value
+	 * @param columnGuide2 the second specified column
+	 * @param guideValue2 the second specified value
+	 * @param columnToGet the column where the returned values will be in.
+	 * @return a list of objects matching the specification.
+	 */
+	public static List<Object> getValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2, 
+			Object guideValue2, String columnToGet) {
+		
+		Util.validateString(tableName);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
+		Util.validateString(columnToGet);
+		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		// Interface boolean.
+		if (guideValue1 instanceof Boolean) guideValue1 = getIntFromBoolean((Boolean) guideValue1);
+		if (guideValue2 instanceof Boolean) guideValue2 = getIntFromBoolean((Boolean) guideValue2);
+		
+		List<Object> result = new ArrayList<Object>();
+		
+		String query = "";
+		try {
+			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide1 
+					+ " = \"" + guideValue1 + "\" AND " + columnGuide2 + " = \"" + guideValue2 + "\"";
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
+					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
+				
+				} else {
+					result.add(rs.getObject(columnToGet));
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+			
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
 	
 	/**
 	 * Closes the database connection
@@ -624,5 +946,100 @@ public class Database {
 	public void close() {
 		con.close();
 	}
+	
+	
+	/*
+	 * Given a table and column name it returns the column type.
+	 * Throws a runtime exception if the table or columns do not exist.
+	 */
+	private static String getColumnType(String tableName, String columnName) {
+		if(!tableExists(tableName)) {
+			throw new RuntimeException("Table " +  tableName + " does not exist.");
+		}
+		
+		String query = "";
+		String type = "";
+		try {
+			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
+			ResultSet rs = stmt.executeQuery(query);
+			rs.next();
+			type = rs.getString(DB_TYPE);
+			
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		return getTypeFromDBType(type);
+	}
+	
+	
+	/*
+	 * Given a DBType in String form, returns a regular type in String form.
+	 * Throws an exception if the passed string is not a DB_TYPE.
+	 */
+	private static String getTypeFromDBType(String dbType) {
+		Util.validateString(dbType);
+		if (dbType.equalsIgnoreCase(DB_STRING)) return STRING;
+		if (dbType.equalsIgnoreCase(DB_BOOLEAN)) return BOOLEAN;
+		if (dbType.equalsIgnoreCase(DB_DOUBLE)) return DOUBLE;
+		if (dbType.equalsIgnoreCase(DB_INT)) return INT;
+		if (dbType.equalsIgnoreCase(DB_LONG)) return LONG;
+		throw new RuntimeException("Passed type " + dbType + " is not a valid DBType.");
+	}
+	
+	
+	// Given an integer value returns its equivalent boolean form.
+	private static boolean getBooleanFromInt(int value) {
+		return value == 1;
+	}
+	
+	
+	// Given a boolean value returns its equivalent int form.
+	private static int getIntFromBoolean(boolean value) {
+		if (value) return 1;
+		return 0;
+	}
+	
+	
+	/*
+	 * Given a map that may have boolean values in integer form, converts those values
+	 * into actual booleans so that it is compatible with the outside world. To be used
+	 * when returning a map to the outside world.
+	 */
+	private static void normalizeObjectMap(String tableName, Map<String, Object> map) {
+		Util.validateString(tableName);
+		
+		// Get the name and type of the columns in the table.
+		Map<String, String> nameAndType = getColumnNameAndType(tableName);
+		
+		for (String name : nameAndType.keySet()) {
+			if (nameAndType.get(name).equals(BOOLEAN)) {
+				
+				// If the value is flagged as boolean, make sure it's an integer and transform it.
+				Util.validateObject(map.get(name), INT);
+				boolean value = getBooleanFromInt((Integer)map.get(name));
+				map.put(name, value);
+			}
+		}
+	}
+	
+	
+	/*
+	 * Given a map that may have boolean values, it changes those values to integers so that
+	 * the map is database compatible. To be used when receiving a map from the outside.
+	 */
+	private static void normalizeObjectMapForDB(Map<String, Object> map) {
+		for (String name : map.keySet()) {
+			if (Util.getType(map.get(name)).equals(BOOLEAN)) {
 
+				// If the value is boolean, make it an integer so that it is DB compatible.
+				int value = getIntFromBoolean((Boolean)map.get(name));
+				map.put(name, value);
+			}
+		}
+	}
+	
+	
+	
 }

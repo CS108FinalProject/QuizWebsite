@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
-import com.dbinterface.DatabaseConstants;
+import com.util.Constants;
 import com.util.Util;
 
 /**
  * Provides access to main user account functionality.
  * @author Guy && Sam
  */
-public class AccountManager implements DatabaseConstants {
+public class AccountManager implements Constants {
 	
 	/**
 	 * Checks if the necessary DB tables for Account operations exist, and creates them
@@ -24,7 +24,7 @@ public class AccountManager implements DatabaseConstants {
 			Map<String, String> columns = new HashMap<String, String>();
 			columns.put(USERNAME, STRING);
 			columns.put(PASSWORD, STRING);
-			columns.put(IS_ADMIN, BOOLEAN);
+			columns.put(IS_ADMIN, BOOLEAN); 
 			Database.createTable(ACCOUNTS, columns);
 		}
 		
@@ -44,7 +44,7 @@ public class AccountManager implements DatabaseConstants {
 			columns.put(TYPE, STRING);
 			columns.put(DATE, STRING);
 			columns.put(READ, BOOLEAN);
-			Database.createTable(ACCOUNTS, columns);
+			Database.createTable(MESSAGES, columns);
 		}
 	}
 	

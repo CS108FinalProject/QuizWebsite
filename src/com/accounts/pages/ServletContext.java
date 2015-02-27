@@ -1,4 +1,4 @@
-package com.pages;
+package com.accounts.pages;
 import java.security.NoSuchAlgorithmException;
 
 import com.accounts.*;
@@ -14,14 +14,14 @@ import java.util.*;
  *
  */
 @WebListener
-public class servletContext implements ServletContextListener {
+public class ServletContext implements ServletContextListener {
 
 	
 
     /**
      * Default constructor. 
      */
-    public servletContext() {
+    public ServletContext() {
         // TODO Auto-generated constructor stub
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
-import com.dbinterface.DatabaseConstants;
+import com.util.Constants;
 import com.util.Util;
 
 /**
@@ -17,7 +17,7 @@ import com.util.Util;
  * @author Sam
  *
  */
-public class Account implements DatabaseConstants {
+public class Account implements Constants {
 	
 	private String userName;
 	
@@ -333,7 +333,7 @@ public class Account implements DatabaseConstants {
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
 		row.put(READ, message.isRead());
-		Database.removeRow(row);
+		Database.removeRows(MESSAGES, row);
 	}
 	
 	
