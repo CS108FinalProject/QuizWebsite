@@ -39,8 +39,10 @@ public class MessageServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		String msg_type = request.getParameter("message_button");
 		Message msg = (Message) request.getAttribute("message");
+
 		
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {

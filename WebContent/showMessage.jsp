@@ -15,7 +15,20 @@
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
 		<%
+
+			/*
+				Check which messages to receive based on the Select tag in the homepage.jsp
+				
+				String msg_type = request.getParameter("choice");
+				ArrayList<Message> messages = account.getReceivedMessages();
+				if (msgToDisplay.equals("Inbox")) { 
+					messages = acct.getReceivedMessages();		
+				} else {
+					messages = acct.getSentMessages();		
+				}
+			*/
 			Account account = AccountManager.getAccount(name);
+				//This type has been changed to ArrayList
 			List<Message> messages = account.getReceivedMessages();
 			for (Message msg : messages) {
 				request.setAttribute("message", msg);

@@ -44,7 +44,7 @@ public class ServletContext implements ServletContextListener {
     	ArrayList<String> admin_anmts = new ArrayList<String>();
     	admin_anmts.add("Test1");
     	admin_anmts.add("Test2");
-    	arg0.getServletContext().setAttribute("admin_anmts",admin_anmts);
+    	arg0.getServletContext().setAttribute("Received Messages",admin_anmts);
     }
 
 	/**
