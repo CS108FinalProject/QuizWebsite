@@ -9,46 +9,59 @@
 </head>
 <body>
 	<%
-		//String name = (String)getServletContext().getAttribute("accounts");
 		String name = (String)request.getParameter("id");
 	%>
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
 		<%
-
-			/*
-				Check which messages to receive based on the Select tag in the homepage.jsp
-				
-				String msg_type = request.getParameter("choice");
-				ArrayList<Message> messages = account.getReceivedMessages();
-				if (msgToDisplay.equals("Inbox")) { 
-					messages = acct.getReceivedMessages();		
-				} else {
-					messages = acct.getSentMessages();		
-				}
-			*/
-			Account account = AccountManager.getAccount(name);
-				//This type has been changed to ArrayList
-			List<Message> messages = account.getReceivedMessages();
+			// Check which messages to receive based on the Select tag in the homepage.jsp
+			//Account account = AccountManager.getAccount(name);
+			ArrayList<Message> messages;
+			String msgToDisplay = request.getParameter("choice");
+			
+			// ????????????
+			Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
+			Message msg2 = new Message("Guy3", "Guy4", "Hi Guy!", Constants.MESSAGE_NOTE, "date", false);
+			messages = new ArrayList<Message>();
+			messages.add(0, msg1);
+			messages.add(1, msg2);
+			
+			/* if (msgToDisplay.equals("Received Messages")) { 
+				messages = account.getReceivedMessages();		
+			} else {
+				messages = account.getSentMessages();		
+			} */
+			
+			// Print messages
 			for (Message msg : messages) {
-				request.setAttribute("message", msg);
+				//request.setAttribute("message", msg);
+				//String sender = (String) request.getAttribute("sender");
 				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
 					if (!msg.isRead()) {
 						out.println("<form action=\"MessageServlet\" method=\"post\">"); 
-						out.println("<li><p>" + msg.getSender() + "sent you a friend request!</p>");
+						out.print("<li><p>" + msg.getSender() + " sent you a friend request!</p>");
 						out.println("<input type=\"submit\" value=\"Confirm\", name=\"message_button\"> <input type=\"submit\" value=\"Decline\", name=\"message_button\">");
-						//out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
 						out.println("</form>");
-						account.readMessage(msg);
+						
+						if (request.getAttribute("isAdded") != null) {
+							if (((String)request.getAttribute("isAdded")).equals("added")) {
+								out.println("<p> Friend Added! </p>");
+							} else if (((String)request.getAttribute("isAdded")).equals("already_friends")) {
+								out.println("<p> Already Friends! </p>");
+							} 
+						}
+						//account.readMessage(msg); // uncomment!
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {
 					// go to challenge page
 				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) {
 					out.println("<form action=\"MessageServlet\" method=\"post\">");
-					out.println("<li><p>" + msg.getSender() + " sent you a message!</p>");
-					out.println("<input type=\"submit\" value=\"ReadMessage\", name=\"message_button\">");
-					//out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
-					//out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+					out.print("<li><p>" + msg.getSender() + " sent you a message!</p>");
+					out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
+					out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
+					out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
 					out.println("</form>");
 				}	
 			} 

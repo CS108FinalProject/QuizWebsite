@@ -22,6 +22,9 @@
 			<tr>
 				<th>Announcements</th>
 				<th>My Achievements</th>
+
+				<th> <a href="searchFriends.jsp?name=<%=name%>"> Find Friends</a> </th>
+
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
@@ -31,7 +34,6 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>

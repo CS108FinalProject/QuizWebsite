@@ -432,8 +432,9 @@ public class Database implements Constants {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Problem with query: " + query);
+
+			throw new RuntimeException("Problem with query" + query);
+
 		}
 		return tables.contains( tableName );
 	}
@@ -897,9 +898,11 @@ public class Database implements Constants {
 			while (rs.next()) {
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
-				
+					System.out.println(rs.isClosed() + "3");
 				} else {
+					System.out.println(rs.isClosed() + "4");
 					result.add(rs.getObject(columnToGet));
+					
 				}
 			}
 			

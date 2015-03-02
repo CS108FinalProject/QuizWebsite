@@ -41,29 +41,35 @@ public class MessageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String msg_type = request.getParameter("message_button");
-		Message msg = (Message) request.getAttribute("message");
 
-		
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {
-			Account receiver_account = AccountManager.getAccount(msg.getRecipient());
-			Account sender_account = AccountManager.getAccount(msg.getSender());
-			receiver_account.addFriend(sender_account);
+			
+			Account receiver_account = AccountManager.getAccount(request.getParameter("recipient"));
+			Account sender_account = AccountManager.getAccount(request.getParameter("sender"));
+			try {
+				receiver_account.addFriend(sender_account);
+				request.setAttribute("isAdded", "added");
+			} catch (RuntimeException e) {
+				request.setAttribute("isAdded", "already_friends");
+			}
+			//request.setAttribute("sender", request.getParameter("sender"));
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 			
 		// case of friend request decline
 		} else if (msg_type.equals("Decline")) {
 			// do nothing
+			request.setAttribute("isAdded", "declined");
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 		
 		// case of read note 
-		} else if (msg_type.equals("ReadMessage")) {
+		} else if (msg_type.equals("Read Message")) {
 			// forward to show note page
+			request.setAttribute("sender", request.getParameter("sender"));
+			request.setAttribute("message_content", request.getParameter("message_content"));
 			RequestDispatcher dispatch = request.getRequestDispatcher("showNote.jsp");
-			//request.setAttribute("message_content", request.getParameter("message_content"));
-			//request.setAttribute("sender", "<p>" + request.getParameter("sender") + "</p>");
 			dispatch.forward(request, response);
 		}
 	}

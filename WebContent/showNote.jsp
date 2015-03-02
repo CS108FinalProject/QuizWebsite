@@ -10,11 +10,14 @@
 <body>
 
 <%
-	Message msg = (Message) request.getAttribute("message");
+	//Message msg = (Message) request.getAttribute("message");
+	//System.out.println("hi");
+	String content = (String) request.getAttribute("message_content");
+	String sender = (String) request.getAttribute("sender");
 %>
-<h2> Message from <%=msg.getSender()%></h2>
+<h2> Message from <%=sender%></h2>
 <br> <br>
-<p> <%=msg.getContent()%> </p>
+<p> <%=content%> </p>
 
 
 

@@ -11,7 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="homepage.css" ></link>
-<%String name = (String)request.getParameter("id");
+<%String name = (String)getServletContext().getAttribute("session_user");
 //Account acct = AccountManager.getAccount(name);
 %>
 <title>Welcome <%=name%></title>
@@ -20,7 +20,15 @@
 <body>
 	<table id="header">
 			<tr>
-				<th>Announcements</th>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">My Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">My Homepage</a></th>");
+				}
+				*/
+					%>
+				<th><a href = <%="\"adminHomepage.jsp\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
@@ -35,7 +43,7 @@
 				<th>Quizzes</th>
 			</tr>
 	</table>
-	<h2>Nice to see you,<%=name %></h2>
+	<h2>Nice to see you, <%=name %></h2>
 	
 	<table id = "admin_content">
 		<tr>
@@ -80,7 +88,7 @@
 			<%
 			ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
 			%>
-			<td><div id="announcements">Announcements
+			<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
 					int anmts_len = admin_anmts.size();
@@ -99,6 +107,7 @@
 					<select name = "choice">
 						<option>Received Messages</option>
 						<option>Sent Messages</option>
+						<option>Send a Message</option>
 					</select>
 					<input type = "submit">
 				</form>
@@ -106,7 +115,7 @@
 					<%
 						String sel_name = (String)request.getParameter("choice");
 					try {
-						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute("");
+						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_name);
 						out.println("<table>");			
 						int list_len = messages.size();
 						for (int i = 0;i < list_len;i++) {

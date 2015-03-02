@@ -41,12 +41,20 @@ public class ServletContext implements ServletContextListener {
 		}
     	*/
     	//Want the admin accounts , so that I can call admin.getMessages()
-    	ArrayList<String> admin_anmts = new ArrayList<String>();
-    	admin_anmts.add("Test1");
-    	admin_anmts.add("Test2");
-    	arg0.getServletContext().setAttribute("Received Messages",admin_anmts);
+    	ArrayList<String> messages = new ArrayList<String>();
+    	messages.add("Test1");
+    	messages.add("Test2");
+    	arg0.getServletContext().setAttribute("Received Messages",messages);
     	ArrayList<String> announcements = new ArrayList<String>();
+    	announcements.add("I love the Coco");
+    	announcements.add("Heath is beautiful");
+    	announcements.add("Bands will make her dance");
+    	announcements.add("I ain't got no type");
+    	announcements.add("A milli, A milli, A milli");
+    	announcements.add("If it ain't broke don't fix it");
     	arg0.getServletContext().setAttribute("announcements",announcements);
+    	String session_user = "Kelsey";
+    	arg0.getServletContext().setAttribute("session_user", session_user);
 
     }
 
