@@ -1,7 +1,4 @@
 package com.accounts.pages;
-import com.accounts.*;
-import java.security.*;
-
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -11,18 +8,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.*;
+
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class adminServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/adminServlet")
+public class adminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public adminServlet() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -36,26 +36,16 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");	
-
-		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-
-		if (AccountManager.accountExists(username)) {
-			System.out.println(username);
-
-			try {
-				if(AccountManager.passwordMatches(username, password)) {
-					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
-					dispatch.forward(request, response);
-				}
-			} catch (NoSuchAlgorithmException e) {			
-			}
-		}
-			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
+		String new_ancmnt =  (String)request.getParameter("new_ancmnt");
+		String user_id = (String)request.getParameter("id");
+		//Check validity
+		System.out.println(user_id);
+		ArrayList<String> announcements = (ArrayList<String>)getServletContext().getAttribute("announcements");
+		if (new_ancmnt != null) {
+			announcements.add(new_ancmnt);
+			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+user_id);
 			dispatch.forward(request, response);
-	
+		}
 	}
 
 }

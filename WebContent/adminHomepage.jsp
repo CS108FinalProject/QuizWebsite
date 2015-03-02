@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="css//main.css" ></link>
+<link rel="stylesheet" href="homepage.css" ></link>
 <%String name = (String)request.getParameter("id");
 //Account acct = AccountManager.getAccount(name);
 %>
@@ -22,9 +22,6 @@
 			<tr>
 				<th>Announcements</th>
 				<th>My Achievements</th>
-
-				<th> <a href="searchFriends.jsp?name=<%=name%>"> Find Friends</a> </th>
-
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
@@ -34,15 +31,54 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
 	<h2>Nice to see you,<%=name %></h2>
+	
+	<table id = "admin_content">
+		<tr>
+			<td>
+				<div id = "addAnnouncement">
+					Add an Announcement<br></br>
+					<form action = "adminServlet/?id=<%=name%>">
+						<textarea rows = "4" cols = "50" name = "new_ancmnt"></textarea>
+						<input type = "submit"></input>
+					</form>
+				</div>
+				<div id = "siteStats">
+					Site Statistics<br></br>	
+				</div>	
+			</td>
+		</tr>
+		<tr>
+			<td>
+					<div id = "removeAcct">
+						Remove Account<br></br>
+						<form action = "adminServlet/?id=<%=name%>">
+							Account id: <input type = "text" name = "remove_acct" value = <% 
+							String removed_id = request.getParameter("remove_success");
+							if (removed_id != null ) {
+								out.println("\"Account "+removed_id+" removed.\"");
+							} else {
+								out.println("\"No Account Removed\"");
+							}
+							%>></input>
+							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>							
+							<input type = "submit"></input>
+						</form>
+					</div>									
+			</td>
+		</tr>
+	</table>
+	
+	
 	<table id = "content">
 		<tr>
 			<%//Displays any admin announcements as a list%>
 			<%
-			ArrayList<String> admin_anmts = (ArrayList<String>)request.getAttribute("admin_anmts");
+			ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
 			%>
 			<td><div id="announcements">Announcements
 				<%if (admin_anmts != null) { 
@@ -59,7 +95,7 @@
 				%>	
 			</div></td>
 			<td>
-				<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+				<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
 					<select name = "choice">
 						<option>Received Messages</option>
 						<option>Sent Messages</option>
@@ -93,18 +129,18 @@
 					}
 						/*
 						ArrayList<Message> messages = acct.getReceivedMessages();	
-						int messageSz = messages.size();
-;
-						if (messageSz > 0) {
+		
+
+						if (messages.size() > 0) {
 							out.println("<table>");
 							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
-							for ( int i = messageSz-1; i > -1;i-- ) {
+							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
 								out.println("<td>"+msg.getSender()+"</td>");
 								out.println("<td>"+msg.getDate()+"</td>");
 								out.println("<td>"+msg.getType()+"</td>");
-								if (i == messageSz -5) i = -1;
+								if (i == 4) i = messages.size();
 							}
 							out.println("</table>");
 						}

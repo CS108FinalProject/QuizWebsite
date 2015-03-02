@@ -83,6 +83,11 @@ public class Connector {
 			e.printStackTrace();
 		}
 	}
+
+	public Connection getConnection() {
+		// TODO Auto-generated method stub
+		return con;
+	}
 	
 	
 }
