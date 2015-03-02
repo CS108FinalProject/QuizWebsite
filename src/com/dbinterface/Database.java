@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.sql.Connection;
 import com.util.Constants;
 import com.util.Util;
 
@@ -25,7 +26,7 @@ import com.util.Util;
  */
 public class Database implements Constants {
 	private static Statement stmt;
-	private Connector con;
+	private static Connector con;
 	
 	/**
 	 * Establishes a connection with 
@@ -113,7 +114,7 @@ public class Database implements Constants {
  			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
  		}
  		
- 			// make live query to check current Tables
+ 		// make live query to check current Tables
  		Set<String> tables = new HashSet<String>();
  		
  		try {
@@ -238,16 +239,22 @@ public class Database implements Constants {
 			String count = "SELECT * FROM " + tableName + ";";
 			ResultSet rs;
 			try {
-				rs = stmt.executeQuery(count);
+				Connection cnn = con.getConnection();
+				Statement stmt2 = cnn.createStatement();
+				stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
+				rs = stmt2.executeQuery(count);
 				ResultSetMetaData rsmd = rs.getMetaData();
 				for(int i = 1; i <= rsmd.getColumnCount(); i++) {
 					String columnName = rsmd.getColumnName(i);
 					String type = rsmd.getColumnClassName(i).substring(10).toLowerCase();
 					map.put(columnName, type);
 				}
+				stmt2.close();
 			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+			} finally {
+				
 			}
 		}
 		return map;
@@ -276,20 +283,17 @@ public class Database implements Constants {
 			if ( row.size() != columnCount ) {
 				throw new RuntimeException("Wrong number of entries in row");
 			}
-			Iterator it = row.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry pair = (Map.Entry)it.next();
-		        String key = (String) pair.getKey();
-		        Object value = pair.getValue();
-		        String type = value.getClass().toString().substring(16).toLowerCase();
-		        
-		        // Turn boolean to integer for DB compatibility. (added by Sam)
+			
+			for(String key : row.keySet()) {
+				Object value = row.get(key);
+				String type = value.getClass().toString().substring(16).toLowerCase();
+				
+				// Turn boolean to integer for DB compatibility. (added by Sam)
 		        if (type.equals(BOOLEAN)) {
 		        	value = getIntFromBoolean((Boolean) value);
 		        	type = value.getClass().toString().substring(16).toLowerCase();
 		        }
 		        //--------------------------------------------------------------
-		        
 		        
 		        Map<String, String> types = getColumnNameAndType(tableName);
 		        if ( !types.containsKey(key) ) {
@@ -300,7 +304,8 @@ public class Database implements Constants {
 		        		+ types.get(key) + " but received: " + type);
 		        	}
  		        }
-		    }
+		        
+			}
 		    
 		    // Transform map for DB compatibility. (added by Sam)
 		    normalizeObjectMapForDB(row);
@@ -407,14 +412,17 @@ public class Database implements Constants {
 		Set<String> tables = new HashSet<String>();
 		String query = String.format("SHOW TABLES;");
 		try {
-			ResultSet rs = stmt.executeQuery(query);
+			Connection cnn = con.getConnection();
+			Statement stmt2 = cnn.createStatement();
+			stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
+			ResultSet rs = stmt2.executeQuery(query);
 			rs.beforeFirst();
 			
 			while ( rs.next() ) {
 				tables.add( rs.getString("Tables_in_" + MyDBInfo.MYSQL_DATABASE_NAME));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Problem with query" + query);
 		}
 		return tables.contains( tableName );
 	}
@@ -435,21 +443,30 @@ public class Database implements Constants {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			if ( c == 0 ) { return list; } // empty list
 			else {
-				ResultSet rs2 = stmt.executeQuery(query);
-				ResultSetMetaData rsmd = rs2.getMetaData();
+				ResultSet rs = stmt.executeQuery(query);
+				ResultSetMetaData rsmd = rs.getMetaData();
 				int columnCount = rsmd.getColumnCount();
-				rs2.beforeFirst();
-				while ( rs2.next() ) {
+				rs.beforeFirst();
+				while ( rs.next() ) {
 					Map<String, Object> entry = entry = new HashMap<String, Object>();
+					System.out.println( rs.isClosed() );
+					normalizeObjectMap(tableName, entry);
+					System.out.println( rs.isClosed() );
 					for(int i = 1; i <= columnCount; i++) {
 						String className = rsmd.getColumnClassName(i);
 						String columnName = rsmd.getColumnName(i);
-						String value = rs2.getString(columnName);
+						String value = rs.getString(columnName);
 						Object valObj = getObject(className, value);
 						entry.put(columnName, valObj);
 					}
+					// fixes boolean values
 					list.add( entry );
 				}
+				
+				// fix boolean values
+//				for(int i = 0; i < list.size(); i++) {
+//					normalizeObjectMap(tableName, list.get(i));
+//				}
 				return list;
 			}
 		} catch (SQLException e) {
@@ -463,10 +480,30 @@ public class Database implements Constants {
 		new Database();
 		
 //		Map<String, Object> row = new HashMap<String, Object>();
-//		row.put(USERNAME, "Hi");
+//		row.put(USERNAME, "Eliezer");
 //		row.put(IS_ADMIN, true);
 //		row.put(FRIEND, false);
 //		addRow("TestBoolean", row);
+		
+//		// another row
+//		Map<String, String> stuff = new HashMap<String, String>();
+//		stuff.put("isHappy", BOOLEAN);
+//		stuff.put("person", STRING);
+//		Database.createTable("happiness", stuff);
+		
+		// test now
+		List<Map<String, Object>> map = Database.getTable("TestBoolean");
+		
+		System.out.println( map.toString() );
+		for(int i = 0; i < map.size(); i++) {
+			for(String key : map.get(i).keySet() ) {
+				System.out.println("Key: " + key);
+				System.out.println("Value " + map.get(i).toString() );
+			}
+		}
+		
+		
+		
 		
 		
 		
@@ -636,6 +673,7 @@ public class Database implements Constants {
 	// TO-DO
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
 		
 		if ( !tableExists(tableName) ) { 
 			throw new RuntimeException(tableName + " does not exist in the database.");
@@ -863,6 +901,7 @@ public class Database implements Constants {
 			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
+				System.out.println( rs.isClosed() );
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
 				
@@ -960,8 +999,11 @@ public class Database implements Constants {
 		String query = "";
 		String type = "";
 		try {
+			Connection cnn = con.getConnection();
+			Statement stmt2 = cnn.createStatement();
+			stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
 			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt2.executeQuery(query);
 			rs.next();
 			type = rs.getString(DB_TYPE);
 			
@@ -1004,8 +1046,8 @@ public class Database implements Constants {
 	
 	/*
 	 * Given a map that may have boolean values in integer form, converts those values
-	 * into actual booleans so that it is compatible with the outside world. To be used
-	 * when returning a map to the outside world.
+	 * into actual booleans so that it is compatible with the client. To be used
+	 * when returning a map to the client.
 	 */
 	private static void normalizeObjectMap(String tableName, Map<String, Object> map) {
 		Util.validateString(tableName);
