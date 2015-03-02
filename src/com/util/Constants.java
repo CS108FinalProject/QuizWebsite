@@ -45,14 +45,15 @@ public interface Constants {
 	
 	// Database datatypes
 	public static final String DB_STRING = "CHAR(64)";
-	public static final String DB_INT = "BIGINT(64)";
+	public static final String DB_INT = "INT(4)";
 	public static final String DB_BOOLEAN = "TINYINT";
 	public static final String DB_DOUBLE = "DOUBLE";
-	public static final String DB_LONG = "BIGINT(64)";
+	public static final String DB_LONG = "BIGINT(8)";
 	
 	// Database 'Raw' types
 	public static final String DB_RAW_STRING = "char(64)";
 	public static final String DB_RAW_DOUBLE = "double";
-	public static final String DB_RAW_INT = "bigint(64)";
+	public static final String DB_RAW_INT = "int(4)";
+	public static final String DB_RAW_LONG = "bigint(8)";
 	public static final String DB_RAW_BOOLEAN = "tinyint(4)";
 }

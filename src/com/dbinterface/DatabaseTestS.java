@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,7 +48,7 @@ public class DatabaseTestS implements Constants {
 		row.put(IS_CODING, true);
 		row.put(NUMBERS, 2);
 		row.put(PRICE, 26.78);
-		row.put(HIGH_NUMBER, 123456789);
+		row.put(HIGH_NUMBER, 123456789l);
 		Database.addRow(TEST_TABLE, row);
 	}
 
@@ -68,27 +67,73 @@ public class DatabaseTestS implements Constants {
 		assertEquals(true, row.get(IS_CODING));
 		assertEquals(2, row.get(NUMBERS));
 		assertEquals(26.78, row.get(PRICE));
-		assertEquals(123456789, row.get(HIGH_NUMBER));
+		assertEquals(123456789l, row.get(HIGH_NUMBER));
 	}
 
 	@Test
 	public void testRemoveRowsStringStringObjectStringObject() {
-		fail("Not yet implemented");
+		int removed = Database.removeRows(TEST_TABLE, NAME, "sam", IS_CODING, true);
+		assertEquals(1, removed);
+		
+		List<Map<String, Object>> table = Database.getTable(TEST_TABLE);
+		assertEquals(0, table.size());
 	}
 
 	@Test
 	public void testRemoveRowsStringStringObject() {
-		fail("Not yet implemented");
+		int removed = Database.removeRows(TEST_TABLE, HIGH_NUMBER, 123456789l);
+		assertEquals(1, removed);
+		
+		List<Map<String, Object>> table = Database.getTable(TEST_TABLE);
+		assertEquals(0, table.size());
 	}
 
 	@Test
 	public void testRemoveRowsStringMapOfStringObject() {
-		fail("Not yet implemented");
+		Map<String, Object> row = new HashMap<String, Object>();
+		row.put(NAME, "sam");
+		row.put(IS_CODING, true);
+		row.put(NUMBERS, 2);
+		row.put(PRICE, 26.78);
+		row.put(HIGH_NUMBER, 123456789l);
+		int removed = Database.removeRows(TEST_TABLE, row);
+		assertEquals(1, removed);
+		
+		List<Map<String, Object>> table = Database.getTable(TEST_TABLE);
+		assertEquals(0, table.size());
 	}
 
 	@Test
 	public void testGetRows() {
-		fail("Not yet implemented");
+		Map<String, Object> row = new HashMap<String, Object>();
+		row.put(NAME, "sam");
+		row.put(IS_CODING, true);
+		row.put(NUMBERS, 2);
+		row.put(PRICE, 26.78);
+		row.put(HIGH_NUMBER, 123456789l);
+		
+		List<Map<String, Object>> rows = Database.getRows(TEST_TABLE, NAME, "john");
+		assertNull(rows);
+		
+		rows = Database.getRows(TEST_TABLE, NAME, "sam");
+		assertEquals(1, rows.size());
+		assertEquals(row, rows.get(0));
+		
+		rows = Database.getRows(TEST_TABLE, IS_CODING, true);
+		assertEquals(1, rows.size());
+		assertEquals(row, rows.get(0));
+		
+		rows = Database.getRows(TEST_TABLE, NUMBERS, 2);
+		assertEquals(1, rows.size());
+		assertEquals(row, rows.get(0));
+		
+		rows = Database.getRows(TEST_TABLE, PRICE, 26.78);
+		assertEquals(1, rows.size());
+		assertEquals(row, rows.get(0));
+		
+		rows = Database.getRows(TEST_TABLE, HIGH_NUMBER, 123456789l);
+		assertEquals(1, rows.size());
+		assertEquals(row, rows.get(0));
 	}
 
 	@Test
@@ -110,5 +155,4 @@ public class DatabaseTestS implements Constants {
 	public void testGetValuesStringStringObjectStringObjectString() {
 		fail("Not yet implemented");
 	}
-
 }

@@ -117,16 +117,15 @@ public class Database implements Constants {
 		}
 		
  		// Ensure that columnTypes are valid
- 		String SQLQuery = "";
  		validateColumnTypeAndName(tableName, columnTypeAndName);
  		
  		//*****************TABLE CREATION******************//
- 		SQLQuery = getCreationQuery(tableName, columnTypeAndName);
+ 		String query = getCreationQuery(tableName, columnTypeAndName);
  		try {
-			stmt.executeUpdate(SQLQuery);
+			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Problem executing query: " + SQLQuery);
+			throw new RuntimeException("Problem executing query: " + query);
 		}
 	}
 	
@@ -135,55 +134,28 @@ public class Database implements Constants {
 	 * Gets the corresponding table creation query
 	 */
 	private static String getCreationQuery(String tableName, Map<String, String> columnTypeAndName ) {
-		if ( columnTypeAndName == null ) {
-			throw new RuntimeException("columnTypeAndName is null.");
-		} else if ( columnTypeAndName.isEmpty() ) {
+		if (columnTypeAndName == null) {
+			throw new RuntimeException("Map is null.");
+		} else if (columnTypeAndName.isEmpty()) {
 			throw new RuntimeException("The table needs atleast 1 column.");
 		}
-		
 		
 		String output = "CREATE TABLE " + tableName + " (\n";
 		
 		// know we have atleast one column
 		int count = 0;
-		for (String key : columnTypeAndName.keySet()) {
-			if ( columnTypeAndName.get(key).equalsIgnoreCase( "string") ) {
-				count++;
-				if ( count == columnTypeAndName.size() ) {
-					// no comma
-					output += key + " " + DB_STRING + "\n";
-				} else {
-					output += key + " " + DB_STRING + ",\n";
-				}
-			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "double") ) {
-				count++;
-				if ( count == columnTypeAndName.size() ) {
-					// no comma
-					output += key + " " + DB_DOUBLE + "\n";
-				} else {
-					output += key +  " " + DB_DOUBLE + ",\n";
-				}
-			} else if ( columnTypeAndName.get(key).equalsIgnoreCase( "long") ||
-					columnTypeAndName.get(key).equalsIgnoreCase( "integer")) {
-				count++;
-				if ( count == columnTypeAndName.size() ) {
-					// no comma
-					output += key +  " " + DB_INT + "\n";
-				} else {
-					output += key + " " + DB_INT + ",\n";
-				}
-			}  else if ( columnTypeAndName.get(key).equals( "boolean")) {
-				count++;
-				if ( count == columnTypeAndName.size() ) {
-					// no comma
-					output += key + " " + DB_BOOLEAN + "\n";
-				} else {
-					output += key + " " + DB_BOOLEAN + ",\n";
-				}
-			}  
+		for (String columnName : columnTypeAndName.keySet()) {
+			String type = columnTypeAndName.get(columnName);
+			
+			count++;
+			if (count == columnTypeAndName.size()) {
+				// no comma
+				output += columnName + " " + getDBTypeFromType(type) + "\n";
+			} else {
+				output += columnName + " " + getDBTypeFromType(type) + ",\n";
+			}
 		}
 		output += ");";
-		
 		return output;
 	}
 	
@@ -218,37 +190,26 @@ public class Database implements Constants {
 	// get columnName and Type for given table
 	private static Map<String, String> getColumnNameAndType(String tableName) {
 		Map<String, String> map = new HashMap<String, String>();
-		if ( tableExists( tableName ) ) {
-			String query = "SELECT * FROM " + tableName;
-			ResultSet rs;
-			try {
-				Connection cnn = con.getConnection();
-				Statement stmt2 = cnn.createStatement();
-				stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
-				rs = stmt2.executeQuery(query);
-				ResultSetMetaData rsmd = rs.getMetaData();
-				for(int i = 1; i <= rsmd.getColumnCount(); i++) {
-					String columnName = rsmd.getColumnName(i);
-					String type = rsmd.getColumnTypeName(i);
-//					if ( type == DB_STRING.substring(0, 4) ) {
-//						type = "string";
-//					} else if ( type == DB_BOOLEAN ) {
-//						type = "boolean";
-//					} else if ( type == DB_DOUBLE ) {
-//						type = "double";
-//					}
-					map.put(columnName, type);
-				}
-				stmt2.close();
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} finally {
-				
+		if (!tableExists( tableName ) ) {
+			throw new RuntimeException("Table " + tableName + " does not exist.");
+		}
+			
+		String query = "SELECT * FROM " + tableName;
+		try {
+			Statement statement = getNewStatement();
+			ResultSet rs = statement.executeQuery(query);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			for(int i = 1; i <= rsmd.getColumnCount(); i++) {
+				String columnName = rsmd.getColumnName(i);
+				String type = rsmd.getColumnTypeName(i);
+				map.put(columnName, type);
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
 		}
 		return map;
-		
 	}
 	
 	
@@ -276,32 +237,9 @@ public class Database implements Constants {
 			throw new RuntimeException("Wrong number of entries in row");
 		}
 		
+		// Validate each field.
 		for(String columnName : row.keySet()) {
 			Object value = row.get(columnName);
-			
-//			String type = value.getClass().toString().substring(16).toLowerCase();
-//			if ( type.equals(STRING) ) {
-//        		type = DB_STRING.substring(0, 4);
-//        	} else if ( type.equals(LONG) || type.equals(INT) ) {
-//        		type = DB_INT;
-//        	} else if ( type.equals(DOUBLE) ) {
-//        		type = DB_DOUBLE;
-//        	} else if ( type.equals(BOOLEAN) ) {
-//	        	type = DB_BOOLEAN;
-//        	}
-//			
-//	        Map<String, String> types = getColumnNameAndType(tableName);
-//	        if ( !types.containsKey(columnName) ) {
-//	        	throw new RuntimeException("Row does not contain this column name");
-//	        } else {
-//	        	if ( !types.get(columnName).equals(type) ) {
-//	        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
-//	        		+ types.get(columnName) + " but received: " + type);
-//	        	}
-//	        }
-			
-			// TODO: Eliezer, I believe all the above commented out code can be refactored into these
-			// 2 lines. Please correct me if I'm wrong.
 			String type = getColumnType(tableName, columnName);
 			Util.validateObject(value, type);
 		}
@@ -310,7 +248,6 @@ public class Database implements Constants {
 	    normalizeObjectMapForDB(row);
 	    
 	    // if we get here we know our row content is good
-	    // check if the table has not been deleted since our last processing
     	String query = insertQuery(tableName, row);
 	    try {
 			stmt.executeUpdate(query);
@@ -319,6 +256,7 @@ public class Database implements Constants {
 			throw new RuntimeException("Problem executing query: " + query);
 		}
 	}
+
 	
 	// Private helper
 	// insert query
@@ -341,8 +279,8 @@ public class Database implements Constants {
 		return output;
 	}
 	
-	// Helper | format's the 
-	// values query
+	
+	// Helper | formats the values query
 	private static String formatValues(Collection<Object> values, String output) {
 		for (Object val : values) {
 			String type = val.getClass().toString().substring(16).toLowerCase();
@@ -357,11 +295,11 @@ public class Database implements Constants {
 		return output;
 	}
 	
-	// Private method that gets
-	// row count of table
+	
+	// Private method that gets row count of table
 	private static int getRowCount(String tableName) {
 		int row = 0;
-		if ( tableExists( tableName ) ) {
+		if (tableExists(tableName)) {
 			String count = "SELECT COUNT(*) FROM " + tableName + ";";
 			ResultSet rs;
 			try {
@@ -372,30 +310,33 @@ public class Database implements Constants {
 				System.out.println( "Unable to count rows in table");
 				e.printStackTrace();
 			}
-			return row;
 		}
 		return row;
 	}
 	
-	// Private method that obtains
-	// the number of columns in a table
+	
+	// Private method that obtains the number of columns in a table
 	private static int getColumnCount(String tableName) {
 		int column = 0;
-		if ( tableExists( tableName ) ) {
-			String count = "SELECT * FROM " + tableName + ";";
-			ResultSet rs;
-			try {
-				rs = stmt.executeQuery(count);
-				ResultSetMetaData rsmd = rs.getMetaData();
-				column = rsmd.getColumnCount();
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}		
-			return column;
+		if (!tableExists(tableName)) {
+			throw new RuntimeException("Table " + tableName + " does not exist.");
 		}
+		
+		String query = "SELECT * FROM " + tableName + ";";
+		try {
+			Statement statement = getNewStatement();
+			ResultSet rs = statement.executeQuery(query);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			column = rsmd.getColumnCount();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}		
+		
 		return column;
 	}
+	
 	
 	/**
 	 * Self explanatory.
@@ -406,22 +347,18 @@ public class Database implements Constants {
 		Set<String> tables = new HashSet<String>();
 		String query = String.format("SHOW TABLES;");
 		try {
-			Connection cnn = con.getConnection();
-			Statement stmt2 = cnn.createStatement();
-			stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
-			ResultSet rs = stmt2.executeQuery(query);
-			rs.beforeFirst();
+			Statement statement = getNewStatement();
+			ResultSet rs = statement.executeQuery(query);
 			
-			while ( rs.next() ) {
+			while (rs.next()) {
 				tables.add( rs.getString("Tables_in_" + MyDBInfo.MYSQL_DATABASE_NAME));
 			}
 			rs.close();
 		} catch (SQLException e) {
-
+			e.printStackTrace();
 			throw new RuntimeException("Problem with query" + query);
-
 		}
-		return tables.contains( tableName );
+		return tables.contains(tableName);
 	}
 	
 	
@@ -469,6 +406,7 @@ public class Database implements Constants {
 	public static void main( String [] args ) {
 		new Database();
 	}
+	
 	
 	//Helper
 	private static Object getObject(String className, String value) {
@@ -631,7 +569,6 @@ public class Database implements Constants {
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
-		
 		Util.validateString(tableName);
 		Util.validateString(columnName);
 		
@@ -643,43 +580,38 @@ public class Database implements Constants {
 		String type = getColumnType(tableName, columnName);
 		Util.validateObject(value, type);
 		
-		Map<String, String> m = getColumnNameAndType(tableName);
-		if (!m.containsKey(columnName) ) {
-			throw new RuntimeException( columnName + " is not a valid column in " 
-					+ tableName );
-		}
-		
-		String columnType = m.get(columnName);
-		String passedObjType =  value.getClass().toString().substring(16).toLowerCase();
-		if ( !columnType.equals(passedObjType) ) {
-			throw new RuntimeException( "Expected: " + columnType + " but received: "
-					+ passedObjType);
-		}
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
 		
 		// Know passed type is a valid at this point; implement sql query
 		String query = "SELECT * FROM " + tableName + " WHERE " + 
-						columnName + " = " + "\"" + value + "\"" + ";";
+						columnName + " = " + "\"" + value + "\"";
 		
 		try {
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next() ) {
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
 				
 				for(int i = 1; i <= numColumns; i++) {
-					Map<String, Object> map = new HashMap<String, Object>();
+					
 					Object obj = rs.getObject(i);
 					String column = rsmd.getColumnName(i);
 					map.put(column, obj);
-					list.add(map);
 				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
 			}
-			return list;
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
 		}
-		return null;
+		
+		if (list.size() == 0) return null;
+		return list;
 	}
 
 	
@@ -954,14 +886,11 @@ public class Database implements Constants {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
 		}
 		
-		String query = "";
+		String query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";;
 		String type = "";
 		try {
-			Connection cnn = con.getConnection();
-			Statement stmt2 = cnn.createStatement();
-			stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
-			query = "SHOW COLUMNS FROM " + tableName + " WHERE Field = \"" + columnName + "\"";
-			ResultSet rs = stmt2.executeQuery(query);
+			Statement statement = getNewStatement();
+			ResultSet rs = statement.executeQuery(query);
 			rs.next();
 			type = rs.getString(DB_TYPE);
 			rs.close();
@@ -981,12 +910,27 @@ public class Database implements Constants {
 	 */
 	private static String getTypeFromDBType(String dbType) {
 		Util.validateString(dbType);
-		if (dbType.equalsIgnoreCase("char(64)")) return STRING;
-		if (dbType.equalsIgnoreCase("tinyint(4)")) return BOOLEAN;
+		if (dbType.equalsIgnoreCase(DB_STRING)) return STRING;
+		if (dbType.equalsIgnoreCase(DB_RAW_BOOLEAN)) return BOOLEAN;
 		if (dbType.equalsIgnoreCase(DB_DOUBLE)) return DOUBLE;
 		if (dbType.equalsIgnoreCase(DB_INT)) return INT;
 		if (dbType.equalsIgnoreCase(DB_LONG)) return LONG;
 		throw new RuntimeException("Passed type " + dbType + " is not a valid DBType.");
+	}
+	
+	
+	/*
+	 * Given a regular type in String form, returns a database type in String form.
+	 * Throws an exception if the passed string is not a regular type.
+	 */
+	private static String getDBTypeFromType(String type) {
+		Util.validateString(type);
+		if (type.equalsIgnoreCase(STRING)) return DB_STRING;
+		if (type.equalsIgnoreCase(BOOLEAN)) return DB_BOOLEAN;
+		if (type.equalsIgnoreCase(DOUBLE)) return DB_DOUBLE;
+		if (type.equalsIgnoreCase(INT)) return DB_INT;
+		if (type.equalsIgnoreCase(LONG)) return DB_LONG;
+		throw new RuntimeException("Passed type " + type + " is not a valid type.");
 	}
 	
 	
@@ -1040,5 +984,18 @@ public class Database implements Constants {
 	}
 	
 	
+	private static Statement getNewStatement() {
+		Connection connection = con.getConnection();
+		Statement statement = null;
+		
+		try {
+			statement = connection.createStatement();
+			statement.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Could not initialize statement.");
+		}
+		return statement;
+	}
 	
 }
