@@ -39,14 +39,22 @@ public class MainMessageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String message_type = (String)request.getParameter("msg_type");
 		String friend_id = (String)request.getParameter("friend_id");
+		String curr_acct_id = (String)request.getParameter("id");
+		Account curr_acct = AccountManager.getAccount(curr_acct_id);
 		//If friend not found?
 		if (AccountManager.accountExists(friend_id)) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("SendMessageServlet"); 
 			dispatch.forward(request, response);
 		} else {
 			request.setAttribute("errMsg", "Friend not found.");
-			RequestDispatcher dispatch = request.getRequestDispatcher(".jsp"); 
-			dispatch.forward(request, response);
+			if (curr_acct.isAdmin()) {
+				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+curr_acct_id); 
+				dispatch.forward(request, response);
+			} else {
+				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+curr_acct_id); 
+				dispatch.forward(request, response);
+			}
+
 		}
 				
 	}

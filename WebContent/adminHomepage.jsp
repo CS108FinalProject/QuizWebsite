@@ -21,9 +21,7 @@ String sel_type = (String)request.getParameter("choice");
 	
 <body>
 	<%String errMsg = (String)request.getAttribute("errMsg");%>
-	<%if (errMsg == null) { %>
-		<%="<h1>Enter your desired username and password!</h1>"%>
-	<%} else {%>
+	<%if (errMsg != null) {%>
 		<%= errMsg%>
 	<%}%>
 	<table id="header">
@@ -33,13 +31,14 @@ String sel_type = (String)request.getParameter("choice");
 				} else {
 					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-				*/
-					%>
-				<th><a href = <%="\"adminHomepage.jsp\""%>>Homepage</a></th>
+				
+					*/%> 
+					
+				<th><a href = <%="\"adminHomepage.jsp?id="+name+"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 				<th>My Messages 
-					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
@@ -111,26 +110,25 @@ String sel_type = (String)request.getParameter("choice");
 				%>	
 			</div></td>
 			<td>
-				<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
-					<select name = "choice">
-						<option>Received Messages</option>
-						<option>Sent Messages</option>
-					</select>
-					<input type = "submit">
-				</form>
 				Send A Message
 				<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
 					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-					<input type = "radio" name = "msg_type" value = "Add Friend" ></input>
-					<input type = "radio" name = "msg_type" value = "Challenge"></input>
+					<input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend<br></input>
 					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-					<input type = "radio" name = "msg_type" value = "note"></input>
+					<input type = "radio" name = "msg_type" value = "Challenge">Challenge<br></input>
 					<textarea rows="4" cols="20" name = "msg_content"></textarea>
+					<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
 					<input type = "submit" value = "Send Message">
 				</form>
 				<div id="messages">
-					<%
-						
+					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+						</select>
+						<input type = "submit" value = "Display Messages">
+					</form>
+					<%						
 					try {
 						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_type);
 						out.println("<table>");			
@@ -171,8 +169,7 @@ String sel_type = (String)request.getParameter("choice");
 							out.println("</table>");
 						}
 						*/
-					//TODO::Extension to add Sorting mechanisms to table cols
-						
+					//TODO::Extension to add Sorting mechanisms to table cols					
 					%>
 
 					
