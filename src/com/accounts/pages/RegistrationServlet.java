@@ -42,7 +42,6 @@ public class RegistrationServlet extends HttpServlet {
 		String username = request.getParameter("user");
 		String password = request.getParameter("password");
 		
-		
 		//Redirect if username not valid
 		//if (!username.equals("Kelsey")) {
 		if (AccountManager.accountExists(username)) {
@@ -50,8 +49,7 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("errMsg", "<h1>Sorry, the username, "+username+", already exists. Please choose another.</h1>");
 			dispatch.forward(request, response);
 		} else {
-			//Try to create new account with input info
-			
+			//Try to create new account with input info			
 			try {
 				AccountManager.createAccount(username,password);
 			} catch (NoSuchAlgorithmException e) {
@@ -62,6 +60,10 @@ public class RegistrationServlet extends HttpServlet {
 			}
 			
 			//redirect to new users' homepage if account created successfully
+			if (request.getParameter("isAdministrator") != null) { // case of admin
+				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
+				dispatch.forward(request, response);
+			}
 			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 			dispatch.forward(request, response);
 		}

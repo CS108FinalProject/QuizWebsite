@@ -47,15 +47,19 @@ public class LoginServlet extends HttpServlet {
 
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
-					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
-					dispatch.forward(request, response);
+					if (AccountManager.getAccount(username).isAdmin()) {
+						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
+						dispatch.forward(request, response);
+					} else {
+						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
+						dispatch.forward(request, response);
+					}
 				}
 			} catch (NoSuchAlgorithmException e) {			
 			}
 		}
 			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-			dispatch.forward(request, response);
-	
+			dispatch.forward(request, response);	
 	}
 
 }

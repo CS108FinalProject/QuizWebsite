@@ -21,6 +21,13 @@ td {
 	margin-right: 200px;
 	 
 }
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	color: red;
+}
 
 
 
