@@ -218,7 +218,8 @@ public class Database implements Constants {
 	        Util.validateString(columnName);
 	        Util.validateString(columnType);
 	        
-        	if ( columnType.equals("string") || columnType.equals("double") ) {
+        	if ( columnType.equals("CHAR") || columnType.equals("DOUBLE") || 
+        			columnType.equals("TINYINT") ) {
         		// okay 
         	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
         		// okay
@@ -237,17 +238,24 @@ public class Database implements Constants {
 	private static Map<String, String> getColumnNameAndType(String tableName) {
 		Map<String, String> map = new HashMap<String, String>();
 		if ( tableExists( tableName ) ) {
-			String count = "SELECT * FROM " + tableName + ";";
+			String query = "SELECT * FROM " + tableName;
 			ResultSet rs;
 			try {
 				Connection cnn = con.getConnection();
 				Statement stmt2 = cnn.createStatement();
 				stmt2.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
-				rs = stmt2.executeQuery(count);
+				rs = stmt2.executeQuery(query);
 				ResultSetMetaData rsmd = rs.getMetaData();
 				for(int i = 1; i <= rsmd.getColumnCount(); i++) {
 					String columnName = rsmd.getColumnName(i);
-					String type = rsmd.getColumnClassName(i).substring(10).toLowerCase();
+					String type = rsmd.getColumnTypeName(i);
+					if ( type == DB_STRING.substring(0, 4) ) {
+						type = "string";
+					} else if ( type == DB_BOOLEAN ) {
+						type = "boolean";
+					} else if ( type == DB_DOUBLE ) {
+						type = "double";
+					}
 					map.put(columnName, type);
 				}
 				stmt2.close();
@@ -452,9 +460,6 @@ public class Database implements Constants {
 				rs.beforeFirst();
 				while ( rs.next() ) {
 					Map<String, Object> entry = entry = new HashMap<String, Object>();
-					System.out.println( rs.isClosed() );
-					normalizeObjectMap(tableName, entry);
-					System.out.println( rs.isClosed() );
 					for(int i = 1; i <= columnCount; i++) {
 						String className = rsmd.getColumnClassName(i);
 						String columnName = rsmd.getColumnName(i);
@@ -462,11 +467,11 @@ public class Database implements Constants {
 						Object valObj = getObject(className, value);
 						entry.put(columnName, valObj);
 					}
-					// fixes boolean values
+					normalizeObjectMap(tableName, entry);
 					list.add( entry );
 				}
 				
-				// fix boolean values
+//				 //fix boolean values
 //				for(int i = 0; i < list.size(); i++) {
 //					normalizeObjectMap(tableName, list.get(i));
 //				}
@@ -495,18 +500,8 @@ public class Database implements Constants {
 //		Database.createTable("happiness", stuff);
 		
 		// test now
-		List<Map<String, Object>> map = Database.getTable("TestBoolean");
-		
+		List<Map<String, Object>> map = Database.getTable("TestBoolean");	
 		System.out.println( map.toString() );
-		for(int i = 0; i < map.size(); i++) {
-			for(String key : map.get(i).keySet() ) {
-				System.out.println("Key: " + key);
-				System.out.println("Value " + map.get(i).toString() );
-			}
-		}
-		
-	
-		
 		
 		
 	}
@@ -900,7 +895,6 @@ public class Database implements Constants {
 			ResultSet rs = stmt.executeQuery(query);
 			//rs.beforeFirst();
 			while (rs.next()) {
-				System.out.println( rs.isClosed() );
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
 				
@@ -1054,10 +1048,8 @@ public class Database implements Constants {
 		
 		// Get the name and type of the columns in the table.
 		Map<String, String> nameAndType = getColumnNameAndType(tableName);
-		
 		for (String name : nameAndType.keySet()) {
 			if (nameAndType.get(name).equals(BOOLEAN)) {
-				
 				// If the value is flagged as boolean, make sure it's an integer and transform it.
 				Util.validateObject(map.get(name), INT);
 				boolean value = getBooleanFromInt((Integer)map.get(name));

@@ -47,6 +47,6 @@ public interface Constants {
 	public static final String DB_STRING = "CHAR(64)";
 	public static final String DB_INT = "BIGINT";
 	public static final String DB_BOOLEAN = "TINYINT";
-	public static final String DB_DOUBLE = "DOUBLE(50, 5)";
+	public static final String DB_DOUBLE = "DOUBLE";
 	public static final String DB_LONG = "BIGINT";
 }
