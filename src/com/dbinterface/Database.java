@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import java.sql.Connection;
+import com.accounts.AccountManager;
 import com.util.Constants;
 import com.util.Util;
 
@@ -421,8 +422,10 @@ public class Database implements Constants {
 			while ( rs.next() ) {
 				tables.add( rs.getString("Tables_in_" + MyDBInfo.MYSQL_DATABASE_NAME));
 			}
+			rs.close();
 		} catch (SQLException e) {
-			throw new RuntimeException("Problem with query" + query);
+			e.printStackTrace();
+			throw new RuntimeException("Problem with query: " + query);
 		}
 		return tables.contains( tableName );
 	}
@@ -502,9 +505,7 @@ public class Database implements Constants {
 			}
 		}
 		
-		
-		
-		
+	
 		
 		
 		
@@ -662,25 +663,22 @@ public class Database implements Constants {
 	 * 
 	 * Example: getRows("Accounts", "userName", "Eliezer") returns the List of rows (each a Map) where the
 	 * value under the userName column is Eliezer.
-	 * 
-	 * Use Util.validateObject() method to ensure that correct object type is passed.
 	 * Should return null if no such row is found.
 	 * @param tableName 
 	 * @param columnName
 	 * @param value
 	 * @return
 	 */
-	// TO-DO
 	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		
-		if ( !tableExists(tableName) ) { 
+		Util.validateString(tableName);
+		Util.validateString(columnName);
+		
+		if (!tableExists(tableName)) { 
 			throw new RuntimeException(tableName + " does not exist in the database.");
-		} else if ( tableName == null ) { 
-			throw new RuntimeException(tableName + " is a NULL value.");
-		} else if ( columnName == null ) { throw new RuntimeException(columnName + " is Null");}
-		else if ( value == null ) { throw new RuntimeException(value + " is NULL"); }
+		}
 		
 		// validate object type
 		String type = getColumnType(tableName, columnName);
@@ -691,6 +689,7 @@ public class Database implements Constants {
 			throw new RuntimeException( columnName + " is not a valid column in " 
 					+ tableName );
 		}
+		
 		String columnType = m.get(columnName);
 		String passedObjType =  value.getClass().toString().substring(16).toLowerCase();
 		if ( !columnType.equals(passedObjType) ) {
@@ -701,15 +700,14 @@ public class Database implements Constants {
 		// Know passed type is a valid at this point; implement sql query
 		String query = "SELECT * FROM " + tableName + " WHERE " + 
 						columnName + " = " + "\"" + value + "\"" + ";";
-		System.out.println( query);
 		
 		try {
 			ResultSet rs = stmt.executeQuery(query);
-			Map<String, String> columnTypes = getColumnNameAndType(tableName);
 			while (rs.next() ) {
 				ResultSetMetaData rsmd = rs.getMetaData();
-				int c = getColumnCount(tableName);
-				for(int i = 1; i <= c; i++) {
+				int numColumns = getColumnCount(tableName);
+				
+				for(int i = 1; i <= numColumns; i++) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					Object obj = rs.getObject(i);
 					String column = rsmd.getColumnName(i);
@@ -900,6 +898,7 @@ public class Database implements Constants {
 		try {
 			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
+			//rs.beforeFirst();
 			while (rs.next()) {
 				System.out.println( rs.isClosed() );
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
@@ -911,6 +910,7 @@ public class Database implements Constants {
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new RuntimeException("Problem executing query: " + query);
 		}
 			
@@ -1006,7 +1006,7 @@ public class Database implements Constants {
 			ResultSet rs = stmt2.executeQuery(query);
 			rs.next();
 			type = rs.getString(DB_TYPE);
-			
+			rs.close();
 			
 		} catch (SQLException e) {
 			throw new RuntimeException("Problem executing query: " + query);
