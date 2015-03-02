@@ -8,11 +8,11 @@
 <title>ExQuizit!</title>
 </head>
 <body>	
-	<h1>Welcome to ExQuizit, Login!</h1>
-	<form action = "LoginServlet" method = "POST">
-		<p>User: <input type = "text" name = "username"/></p>
-		<p>Password:<input type = "password" name = "password"/></p>
-		<input type = "submit"/>
+	<h1>Welcome to ExQuizit</h1>
+	<form class="login_form" action = "LoginServlet" method = "POST">
+		<p>User <input class="usr" type = "text" name = "username"/></p>
+		<p>Password<input class="pw" type = "password" name = "password"/></p>
+		<input class="btn" type = "submit"/>
 	</form>
 	<p>New User? <a href = "registration.jsp">Register here!</a></p>
 </body>
