@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import java.sql.Connection;
-import com.accounts.AccountManager;
 import com.util.Constants;
 import com.util.Util;
 
@@ -29,14 +27,15 @@ public class Database implements Constants {
 	private static Statement stmt;
 	private static Connector con;
 	
+	
 	/**
-	 * Establishes a connection with 
-	 * a database
+	 * Establishes a connection with the database
 	 */
 	public Database() {
-		this.con = new Connector();
+		con = new Connector();
 		stmt = con.getStatement();
 	}
+	
 	
 	/**
 	 * Removes table.
@@ -53,8 +52,11 @@ public class Database implements Constants {
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
 		}
 	}
+	
+	
 	/**
 	 * Show Tables in database specified by MyDBInfo file.
 	 * Should be used for error checking and validation.
@@ -109,41 +111,25 @@ public class Database implements Constants {
 			throw new RuntimeException("tableName is empty");
 		}
 		
+		// Check that table doesn't already exist.
+		if (tableExists(tableName)) {
+			throw new RuntimeException("Table: " + tableName + " already exists.");
+		}
+		
  		// Ensure that columnTypes are valid
  		String SQLQuery = "";
- 		if ( columnTypeAndNameValid(tableName, columnTypeAndName ) ) {
- 			SQLQuery = getCreationQuery( tableName, columnTypeAndName );
- 		}
- 		
- 		// make live query to check current Tables
- 		Set<String> tables = new HashSet<String>();
- 		
- 		try {
-			String query = "SHOW TABLES;";
-			ResultSet rs = stmt.executeQuery(query);
-			rs.beforeFirst();
-			while ( rs.next() ) {
-				String tab = rs.getString("Tables_in_" + MyDBInfo.MYSQL_DATABASE_NAME);
-				tables.add(tab);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
- 		
- 			// checks if the table already exists in the database
- 		if ( tables.contains( tableName ) ) {
- 			throw new RuntimeException("The table: \"" + tableName + "\" already exists in the database.");
- 		}
+ 		validateColumnTypeAndName(tableName, columnTypeAndName);
  		
  		//*****************TABLE CREATION******************//
+ 		SQLQuery = getCreationQuery(tableName, columnTypeAndName);
  		try {
- 			System.out.println( SQLQuery);
 			stmt.executeUpdate(SQLQuery);
 		} catch (SQLException e) {
-			System.out.println("Failed to execute query");
 			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + SQLQuery);
 		}
 	}
+	
 	
 	/*
 	 * Gets the corresponding table creation query
@@ -205,7 +191,7 @@ public class Database implements Constants {
 	/*
 	 * Checks to see if the map's keys contain valid datatypes
 	 */
-	private static boolean columnTypeAndNameValid( String tableName, Map<String, String> columnTypeAndName) {
+	private static void validateColumnTypeAndName(String tableName, Map<String, String> columnTypeAndName) {
 		if ( columnTypeAndName == null ) {
 			throw new RuntimeException("columnTypeAndName is null.");
 		} else if ( columnTypeAndName.size() == 0 ) {
@@ -219,21 +205,12 @@ public class Database implements Constants {
 	        Util.validateString(columnName);
 	        Util.validateString(columnType);
 	        
-        	if ( columnType.equals("CHAR") || columnType.equals("DOUBLE") || 
-        			columnType.equals("TINYINT") ) 
-        	{
-        		// okay 
-        	} else if ( columnType.equals("string") ) {
-        		// okay
-        	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
-        		// okay
-        	} else if ( columnType.equals("integer")  ) {
-        		// okay
-        	} else {
+        	if (!(columnType.equals(DOUBLE) || columnType.equals(STRING)
+        			|| columnType.equals(INT) || columnType.equals(BOOLEAN)
+        			|| columnType.equals(LONG))) {
         		throw new RuntimeException(columnType + " is an invalid data type");
         	}
 	    }
-		return true;
 	}
 	
 	
@@ -274,79 +251,72 @@ public class Database implements Constants {
 		
 	}
 	
-	// TO-DO
+	
 	/**
 	 * Should add the passed row to the specified table. Check correct type for each Object.
 	 * @param tableName
 	 * @param row key = column name, value = table value
-	 * throw exception on failure (type missmatch, etc...)
+	 * throw exception on failure (type miss-match, etc...)
 	 */
 	public static void addRow(String tableName, Map<String, Object> row) {
-		if ( tableName == null ) {
-			throw new RuntimeException("Table is null.");
-		} else if ( !tableExists(tableName ) ) {
+		Util.validateString(tableName);
+		
+		if (!tableExists(tableName)) {
 			throw new RuntimeException(tableName + " is not a valid table");
-		} else {
-			if ( row == null ) {
+		}
+		
+		if ( row == null ) {
 				throw new RuntimeException("Null value passed for row");
-			}
+		}
 			
-			int columnCount = getColumnCount(tableName);
-			// each map entry must correspond to a column
-			if ( row.size() != columnCount ) {
-				throw new RuntimeException("Wrong number of entries in row");
-			}
+		int columnCount = getColumnCount(tableName);
+		
+		// each map entry must correspond to a column
+		if ( row.size() != columnCount ) {
+			throw new RuntimeException("Wrong number of entries in row");
+		}
+		
+		for(String columnName : row.keySet()) {
+			Object value = row.get(columnName);
 			
-			for(String key : row.keySet()) {
-				Object value = row.get(key);
-				String type = value.getClass().toString().substring(16).toLowerCase();
-				if ( type.equals(STRING) ) {
-	        		type = DB_STRING.substring(0, 4);
-	        	} else if ( type.equals(LONG) || type.equals(INT) ) {
-	        		type = DB_INT;
-	        	} else if ( type.equals(DOUBLE) ) {
-	        		type = DB_DOUBLE;
-	        	} else if ( type.equals(BOOLEAN) ) {
-//	        		// Turn boolean to integer for DB compatibility. (added by Sam)
-//	        		value = getIntFromBoolean((Boolean) value);
-//		        	type = value.getClass().toString().substring(16).toLowerCase();
-		        	type = DB_BOOLEAN;
-	        	}
-				
-				
-//		        if (type.equals(BOOLEAN)) {
-//		        	value = getIntFromBoolean((Boolean) value);
-//		        	type = value.getClass().toString().substring(16).toLowerCase();
-//		        }
-//		        //--------------------------------------------------------------
-		        
-		        Map<String, String> types = getColumnNameAndType(tableName);
-		        if ( !types.containsKey(key) ) {
-		        	throw new RuntimeException("Row does not contain this column name");
-		        } else {
-		        	if ( !types.get(key).equals(type) ) {
-		        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
-		        		+ types.get(key) + " but received: " + type);
-		        	}
- 		        }
-		        
-			}
-		    
-		    // Transform map for DB compatibility. (added by Sam)
-		    normalizeObjectMapForDB(row);
-		    //---------------------------------------------------
-		    
-		    
-		    // if we get here we know our row content is good
-		    // check if the table has not been deleted since our last processing
-		    if ( tableExists(tableName) ) {
-		    	try {
-					stmt.executeUpdate(insertQuery(tableName, row));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		    }
+//			String type = value.getClass().toString().substring(16).toLowerCase();
+//			if ( type.equals(STRING) ) {
+//        		type = DB_STRING.substring(0, 4);
+//        	} else if ( type.equals(LONG) || type.equals(INT) ) {
+//        		type = DB_INT;
+//        	} else if ( type.equals(DOUBLE) ) {
+//        		type = DB_DOUBLE;
+//        	} else if ( type.equals(BOOLEAN) ) {
+//	        	type = DB_BOOLEAN;
+//        	}
+//			
+//	        Map<String, String> types = getColumnNameAndType(tableName);
+//	        if ( !types.containsKey(columnName) ) {
+//	        	throw new RuntimeException("Row does not contain this column name");
+//	        } else {
+//	        	if ( !types.get(columnName).equals(type) ) {
+//	        		throw new RuntimeException("Type Mismatch" + "\n\nExpected:" 
+//	        		+ types.get(columnName) + " but received: " + type);
+//	        	}
+//	        }
+			
+			// TODO: Eliezer, I believe all the above commented out code can be refactored into these
+			// 2 lines. Please correct me if I'm wrong.
+			String type = getColumnType(tableName, columnName);
+			Util.validateObject(value, type);
+		}
+	    
+	    // Transform map for DB compatibility.
+	    normalizeObjectMapForDB(row);
+	    
+	    // if we get here we know our row content is good
+	    // check if the table has not been deleted since our last processing
+    	String query = insertQuery(tableName, row);
+	    try {
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
 		}
 	}
 	
@@ -355,10 +325,9 @@ public class Database implements Constants {
 	private static String insertQuery(String tableName, Map<String, Object> row ) {
 		String output = "";
 		output += "INSERT INTO " + tableName + " (\n";
-		Set<String> keys = row.keySet();
 		int columns = getColumnCount(tableName);
 		int count = 0;
-		for(String key : keys) {
+		for(String key : row.keySet()) {
 			count++;
 			if ( count == columns ) { output += key + ")\n"; }
 			else {
@@ -377,9 +346,9 @@ public class Database implements Constants {
 	private static String formatValues(Collection<Object> values, String output) {
 		for (Object val : values) {
 			String type = val.getClass().toString().substring(16).toLowerCase();
-			if ( type.equals("integer") || type.equals("long") ) {
+			if ( type.equals(INT) || type.equals(LONG) || type.equals(DOUBLE)) {
 				output += val + ",";
-			} else if ( type.equals("string") ) {
+			} else if (type.equals(STRING)) {
 				output += "\"" + val + "\",";
 			}
 		}
@@ -463,64 +432,42 @@ public class Database implements Constants {
 	 * @return list of maps containing the row information
 	 */
 	public static List<Map<String, Object>> getTable(String tableName) {
-		if ( !tableExists(tableName) ) return null;
-		String query = "SELECT * FROM " + tableName + ";";
+		if (!tableExists(tableName)) return null;
 		
+		int c = getRowCount(tableName);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if ( c == 0 ) return list; // empty list
+		
+		String query = "SELECT * FROM " + tableName;
 		try {
-			int c = getRowCount(tableName);
-			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-			if ( c == 0 ) { return list; } // empty list
-			else {
-				ResultSet rs = stmt.executeQuery(query);
-				ResultSetMetaData rsmd = rs.getMetaData();
-				int columnCount = rsmd.getColumnCount();
-				rs.beforeFirst();
-				while ( rs.next() ) {
-					Map<String, Object> entry = entry = new HashMap<String, Object>();
-					for(int i = 1; i <= columnCount; i++) {
-						String className = rsmd.getColumnClassName(i);
-						String columnName = rsmd.getColumnName(i);
-						String value = rs.getString(columnName);
-						Object valObj = getObject(className, value);
-						entry.put(columnName, valObj);
-					}
-					normalizeObjectMap(tableName, entry);
-					list.add( entry );
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int columnCount = rsmd.getColumnCount();
+			
+			while ( rs.next() ) {
+				Map<String, Object> entry = new HashMap<String, Object>();
+				for(int i = 1; i <= columnCount; i++) {
+					String className = rsmd.getColumnClassName(i);
+					String columnName = rsmd.getColumnName(i);
+					String value = rs.getString(columnName);
+					Object valObj = getObject(className, value);
+					entry.put(columnName, valObj);
 				}
 				
-//				 //fix boolean values
-//				for(int i = 0; i < list.size(); i++) {
-//					normalizeObjectMap(tableName, list.get(i));
-//				}
-				return list;
+				normalizeObjectMap(tableName, entry);
+				list.add( entry );
 			}
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
 		}
-		return null;
+		return list;
 	}
+	
 	
 	public static void main( String [] args ) {
 		new Database();
-		
-//		Map<String, Object> row = new HashMap<String, Object>();
-//		row.put(USERNAME, "Eliezer");
-//		row.put(IS_ADMIN, true);
-//		row.put(FRIEND, false);
-//		addRow("TestBoolean", row);
-		
-//		// another row
-//		Map<String, String> stuff = new HashMap<String, String>();
-//		stuff.put("isHappy", BOOLEAN);
-//		stuff.put("person", STRING);
-//		Database.createTable("happiness", stuff);
-		
-		// test now
-		List<Map<String, Object>> map = Database.getTable("TestBoolean");	
-		//System.out.println( map.toString() );
-		
-		
 	}
 	
 	//Helper
@@ -1020,6 +967,7 @@ public class Database implements Constants {
 			rs.close();
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new RuntimeException("Problem executing query: " + query);
 		}
 		
@@ -1066,7 +1014,7 @@ public class Database implements Constants {
 		// Get the name and type of the columns in the table.
 		Map<String, String> nameAndType = getColumnNameAndType(tableName);
 		for (String name : nameAndType.keySet()) {
-			if (nameAndType.get(name).equals(BOOLEAN)) {
+			if (nameAndType.get(name).equals(DB_BOOLEAN)) {
 				// If the value is flagged as boolean, make sure it's an integer and transform it.
 				Util.validateObject(map.get(name), INT);
 				boolean value = getBooleanFromInt((Integer)map.get(name));

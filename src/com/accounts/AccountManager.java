@@ -1,7 +1,7 @@
 package com.accounts;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class AccountManager implements Constants {
 	 */
 	public static void initTables() {
 		if (!Database.tableExists(ACCOUNTS)) {
-			Map<String, String> columns = new HashMap<String, String>();
+			Map<String, String> columns = new LinkedHashMap<String, String>();
 			columns.put(USERNAME, STRING);
 			columns.put(PASSWORD, STRING);
 			columns.put(IS_ADMIN, BOOLEAN); 
@@ -29,7 +29,7 @@ public class AccountManager implements Constants {
 		}
 		
 		if (!Database.tableExists(FRIENDS)) {
-			Map<String, String> columns = new HashMap<String, String>();
+			Map<String, String> columns = new LinkedHashMap<String, String>();
 			columns.put(USERNAME, STRING);
 			columns.put(FRIEND, STRING);
 			columns.put(STATUS, STRING);
@@ -37,7 +37,7 @@ public class AccountManager implements Constants {
 		}
 		
 		if (!Database.tableExists(MESSAGES)) {
-			Map<String, String> columns = new HashMap<String, String>();
+			Map<String, String> columns = new LinkedHashMap<String, String>();
 			columns.put(SENDER, STRING);
 			columns.put(RECIPIENT, STRING);
 			columns.put(CONTENT, STRING);
