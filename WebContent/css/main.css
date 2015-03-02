@@ -1,8 +1,9 @@
+
+/********BEGIN CSS RESET********************
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -23,7 +24,9 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+/****************END CSS RESET********************/
 /* HTML5 display-role reset for older browsers */
+
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
@@ -54,50 +57,60 @@ table {
 */
 
 body {
-  background: #293f50;
-  color: #888;
+  background: #32A5ED;
+  text-align: center;
+  color: #fff;
   font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /*
   ========================================
-  Grid
+  Login Form
+  ========================================
+*/
+.usr, .pw {
+	float: right;
+	border-radius: 8px;
+	padding: 5px 15px;
+	font-size: 100%;
+}
+
+form {
+	display: inline-block;
+	width: 30%;
+	text-align: center;
+
+}
+
+/*
+  ========================================
+  Buttons
   ========================================
 */
 
-*,
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-}
-.container,
-.grid {
-  margin: 0 auto;
-  width: 960px;
-}
-.container {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.grid,
-.col-1-3,
-.col-2-3 {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.col-1-3,
-.col-2-3  {
+.btn {
+  background: #159aed;
+  height: 30px;
+  width: 60px;
+  color: #fff;
+  cursor: pointer;
   display: inline-block;
-  vertical-align: top;
+  font-weight: 400;
+  letter-spacing: .5px;
+  margin: 10px 20px;
+  text-transform: uppercase;
+  float: right;
+  border-color: #fff;
 }
-.col-1-3 {
-  width: 33.33%;
+
+.btn:hover {
+	background: #fff;
+	color: #32A5ED;
+	border-width: medium;
+	border-color: #fff;
+	margin: 10px 20px;
 }
-.col-2-3 {
-  width: 66.66%;
-}
+
 
 /*
   ========================================
@@ -118,27 +131,7 @@ body {
   *zoom: 1;
 }
 
-/*
-  ========================================
-  Rows
-  ========================================
-*/
 
-.row,
-.row-alt {
-  min-width: 960px;
-}
-.row {
-  background: #fff;
-  padding: 66px 0 44px 0;
-}
-.row-alt {
-  background: #cbe2c1;
-  background: -webkit-linear-gradient(to right, #a1d3b0, #f6f1d3);
-  background:    -moz-linear-gradient(to right, #a1d3b0, #f6f1d3);
-  background:         linear-gradient(to right, #a1d3b0, #f6f1d3);
-  padding: 44px 0 22px 0;
-}
 
 /*
   ========================================
@@ -147,7 +140,7 @@ body {
 */
 
 h1, h2, h3, h4 {
-  color: #648880;
+  color: #fff;
 }
 h1, h3, h4, h5, p {
   margin-bottom: 22px;
@@ -167,7 +160,7 @@ h4 {
   font-size: 18px;
 }
 h5 {
-  color: #a9b2b9;
+  color: #fff;
   font-size: 14px;
   font-weight: 400;
   text-transform: uppercase;
@@ -180,19 +173,7 @@ em {
   font-style: italic;
 }
 
-/*
-  ========================================
-  Leads
-  ========================================
-*/
 
-.lead {
-  text-align: center;
-}
-.lead p {
-  font-size: 21px;
-  line-height: 33px;
-}
 
 /*
   ========================================
@@ -201,7 +182,8 @@ em {
 */
 
 a {
-  color: #648880;
+  color: #BFD2DE;
+  border: none;
   text-decoration: none;
 }
 a:hover {
@@ -210,166 +192,11 @@ a:hover {
 p a {
   border-bottom: 1px solid #dfe2e5;
 }
-.primary-header a,
-.primary-footer a {
-  color: #fff;
-}
-.primary-header a:hover,
-.primary-footer a:hover {
-  color: #648880;
-}
+
 
 /*
   ========================================
-  Buttons
-  ========================================
-*/
-
-.btn {
-  border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: 400;
-  letter-spacing: .5px;
-  margin: 0;
-  text-transform: uppercase;
-}
-.btn-default {
-  border: 0;
-  background: #648880;
-  padding: 11px 30px;
-  font-size: 14px;
-}
-.btn-default:hover {
-  background: #77a198;
-}
-.btn-alt {
-  border: 1px solid #fff;
-  padding: 10px 30px;
-}
-.btn-alt:hover {
-  background: #fff;
-  color: #648880;
-}
-
-/*
-  ========================================
-  Primary header
-  ========================================
-*/
-
-.logo {
-  border-top: 4px solid #648880;
-  float: left;
-  font-size: 48px;
-  font-weight: 100;
-  letter-spacing: .5px;
-  line-height: 44px;
-  padding: 40px 0 22px 0;
-  text-transform: uppercase;
-}
-.tagline {
-  margin: 66px 0 22px 0;
-  text-align: right;
-}
-.primary-nav {
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-}
-
-/*
-  ========================================
-  Primary footer
-  ========================================
-*/
-
-.primary-footer {
-  color: #648880;
-  font-size: 14px;
-  padding-bottom: 44px;
-  padding-top: 44px;
-}
-.primary-footer small {
-  float: left;
-  font-weight: 400;
-}
-
-/*
-  ========================================
-  Navigation
-  ========================================
-*/
-
-.nav {
-  text-align: right;
-}
-.nav li {
-  display: inline-block;
-  margin: 0 10px;
-  vertical-align: top;
-}
-.nav li:last-child {
-  margin-right: 0;
-}
-
-/*
-  ========================================
-  Home
-  ========================================
-*/
-
-.hero {
-  color: #fff;
-  line-height: 44px;
-  padding: 22px 80px 66px 80px;
-  text-align: center;
-}
-.hero h2 {
-  font-size: 36px;
-}
-.hero p {
-  font-size: 24px;
-  font-weight: 100;
-}
-.teaser a:hover h3 {
-  color: #a9b2b9;
-}
-.teaser img {
-  border-radius: 5px;
-  display: block;
-  margin-bottom: 22px;
-  max-width: 100%
-}
-
-/*
-  ========================================
-  Speakers
-  ========================================
-*/
-
-.speaker {
-  margin-bottom: 44px;
-}
-.speaker-info {
-  border: 1px solid #dfe2e5;
-  border-radius: 5px;
-  margin-top: 88px;
-  padding-bottom: 22px;
-  text-align: center;
-}
-.speaker-info img {
-  border-radius: 50%;
-  height: 130px;
-  margin: -66px 0 22px 0;
-  vertical-align: top;
-}
-
-/*
-  ========================================
-  Schedule
+  Table Layout for Welcome Page
   ========================================
 */
 
@@ -397,11 +224,11 @@ thead {
   line-height: 44px;
 }
 thead th {
-  color: #648880;
+  color: #fff;
   font-size: 24px;
 }
 tbody th {
-  color: #a9b2b9;
+  color: #fff;
   font-size: 14px;
   font-weight: 400;
   padding-top: 22px;
@@ -422,78 +249,10 @@ tbody td:only-of-type {
   padding-right: 0;
 }
 table a {
-  color: #888;
+  color: #fff;
 }
 table h4 {
   margin-bottom: 0;
 }
-.schedule-offset {
-  color: #a9b2b9;
-}
 
-/*
-  ========================================
-  Venue
-  ========================================
-*/
 
-.venue-theatre {
-  margin-bottom: 66px;
-}
-.venue-hotel {
-  margin-bottom: 22px;
-}
-.venue-map {
-  height: 264px;
-}
-
-/*
-  ========================================
-  Register
-  ========================================
-*/
-
-.why-attend {
-  list-style: square;
-  margin: 0 0 22px 30px;
-}
-form {
-  margin-bottom: 22px;
-}
-input,
-select,
-textarea {
-  font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-.register-group label {
-  color: #648880;
-  cursor: pointer;
-  font-weight: 400;
-}
-.register-group input,
-.register-group select,
-.register-group textarea {
-  border: 1px solid #c6c9cc;
-  border-radius: 5px;
-  color: #888;
-  display: block;
-  margin: 5px 0 27px 0;
-  padding: 5px 8px;
-}
-.register-group input,
-.register-group textarea {
-  width: 100%;
-}
-.register-group select {
-  height: 34px;
-  width: 60px;
-}
-.register-group textarea {
-  height: 78px;
-}
-
-.headline h1 {
-  font-weight: 300px;
-  border-bottom: 1px solid black;
-  color: gray;
-}

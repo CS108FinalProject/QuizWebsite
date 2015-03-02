@@ -43,8 +43,6 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		if (AccountManager.accountExists(username)) {
-			System.out.println(username);
-
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
 					if (AccountManager.getAccount(username).isAdmin()) {
@@ -57,9 +55,10 @@ public class LoginServlet extends HttpServlet {
 				}
 			} catch (NoSuchAlgorithmException e) {			
 			}
+			return;
 		}
-			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-			dispatch.forward(request, response);	
+		RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
+		dispatch.forward(request, response);	
 	}
 
 }

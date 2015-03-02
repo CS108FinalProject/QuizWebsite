@@ -11,7 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//main.css" ></link>
-<%String name = (String)request.getParameter("id");
+<%String name = (String)request.getParameter("username");
 //Account acct = AccountManager.getAccount(name);
 %>
 <title>Welcome <%=name%></title>
@@ -37,7 +37,7 @@
 				<th>Quizzes</th>
 			</tr>
 	</table>
-	<h2>Nice to see you,<%=name %></h2>
+	<h2>Nice to see you, <%=name %></h2>
 	<table id = "content">
 		<tr>
 			<%//Displays any admin announcements as a list%>
