@@ -10,7 +10,8 @@
 <body>
 
 <%
-	Message msg = (Message) request.getAttribute("message");
+	//Message msg = (Message) request.getAttribute("message");
+	//System.out.println("hi");
 	String content = (String) request.getAttribute("message_content");
 	String sender = (String) request.getAttribute("sender");
 %>

@@ -44,6 +44,14 @@
 						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
 						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
 						out.println("</form>");
+						
+						if (request.getAttribute("isAdded") != null) {
+							if (((String)request.getAttribute("isAdded")).equals("added")) {
+								out.println("<p> Friend Added! </p>");
+							} else if (((String)request.getAttribute("isAdded")).equals("already_friends")) {
+								out.println("<p> Already Friends! </p>");
+							} 
+						}
 						//account.readMessage(msg); // uncomment!
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {

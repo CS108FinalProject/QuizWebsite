@@ -424,12 +424,9 @@ public class Database implements Constants {
 			}
 			rs.close();
 		} catch (SQLException e) {
-<<<<<<< HEAD
+
 			throw new RuntimeException("Problem with query" + query);
-=======
-			e.printStackTrace();
-			throw new RuntimeException("Problem with query: " + query);
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
+
 		}
 		return tables.contains( tableName );
 	}
@@ -904,11 +901,7 @@ public class Database implements Constants {
 			ResultSet rs = stmt.executeQuery(query);
 			//rs.beforeFirst();
 			while (rs.next()) {
-<<<<<<< HEAD
-				System.out.println(rs.isClosed() + "2");
-=======
-				System.out.println( rs.isClosed() );
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
+
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
 					System.out.println(rs.isClosed() + "3");
