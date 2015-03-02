@@ -44,6 +44,8 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		if (AccountManager.accountExists(username)) {
+			System.out.println(username);
+
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
 					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");

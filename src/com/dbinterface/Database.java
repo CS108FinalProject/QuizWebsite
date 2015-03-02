@@ -414,7 +414,7 @@ public class Database implements Constants {
 				tables.add( rs.getString("Tables_in_" + MyDBInfo.MYSQL_DATABASE_NAME));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Problem with query" + query);
 		}
 		return tables.contains( tableName );
 	}
@@ -863,11 +863,14 @@ public class Database implements Constants {
 			query = "SELECT * FROM " + tableName + " WHERE " + columnGuide + " = \"" + guideValue + "\"";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
+				System.out.println(rs.isClosed() + "2");
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
-				
+					System.out.println(rs.isClosed() + "3");
 				} else {
+					System.out.println(rs.isClosed() + "4");
 					result.add(rs.getObject(columnToGet));
+					
 				}
 			}
 			

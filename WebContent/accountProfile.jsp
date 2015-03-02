@@ -7,6 +7,20 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<%
+		String sender_name = (String)request.getParameter("id");
+		String friend_name = (String)request.getParameter("friend_id");
+	%>
+	<form action="addFriendServlet" method="post"> 
+		<input type="submit" name=message_type value="Add Friend">
+	</form>
+	<br>
+	
+	<form action="SendMessageServlet" method="post"> 
+		<input type="text" value="" name="msg_content">
+		<input type="submit" name=message_type value="Send Note">
+	</form>
+	
+	
 </body>
 </html>

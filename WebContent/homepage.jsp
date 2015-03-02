@@ -23,7 +23,7 @@
 				<th>Announcements</th>
 				<th>My Achievements</th>
 				<th>My Messages</th>
-				<th>Find Friends</th>
+				<th> <a href="searchFriends.jsp?name=<%=name%>"> Find Friends</a> </th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
