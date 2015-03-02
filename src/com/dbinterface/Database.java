@@ -137,6 +137,7 @@ public class Database implements Constants {
  		
  		//*****************TABLE CREATION******************//
  		try {
+ 			System.out.println( SQLQuery);
 			stmt.executeUpdate(SQLQuery);
 		} catch (SQLException e) {
 			System.out.println("Failed to execute query");
@@ -252,13 +253,13 @@ public class Database implements Constants {
 				for(int i = 1; i <= rsmd.getColumnCount(); i++) {
 					String columnName = rsmd.getColumnName(i);
 					String type = rsmd.getColumnTypeName(i);
-					if ( type == DB_STRING.substring(0, 4) ) {
-						type = "string";
-					} else if ( type == DB_BOOLEAN ) {
-						type = "boolean";
-					} else if ( type == DB_DOUBLE ) {
-						type = "double";
-					}
+//					if ( type == DB_STRING.substring(0, 4) ) {
+//						type = "string";
+//					} else if ( type == DB_BOOLEAN ) {
+//						type = "boolean";
+//					} else if ( type == DB_DOUBLE ) {
+//						type = "double";
+//					}
 					map.put(columnName, type);
 				}
 				stmt2.close();
@@ -299,13 +300,25 @@ public class Database implements Constants {
 			for(String key : row.keySet()) {
 				Object value = row.get(key);
 				String type = value.getClass().toString().substring(16).toLowerCase();
+				if ( type.equals(STRING) ) {
+	        		type = DB_STRING.substring(0, 4);
+	        	} else if ( type.equals(LONG) || type.equals(INT) ) {
+	        		type = DB_INT;
+	        	} else if ( type.equals(DOUBLE) ) {
+	        		type = DB_DOUBLE;
+	        	} else if ( type.equals(BOOLEAN) ) {
+//	        		// Turn boolean to integer for DB compatibility. (added by Sam)
+//	        		value = getIntFromBoolean((Boolean) value);
+//		        	type = value.getClass().toString().substring(16).toLowerCase();
+		        	type = DB_BOOLEAN;
+	        	}
 				
-				// Turn boolean to integer for DB compatibility. (added by Sam)
-		        if (type.equals(BOOLEAN)) {
-		        	value = getIntFromBoolean((Boolean) value);
-		        	type = value.getClass().toString().substring(16).toLowerCase();
-		        }
-		        //--------------------------------------------------------------
+				
+//		        if (type.equals(BOOLEAN)) {
+//		        	value = getIntFromBoolean((Boolean) value);
+//		        	type = value.getClass().toString().substring(16).toLowerCase();
+//		        }
+//		        //--------------------------------------------------------------
 		        
 		        Map<String, String> types = getColumnNameAndType(tableName);
 		        if ( !types.containsKey(key) ) {
@@ -505,7 +518,7 @@ public class Database implements Constants {
 		
 		// test now
 		List<Map<String, Object>> map = Database.getTable("TestBoolean");	
-		System.out.println( map.toString() );
+		//System.out.println( map.toString() );
 		
 		
 	}
@@ -901,9 +914,7 @@ public class Database implements Constants {
 			while (rs.next()) {
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
-					System.out.println(rs.isClosed() + "3");
 				} else {
-					System.out.println(rs.isClosed() + "4");
 					result.add(rs.getObject(columnToGet));
 					
 				}
@@ -1022,8 +1033,8 @@ public class Database implements Constants {
 	 */
 	private static String getTypeFromDBType(String dbType) {
 		Util.validateString(dbType);
-		if (dbType.equalsIgnoreCase(DB_STRING)) return STRING;
-		if (dbType.equalsIgnoreCase(DB_BOOLEAN)) return BOOLEAN;
+		if (dbType.equalsIgnoreCase("char(64)")) return STRING;
+		if (dbType.equalsIgnoreCase("tinyint(4)")) return BOOLEAN;
 		if (dbType.equalsIgnoreCase(DB_DOUBLE)) return DOUBLE;
 		if (dbType.equalsIgnoreCase(DB_INT)) return INT;
 		if (dbType.equalsIgnoreCase(DB_LONG)) return LONG;
