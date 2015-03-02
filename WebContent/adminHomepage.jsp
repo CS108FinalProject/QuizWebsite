@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="homepage.css" ></link>
 <%String name = (String)getServletContext().getAttribute("session_user");
 //Account acct = AccountManager.getAccount(name);
+String sel_type = (String)request.getParameter("choice");
+
 %>
 <title>Welcome <%=name%></title>
 </head>
@@ -21,9 +23,9 @@
 	<table id="header">
 			<tr>
 				<%/*if(acct.isAdmin()) {
-					out.println("<th<a href = \"adminHomepage.jsp\">My Homepage</a></th>");
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th<a href = \"homepage.jsp\">My Homepage</a></th>");
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				*/
 					%>
@@ -35,6 +37,7 @@
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
+							<option>Send A Message</option>
 						</select>
 						<input type = "submit" value = "Go">
 					</form>
@@ -44,7 +47,6 @@
 			</tr>
 	</table>
 	<h2>Nice to see you, <%=name %></h2>
-	
 	<table id = "admin_content">
 		<tr>
 			<td>
@@ -107,15 +109,24 @@
 					<select name = "choice">
 						<option>Received Messages</option>
 						<option>Sent Messages</option>
-						<option>Send a Message</option>
 					</select>
 					<input type = "submit">
 				</form>
+				Send A Message
+				<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
+					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
+					<input type = "radio" name = "friend_request" value = "Enter Friends Username"></input>
+					<input type = "radio" name = "challenge" value = "Enter Friends Username"></input>
+					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
+					<input type = "radio" name = "note"></input>
+					<textarea rows="4" cols="20" name = "note_txt"></textarea>
+					<input type = "submit" value = "Send Message">
+				</form>
 				<div id="messages">
 					<%
-						String sel_name = (String)request.getParameter("choice");
+						
 					try {
-						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_name);
+						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_type);
 						out.println("<table>");			
 						int list_len = messages.size();
 						for (int i = 0;i < list_len;i++) {
@@ -157,6 +168,9 @@
 					//TODO::Extension to add Sorting mechanisms to table cols
 						
 					%>
+
+					
+					
 				</div>
 			</td>
 		</tr>
