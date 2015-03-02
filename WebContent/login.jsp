@@ -6,14 +6,33 @@
 <link rel="stylesheet" href="css//main.css" ></link>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>ExQuizit!</title>
+
+<script>
+	function validateForm() {
+		var username = document.getElementById('username').value;
+		var password = document.getElementById('password').value;
+		
+		if ( username == null || username == "" ) {
+			alert("Username cannot be empty");
+			return false;
+		} else if ( password == null || password == "" ) {
+			alert("Password cannot be empty");
+			return false;
+		}
+		return true;
+	}
+</script type="text/javascript">
 </head>
+
 <body>	
 	<h1>Welcome to ExQuizit</h1>
-	<form class="login_form" action = "LoginServlet" method = "POST">
-		<p>User <input class="usr" type = "text" name = "username"/></p>
-		<p>Password<input class="pw" type = "password" name = "password"/></p>
+	<form class="login_form" action = "LoginServlet" method = "POST"
+	onsubmit="return validateForm();">
+		<p>User <input class="usr" id="username" type = "text" name = "username"/></p>
+		<p>Password<input class="pw" id="password" type = "password" name = "password"/></p>
 		<input class="btn" type = "submit"/>
 	</form>
 	<p>New User? <a href = "registration.jsp">Register here!</a></p>
+	
 </body>
 </html>
