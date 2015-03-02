@@ -219,8 +219,11 @@ public class Database implements Constants {
 	        Util.validateString(columnType);
 	        
         	if ( columnType.equals("CHAR") || columnType.equals("DOUBLE") || 
-        			columnType.equals("TINYINT") ) {
+        			columnType.equals("TINYINT") ) 
+        	{
         		// okay 
+        	} else if ( columnType.equals("string") ) {
+        		// okay
         	} else if (columnType.equals("boolean") || columnType.equals("long") ) {
         		// okay
         	} else if ( columnType.equals("integer")  ) {
