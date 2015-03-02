@@ -25,9 +25,8 @@ public class MainListener implements ServletContextListener {
      */
     public void contextInitialized(ServletContextEvent arg0)  { 
         // Initiate db and Account tables. 
-      new Database();
-      AccountManager.initTables();
-       
+       new Database();
+       AccountManager.initTables();       
     }
 
 	/**

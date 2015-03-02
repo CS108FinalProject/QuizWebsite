@@ -1,6 +1,4 @@
 package com.accounts.pages;
-import com.accounts.*;
-import java.security.*;
 
 import java.io.IOException;
 
@@ -11,18 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accounts.AccountManager;
+
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class SearchFriendServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/SearchFriendServlet")
+public class SearchFriendServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public SearchFriendServlet() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -36,25 +37,16 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");	
-
-		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-
-		if (AccountManager.accountExists(username)) {
-			System.out.println(username);
-
-			try {
-				if(AccountManager.passwordMatches(username, password)) {
-					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
-					dispatch.forward(request, response);
-				}
-			} catch (NoSuchAlgorithmException e) {			
-			}
-		}
-			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-			dispatch.forward(request, response);	
+		String friend_id = request.getParameter("friend_id");
+		
+		// Update request according to account existence 
+		if (AccountManager.accountExists(friend_id)) {
+			request.setAttribute("account", friend_id);
+		} else request.setAttribute("account", null);
+		
+		// forward request back to searchFriends.jsp
+		RequestDispatcher dispatch = request.getRequestDispatcher("searchFriends.jsp");
+		dispatch.forward(request, response);
 	}
 
 }

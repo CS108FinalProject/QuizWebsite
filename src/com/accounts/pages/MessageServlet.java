@@ -41,14 +41,15 @@ public class MessageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String msg_type = request.getParameter("message_button");
-		Message msg = (Message) request.getAttribute("message");
+		//Message msg = (Message) request.getAttribute("message");
 
-		
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {
-			Account receiver_account = AccountManager.getAccount(msg.getRecipient());
-			Account sender_account = AccountManager.getAccount(msg.getSender());
+			
+			Account receiver_account = AccountManager.getAccount(request.getParameter("recipient"));
+			Account sender_account = AccountManager.getAccount(request.getParameter("sender"));
 			receiver_account.addFriend(sender_account);
+			//request.setAttribute("sender", request.getParameter("sender"));
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 			
@@ -62,8 +63,8 @@ public class MessageServlet extends HttpServlet {
 		} else if (msg_type.equals("ReadMessage")) {
 			// forward to show note page
 			RequestDispatcher dispatch = request.getRequestDispatcher("showNote.jsp");
-			//request.setAttribute("message_content", request.getParameter("message_content"));
-			//request.setAttribute("sender", "<p>" + request.getParameter("sender") + "</p>");
+			request.setAttribute("message_content", request.getParameter("message_content"));
+			request.setAttribute("sender", request.getParameter("sender"));
 			dispatch.forward(request, response);
 		}
 	}
