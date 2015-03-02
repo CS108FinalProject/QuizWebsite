@@ -48,6 +48,7 @@
 					int anmts_len = admin_anmts.size();
 					for (int i = 0; i < anmts_len; i++) { 
 						out.println("<li>"+admin_anmts.get(i)+"</li>");
+						if (i == 4) i = anmts_len;
 					} 
 					out.println("</ul>");
 				} else {
@@ -89,18 +90,19 @@
 						out.println("</table>");
 					}
 						/*
-						ArrayList<Message> messages = acct.getReceivedMessages();		
+						ArrayList<Message> messages = acct.getReceivedMessages();	
+						int messageSz = messages.size();
 ;
-						if (messages.size() > 0) {
+						if (messageSz > 0) {
 							out.println("<table>");
 							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
-							for ( int i = 0; i < messages.size();i++ ) {
+							for ( int i = messageSz-1; i > -1;i-- ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
 								out.println("<td>"+msg.getSender()+"</td>");
 								out.println("<td>"+msg.getDate()+"</td>");
 								out.println("<td>"+msg.getType()+"</td>");
-								if (i == 4) i = messages.size();
+								if (i == messageSz -5) i = -1;
 							}
 							out.println("</table>");
 						}

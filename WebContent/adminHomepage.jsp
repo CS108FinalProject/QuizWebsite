@@ -60,9 +60,9 @@
 							Account id: <input type = "text" name = "remove_acct" value = <% 
 							String removed_id = request.getParameter("remove_success");
 							if (removed_id != null ) {
-								out.println("Account "+removed_id+" removed.");
+								out.println("\"Account "+removed_id+" removed.\"");
 							} else {
-								out.println("No account removed");
+								out.println("\"No Account Removed\"");
 							}
 							%>></input>
 							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>							
@@ -78,7 +78,7 @@
 		<tr>
 			<%//Displays any admin announcements as a list%>
 			<%
-			ArrayList<String> admin_anmts = (ArrayList<String>)request.getAttribute("admin_anmts");
+			ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
 			%>
 			<td><div id="announcements">Announcements
 				<%if (admin_anmts != null) { 
@@ -86,6 +86,7 @@
 					int anmts_len = admin_anmts.size();
 					for (int i = 0; i < anmts_len; i++) { 
 						out.println("<li>"+admin_anmts.get(i)+"</li>");
+						if (i == 4) i = anmts_len;
 					} 
 					out.println("</ul>");
 				} else {
@@ -94,7 +95,7 @@
 				%>	
 			</div></td>
 			<td>
-				<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+				<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
 					<select name = "choice">
 						<option>Received Messages</option>
 						<option>Sent Messages</option>
@@ -127,8 +128,9 @@
 						out.println("</table>");
 					}
 						/*
-						ArrayList<Message> messages = acct.getReceivedMessages();		
-;
+						ArrayList<Message> messages = acct.getReceivedMessages();	
+		
+
 						if (messages.size() > 0) {
 							out.println("<table>");
 							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
