@@ -20,6 +20,12 @@ String sel_type = (String)request.getParameter("choice");
 </head>
 	
 <body>
+	<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%if (errMsg == null) { %>
+		<%="<h1>Enter your desired username and password!</h1>"%>
+	<%} else {%>
+		<%= errMsg%>
+	<%}%>
 	<table id="header">
 			<tr>
 				<%/*if(acct.isAdmin()) {
@@ -115,11 +121,11 @@ String sel_type = (String)request.getParameter("choice");
 				Send A Message
 				<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
 					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-					<input type = "radio" name = "friend_request" value = "Enter Friends Username"></input>
-					<input type = "radio" name = "challenge" value = "Enter Friends Username"></input>
+					<input type = "radio" name = "msg_type" value = "Add Friend" ></input>
+					<input type = "radio" name = "msg_type" value = "Challenge"></input>
 					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-					<input type = "radio" name = "note"></input>
-					<textarea rows="4" cols="20" name = "note_txt"></textarea>
+					<input type = "radio" name = "msg_type" value = "note"></input>
+					<textarea rows="4" cols="20" name = "msg_content"></textarea>
 					<input type = "submit" value = "Send Message">
 				</form>
 				<div id="messages">
