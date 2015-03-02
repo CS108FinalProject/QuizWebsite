@@ -425,8 +425,8 @@ public class Database implements Constants {
 			rs.close();
 		} catch (SQLException e) {
 
-			e.printStackTrace();
-			throw new RuntimeException("Problem with query: " + query);
+			throw new RuntimeException("Problem with query" + query);
+
 		}
 		return tables.contains( tableName );
 	}
@@ -901,6 +901,7 @@ public class Database implements Constants {
 			ResultSet rs = stmt.executeQuery(query);
 			//rs.beforeFirst();
 			while (rs.next()) {
+
 				if (getColumnType(tableName, columnToGet).equals(BOOLEAN)) {
 					result.add(getBooleanFromInt((Integer)rs.getObject(columnToGet)));
 					System.out.println(rs.isClosed() + "3");

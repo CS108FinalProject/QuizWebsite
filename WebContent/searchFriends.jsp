@@ -23,7 +23,7 @@
 	
 	<%
 	String name = (String)request.getParameter("id");
-	out.println("<p>" + name + "</p>");
+	//out.println("<p>" + name + "</p>");
 	
 	// Check whether account exists and prints a message accordingly
 	if ((request.getAttribute("account") != null) && (!((String) request.getAttribute("account")).equals("not_searched"))) {
