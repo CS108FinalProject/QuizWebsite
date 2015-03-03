@@ -17,6 +17,40 @@
 			name = (String) request.getAttribute("username");
 		}
 	%>
+	
+	<table id="header">
+			<tr>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+ name +"\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th>My Achievements</th>
+
+				<% //System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
+
+
+				<th>My Messages 
+					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+							<option>Send A Message</option>
+						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=name%>>
+						<input type = "submit" value = "Go">
+					</form>
+				</th>
+				<th>Quizzes</th>
+			</tr>
+	</table>
+	
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
 		<%

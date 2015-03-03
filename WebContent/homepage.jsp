@@ -36,21 +36,22 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<% System.out.println( "In Homepage: " + name); %>
+				<% //System.out.println( "In Homepage: " + name); %>
           		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
 
 
 				<th>My Messages 
-					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
 							<option>Send A Message</option>
 						</select>
+						<input name="choice" type="hidden" value=<%=sel_type%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
