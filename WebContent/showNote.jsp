@@ -11,11 +11,43 @@
 <body>
 
 <%
-	//Message msg = (Message) request.getAttribute("message");
-	//System.out.println("hi");
 	String content = (String) request.getAttribute("message_content");
 	String sender = (String) request.getAttribute("sender");
 %>
+
+<table id="header">
+			<tr>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+ sender +"\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th>My Achievements</th>
+
+				<% //System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=sender%>"> Find Friends</a> </th>
+
+
+				<th>My Messages 
+					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+							<option>Send A Message</option>
+						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input type = "submit" value = "Go">
+					</form>
+				</th>
+				<th>Quizzes</th>
+			</tr>
+	</table>
+
 <h2> Message from <%=sender%></h2>
 <br> <br>
 <p> <%=content%> </p>

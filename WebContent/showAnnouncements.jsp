@@ -18,28 +18,35 @@ ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttrib
 </head>
 <body>
 
-	<table id="header">
+<table id="header">
 			<tr>
 				<%/*if(acct.isAdmin()) {
-					out.println("<th<a href = \"adminHomepage.jsp\">My Homepage</a></th>");
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th<a href = \"homepage.jsp\">My Homepage</a></th>");
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-				*/
-					%>
-				<th><a href = <%="\"adminHomepage.jsp\""%>>Homepage</a></th>
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+ name +"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
+
+				<% //System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
+
+
 				<th>My Messages 
-					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
+							<option>Send A Message</option>
 						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>

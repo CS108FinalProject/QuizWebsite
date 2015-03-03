@@ -10,6 +10,38 @@
 </head>
 <body>
 	
+	<table id="header">
+			<tr>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+ (String) request.getAttribute("sender") +"\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th>My Achievements</th>
+
+				<% //System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=(String) request.getAttribute("sender")%>"> Find Friends</a> </th>
+
+
+				<th>My Messages 
+					<form action = <%="\"showMessage.jsp?id="+(String) request.getAttribute("sender")+"\""%>>					
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+							<option>Send A Message</option>
+						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input type = "submit" value = "Go">
+					</form>
+				</th>
+				<th>Quizzes</th>
+			</tr>
+	</table>
 	
 	<h2> Find Friends</h2>
 	
@@ -20,8 +52,6 @@
 	<br>
 	
 	<%
-	//String name = (String)request.getParameter("");
-	//out.println("<p>" + name + "</p>");
 	// Check whether account exists and prints a message accordingly
 	if ((request.getAttribute("account") != null) ) {
 		// Case of account exists - print link to acount's profile
