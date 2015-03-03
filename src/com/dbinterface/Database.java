@@ -890,7 +890,12 @@ public class Database implements Constants {
 		try {
 			Statement statement = getNewStatement();
 			ResultSet rs = statement.executeQuery(query);
-			rs.next();
+			
+			// Ensure there is content in the 
+			if (!rs.next()) {
+				throw new RuntimeException(columnName + " is not a valid column of " + tableName);
+			}
+			
 			type = rs.getString(DB_TYPE);
 			rs.close();
 			
