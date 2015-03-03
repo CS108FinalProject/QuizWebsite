@@ -229,7 +229,7 @@ public class Account implements Constants {
 	 */
 	public void addFriend(Account account) {
 		// TODO: front-end should catch this and display a helpful message.
-		// No self-friending.
+		// No self-befriending.
 		if (account.getUserName().equals(userName)) {
 			throw new RuntimeException("You cannot make friends with yourself.");
 		}
@@ -238,6 +238,11 @@ public class Account implements Constants {
 		// TODO: front end should catch this and notify user.
 		if (isFriend(account)) {
 			throw new RuntimeException("Already friends");
+		}
+		
+		// If this friend already sent a friend request, do nothing.
+		if (friendshipPending(account)) {
+			return;
 		}
 		
 		// If friendship was already initiated by the other party, activate it.
