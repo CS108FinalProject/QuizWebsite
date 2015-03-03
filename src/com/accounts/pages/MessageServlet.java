@@ -41,10 +41,10 @@ public class MessageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String msg_type = request.getParameter("message_button");
+		request.setAttribute("username", request.getParameter("recipient"));
 
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {
-			
 			Account receiver_account = AccountManager.getAccount(request.getParameter("recipient"));
 			Account sender_account = AccountManager.getAccount(request.getParameter("sender"));
 			try {
@@ -53,7 +53,6 @@ public class MessageServlet extends HttpServlet {
 			} catch (RuntimeException e) {
 				request.setAttribute("isAdded", "already_friends");
 			}
-			//request.setAttribute("sender", request.getParameter("sender"));
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 			
