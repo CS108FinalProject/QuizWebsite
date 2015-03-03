@@ -47,6 +47,7 @@ public class SendMessageServlet extends HttpServlet {
 		
 		// get accounts
 		String sender_name = (String)request.getParameter("id");
+		System.out.println(sender_name);
 		String friend_name = (String)request.getParameter("friend_id");
 		Account sender = AccountManager.getAccount(sender_name);
 		
