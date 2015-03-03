@@ -1,5 +1,7 @@
 package com.accounts;
 
+import com.util.Util;
+
 /**
  * Used as a data structure, provides encapsulation for message information.
  * @author Sam
@@ -16,6 +18,12 @@ public class Message {
 	
 	public Message(String sender, String recipient, String content, String type, 
 			String date, boolean read) {
+		
+		Util.validateString(sender);
+		Util.validateString(recipient);
+		Util.validateString(content);
+		Util.validateString(type);
+		Util.validateString(date);
 		
 		this.sender = sender;
 		this.recipient = recipient;

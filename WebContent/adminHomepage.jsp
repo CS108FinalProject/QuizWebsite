@@ -54,6 +54,7 @@ String sel_type = (String)request.getParameter("choice");
 				</th>
 				<th>Find Friends</th>
 				<th>Quizzes</th>
+				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
 			</tr>
 	</table>
 	<h2>Nice to see you, <%=name %></h2>

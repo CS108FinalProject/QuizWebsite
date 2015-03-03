@@ -12,7 +12,7 @@ public class Util implements Constants {
 	 * @param str
 	 */
 	public static void validateString(String str) {
-		if (str == null) throw new NullPointerException();
+		if (str == null) throw new NullPointerException("Passed value cannot be null");
 		if (str.isEmpty()) {
 			throw new IllegalArgumentException("The passed String is empty.");
 		}
