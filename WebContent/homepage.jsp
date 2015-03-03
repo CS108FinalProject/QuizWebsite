@@ -3,8 +3,7 @@
 	<%@ page import = "com.accounts.*"%>
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "javax.swing.*" %>
-	<%@ page import = "java.awt.*" %>
-	<%@ page import = "java.awt.List" %>
+
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -92,36 +91,12 @@ String sel_type = (String)request.getParameter("choice");
 						</select>
 						<input type = "submit" value = "Display Messages">
 					</form>
-					<%						
-					try {
-						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_type);
-						out.println("<table>");			
-						int list_len = messages.size();
-						for (int i = 0;i < list_len;i++) {
-							out.println("<tr>");
-							out.println("<td>");
-							out.println("<a href = \"showMessage.jsp?id="+name+"\">"+messages.get(i)+"</a>");
-							out.println("</td>");
-							out.println("</tr>");
-							if  (i == 4) i = list_len;
-						}
-						out.println("</table>");
-					} catch (Exception e) {
-						out.println("<table>");
-							out.println("<tr>");
-							out.println("<td>");
-							out.println("Select messages to display from form above.");
-							out.println("</td>");
-							out.println("</tr>");
-						out.println("</table>");
-					}
-						/*
-						ArrayList<Message> messages = acct.getReceivedMessages();	
-		
+					<%																
+						List<Message> messages = acct.getReceivedMessages();	
 
 						if (messages.size() > 0) {
 							out.println("<table>");
-							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
+							out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
@@ -132,7 +107,7 @@ String sel_type = (String)request.getParameter("choice");
 							}
 							out.println("</table>");
 						}
-						*/
+					
 					//TODO::Extension to add Sorting mechanisms to table cols					
 					%>
 
