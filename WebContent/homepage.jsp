@@ -3,48 +3,66 @@
 	<%@ page import = "com.accounts.*"%>
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "javax.swing.*" %>
-	<%@ page import = "java.awt.*" %>
-	<%@ page import = "java.awt.List" %>
+
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet" href="css//main.css" ></link>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%String name = (String)request.getParameter("username");
-//Account acct = AccountManager.getAccount(name);
+<link rel="stylesheet" href="homepage.css" ></link>
+<%String name = (String)getServletContext().getAttribute("session_user");
+Account acct = AccountManager.getAccount(name);
+String sel_type = (String)request.getParameter("choice");
+
 %>
 <title>Welcome <%=name%></title>
 </head>
 	
 <body>
+	<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%if (errMsg != null) {%>
+		<%= errMsg%>
+	<%}%>
 	<table id="header">
 			<tr>
-				<th>Announcements</th>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+name+"\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<th> <a href="searchFriends.jsp?name=<%=name%>"> Find Friends</a> </th>
+				<% System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
+
 
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
+							<option>Send A Message</option>
 						</select>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
 	<h2>Nice to see you, <%=name %></h2>
+	
 	<table id = "content">
 		<tr>
 			<%//Displays any admin announcements as a list%>
 			<%
-			ArrayList<String> admin_anmts = (ArrayList<String>)request.getAttribute("admin_anmts");
+			ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
 			%>
-			<td><div id="announcements">Announcements
+			<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
 					int anmts_len = admin_anmts.size();
@@ -59,59 +77,46 @@
 				%>	
 			</div></td>
 			<td>
-				<form action = <%="\"homepage.jsp?id="+name+"\""%>>
-					<select name = "choice">
-						<option>Received Messages</option>
-						<option>Sent Messages</option>
-					</select>
-					<input type = "submit">
+				Send A Message
+				<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
+					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
+					<input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend<br></input>
+					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
+					<input type = "radio" name = "msg_type" value = "Challenge">Challenge<br></input>
+					<textarea rows="4" cols="20" name = "msg_content"></textarea>
+					<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
+					<input type = "submit" value = "Send Message">
 				</form>
 				<div id="messages">
-					<%
-						String sel_name = (String)request.getParameter("choice");
-					try {
-						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute("");
-						out.println("<table>");			
-						int list_len = messages.size();
-						for (int i = 0;i < list_len;i++) {
-							out.println("<tr>");
-							out.println("<td>");
-							out.println("<a href = \"showMessage.jsp?id="+name+"\">"+messages.get(i)+"</a>");
-							out.println("</td>");
-							out.println("</tr>");
-							if  (i == 4) i = list_len;
-						}
-						out.println("</table>");
-					} catch (Exception e) {
-						out.println("<table>");
-							out.println("<tr>");
-							out.println("<td>");
-							out.println("Select messages to display from form above.");
-							out.println("</td>");
-							out.println("</tr>");
-						out.println("</table>");
-					}
-						/*
-						ArrayList<Message> messages = acct.getReceivedMessages();	
-						int messageSz = messages.size();
-;
-						if (messageSz > 0) {
+					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+						</select>
+						<input type = "submit" value = "Display Messages">
+					</form>
+					<%																
+						List<Message> messages = acct.getReceivedMessages();	
+					out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
+
+						if (messages.size() > 0) {
 							out.println("<table>");
-							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
-							for ( int i = messageSz-1; i > -1;i-- ) {
+							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
 								out.println("<td>"+msg.getSender()+"</td>");
 								out.println("<td>"+msg.getDate()+"</td>");
 								out.println("<td>"+msg.getType()+"</td>");
-								if (i == messageSz -5) i = -1;
+								if (i == 4) i = messages.size();
 							}
 							out.println("</table>");
 						}
-						*/
-					//TODO::Extension to add Sorting mechanisms to table cols
-						
+					
+					//TODO::Extension to add Sorting mechanisms to table cols					
 					%>
+
+					
+					
 				</div>
 			</td>
 		</tr>
