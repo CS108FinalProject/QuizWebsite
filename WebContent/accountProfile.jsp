@@ -17,8 +17,6 @@
 		} else {
 			friend_name = (String)request.getAttribute("friend_id");
 		}
-		
-		//System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
 	
 	<table id="header">

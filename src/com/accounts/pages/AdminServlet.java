@@ -44,14 +44,11 @@ public class AdminServlet extends HttpServlet {
 		String user_id = (String)getServletContext().getAttribute("session_user");
 		String acct_to_remove = (String)request.getParameter("remove_acct");
 		//Check validity
-		System.out.println(user_id);
 		ArrayList<String> announcements = (ArrayList<String>)getServletContext().getAttribute("announcements");
 		if (new_ancmnt != null) {
 			announcements.add(new_ancmnt);
-			System.out.println("New Announcement recognized");
 		} else if (acct_to_remove != null && acct_to_remove != "") {
 			AccountManager.removeAccount(acct_to_remove);
-			System.out.println("Remove Success");
 		}
 		//Send back to the user homepage regardless
 		if (AccountManager.getAccount(user_id).isAdmin()) {

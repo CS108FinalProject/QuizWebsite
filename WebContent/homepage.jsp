@@ -36,8 +36,10 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
+
 				<% //System.out.println( "In Homepage: " + name); %>
           		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
+
 
 
 				<th>My Messages 
@@ -52,6 +54,10 @@ String sel_type = (String)request.getParameter("choice");
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+<<<<<<< HEAD
+				<th><a href = <%="\"searchFriends.jsp?id="+name+"\""%>>Find Friends</a></th>
+=======
+>>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 				<th>Quizzes</th>
 			</tr>
 	</table>
