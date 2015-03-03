@@ -53,8 +53,7 @@ public class ServletContext implements ServletContextListener {
     	announcements.add("A milli, A milli, A milli");
     	announcements.add("If it ain't broke don't fix it");
     	arg0.getServletContext().setAttribute("announcements",announcements);
-    	String session_user = "Kelsey";
-    	arg0.getServletContext().setAttribute("session_user", session_user);
+    	arg0.getServletContext().setAttribute("session_user", "");
 
     }
 

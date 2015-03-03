@@ -45,7 +45,8 @@ public class LoginServlet extends HttpServlet {
 		if (AccountManager.accountExists(username)) {
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
-					// if user is an administrator (still need to implemenet checkbox)
+					getServletContext().setAttribute("session_user",username);
+					
 					if (AccountManager.getAccount(username).isAdmin()) {
 						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
 						dispatch.forward(request, response);
@@ -54,13 +55,32 @@ public class LoginServlet extends HttpServlet {
 						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
 						dispatch.forward(request, response);
 					}
+					
+						/*
+						getServletContext().setAttribute("session_user",username);
+						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
+						dispatch.forward(request, response);
+						*/
+				} else {
+					/*Needed for the case that the Account Exists but the Password Fails*/
+					request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
+					RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+					dispatch.forward(request, response);
 				}
-			} catch (NoSuchAlgorithmException e) {			
+			} catch (NoSuchAlgorithmException e) {
+				/*Needed for the case that the Password hashing can not be done.*/
+				request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
+				RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+				dispatch.forward(request, response);
 			}
-			return;
+
+		} else {
+			/*Needed for the case that the Account fails to exist */
+			request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
+			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+			dispatch.forward(request, response);
 		}
-		RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-		dispatch.forward(request, response);	
+
 	}
 
 }
