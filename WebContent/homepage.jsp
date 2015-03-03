@@ -36,21 +36,22 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<% System.out.println( "In Homepage: " + name); %>
+				<% //System.out.println( "In Homepage: " + name); %>
           		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
 
 
 				<th>My Messages 
-					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
 							<option>Send A Message</option>
 						</select>
+						<input name="choice" type="hidden" value=<%=sel_type%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th>Find Friends</th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
@@ -66,9 +67,9 @@ String sel_type = (String)request.getParameter("choice");
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
 					int anmts_len = admin_anmts.size();
-					for (int i = 0; i < anmts_len; i++) { 
+					for (int i = anmts_len - 1; i > -1; i--) { 
 						out.println("<li>"+admin_anmts.get(i)+"</li>");
-						if (i == 4) i = anmts_len;
+						if (i == anmts_len - 5) i = -1;
 					} 
 					out.println("</ul>");
 				} else {
@@ -99,19 +100,19 @@ String sel_type = (String)request.getParameter("choice");
 						List<Message> messages = acct.getReceivedMessages();	
 					out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
 
-						if (messages.size() > 0) {
-							out.println("<table>");
-							for ( int i = 0; i < messages.size();i++ ) {
-								out.println("<tr>");
-								Message msg = messages.get(i);								
-								out.println("<td><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
-										+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a></td>");
-								out.println("<td>"+msg.getDate()+"</td>");
-								out.println("<td>"+msg.getType()+"</td>");
-								if (i == 4) i = messages.size();
-							}
-							out.println("</table>");
+					if (messages.size() > 0) {
+						out.println("<table>");
+						for ( int i = messages.size() -1; i > -1;i-- ) {
+							out.println("<tr>");
+							Message msg = messages.get(i);
+							out.println("<td>"+msg.getSender()+"</td>");
+							out.println("<td>"+msg.getDate()+"</td>");
+							out.println("<td>"+msg.getType()+"</td>");
+							if (i == messages.size() -5) i = -1;
+
 						}
+						out.println("</table>");
+					}
 					
 					//TODO::Extension to add Sorting mechanisms to table cols					
 					%>

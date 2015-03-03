@@ -8,21 +8,71 @@
 <title>Insert title here</title>
 </head>
 <body>
+	
 	<%
-		String sender_name = (String)request.getParameter("username");
+		String sender_name =  (String) request.getParameter("username");
 		String friend_name = (String)request.getParameter("friend_id");
 		System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
+<<<<<<< HEAD
+	
+	<table id="header">
+			<tr>
+				<%/*if(acct.isAdmin()) {
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+					*/%> 
+					
+				<th><a href = <%="\"homepage.jsp?id="+ sender_name +"\""%>>Homepage</a></th>
+				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th>My Achievements</th>
+
+				<% //System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=sender_name%>"> Find Friends</a> </th>
+
+
+				<th>My Messages 
+					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
+						<select name = "choice">
+							<option>Received Messages</option>
+							<option>Sent Messages</option>
+							<option>Send A Message</option>
+						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input type = "submit" value = "Go">
+					</form>
+				</th>
+				<th>Quizzes</th>
+			</tr>
+	</table>
+	
 	<form action="addFriendServlet" method="post"> 
 		<input type="submit" name=message_type value="Add Friend">
 	</form>
 	<br>
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 	
 	<form action="SendMessageServlet" method="post"> 
-		<input type="text" value="" name="msg_content">
+		<input type="text" value="" name="msg_content"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Send Note">
 	</form>
+	
+		<form action="SendMessageServlet" method="post"> 
+		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
+
+		<input type="submit" name=message_type value="Add Friend">
+	</form>
+	<br>
+
 	
 	
 </body>

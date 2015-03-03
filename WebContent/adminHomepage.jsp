@@ -41,12 +41,14 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 				<th>My Messages 
-					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
 							<option>Send A Message</option>
 						</select>
+						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
@@ -60,7 +62,7 @@ String sel_type = (String)request.getParameter("choice");
 			<td>
 				<div id = "addAnnouncement">
 					Add an Announcement<br></br>
-					<form action = "AdminServlet">
+					<form action = "AdminServlet" method = "POST">
 						<input type = "hidden" name = "id" value = "<%=name %>">
 						<textarea rows = "4" cols = "50" name = "new_ancmnt"></textarea>
 						<input type = "submit"></input>
@@ -75,16 +77,17 @@ String sel_type = (String)request.getParameter("choice");
 			<td>
 					<div id = "removeAcct">
 						Remove Account<br></br>
-						<form action = "adminServlet/?id=<%=name%>">
+						<form action = "AdminServlet" method = "POST">
 							Account id: <input type = "text" name = "remove_acct" value = <% 
-							String removed_id = request.getParameter("remove_success");
+							String removed_id = request.getParameter("remove_acct");
 							if (removed_id != null ) {
 								out.println("\"Account "+removed_id+" removed.\"");
 							} else {
 								out.println("\"No Account Removed\"");
 							}
 							%>></input>
-							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>							
+							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>	
+							<input type = "hidden" name = "id" value = <%="\""+name+"\"" %>>					
 							<input type = "submit"></input>
 						</form>
 					</div>									
@@ -103,9 +106,9 @@ String sel_type = (String)request.getParameter("choice");
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
 					int anmts_len = admin_anmts.size();
-					for (int i = 0; i < anmts_len; i++) { 
+					for (int i = anmts_len - 1; i > -1; i--) { 
 						out.println("<li>"+admin_anmts.get(i)+"</li>");
-						if (i == 4) i = anmts_len;
+						if (i == anmts_len - 5) i = -1;
 					} 
 					out.println("</ul>");
 				} else {
@@ -141,13 +144,13 @@ String sel_type = (String)request.getParameter("choice");
 
 						if (messages.size() > 0) {
 							out.println("<table>");
-							for ( int i = 0; i < messages.size();i++ ) {
+							for ( int i = messages.size() -1; i > -1;i-- ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
 								out.println("<td>"+msg.getSender()+"</td>");
 								out.println("<td>"+msg.getDate()+"</td>");
 								out.println("<td>"+msg.getType()+"</td>");
-								if (i == 4) i = messages.size();
+								if (i == messages.size() -5) i = -1;
 							}
 							out.println("</table>");
 						}
