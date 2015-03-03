@@ -26,7 +26,7 @@ public interface Constants {
 	public static final String CONTENT = "content";
 	public static final String TYPE = "type";
 	public static final String DATE = "date";
-	public static final String READ = "seen";
+	public static final String SEEN = "seen";
 	
 	// Types
 	public static final String STRING = "string"; 
