@@ -27,7 +27,6 @@
 		// Case of account exists - print link to acount's profile
 		String friend = (String) request.getAttribute("account");
 		String sender2 = (String) request.getAttribute("sender");
-		System.out.println( "Friend: " + friend);
 		if (AccountManager.accountExists(friend) ) {
 			
 			out.println("<p> Friend found: </p><br>");

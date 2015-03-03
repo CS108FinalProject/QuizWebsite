@@ -11,7 +11,6 @@
 	<%
 		String sender_name =  (String) request.getParameter("username");
 		String friend_name = (String)request.getParameter("friend_id");
-		System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
 
 

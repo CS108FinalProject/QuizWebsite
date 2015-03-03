@@ -71,7 +71,6 @@ public class AccountManager implements Constants {
 	 * @return
 	 */
 	public static Account getAccount(String username) {
-		System.out.println( "Username is " + username );
 		Util.validateString(username);
 		return new Account(username);
 	}
