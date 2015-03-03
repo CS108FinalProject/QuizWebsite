@@ -16,22 +16,22 @@
 	<ul>
 		<%
 			// Check which messages to receive based on the Select tag in the homepage.jsp
-			//Account account = AccountManager.getAccount(name);
-			ArrayList<Message> messages;
+			Account account = AccountManager.getAccount(name);
+			List<Message> messages;
 			String msgToDisplay = request.getParameter("choice");
 			
 			// ????????????
-			Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
+		/* 	Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
 			Message msg2 = new Message("Guy3", "Guy4", "Hi Guy!", Constants.MESSAGE_NOTE, "date", false);
 			messages = new ArrayList<Message>();
 			messages.add(0, msg1);
-			messages.add(1, msg2);
+			messages.add(1, msg2); */
 			
-			/* if (msgToDisplay.equals("Received Messages")) { 
+			if (msgToDisplay.equals("Received Messages")) { 
 				messages = account.getReceivedMessages();		
 			} else {
 				messages = account.getSentMessages();		
-			} */
+			}
 			
 			// Print messages
 			for (Message msg : messages) {
@@ -53,7 +53,7 @@
 								out.println("<p> Already Friends! </p>");
 							} 
 						}
-						//account.readMessage(msg); // uncomment!
+						account.readMessage(msg); // uncomment!
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {
 					// go to challenge page
