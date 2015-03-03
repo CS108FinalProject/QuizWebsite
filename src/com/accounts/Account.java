@@ -301,19 +301,19 @@ public class Account implements Constants {
 		row.put(RECIPIENT, message.getRecipient());
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
-		row.put(READ, message.isRead());
+		row.put(SEEN, message.isRead());
 		Database.addRow(MESSAGES, row);
 	}
 	
 	
 	/**
-	 * Updates the database to show this message as read = true.
+	 * Updates the database to show this message as seen = true.
 	 * @param message
 	 */
 	public void readMessage(Message message) {
 		String recipientName = message.getRecipient();
-		int modified = Database.setValues(MESSAGES, recipientName, userName, 
-				DATE, message.getDate(), READ, true);
+		int modified = Database.setValues(MESSAGES, RECIPIENT, recipientName, 
+				DATE, message.getDate(), SEEN, true);
 		
 		if (modified != 1) {
 			throw new RuntimeException("Problem modifying rows. Modified " + modified + " rows");
@@ -332,7 +332,7 @@ public class Account implements Constants {
 		row.put(RECIPIENT, message.getRecipient());
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
-		row.put(READ, message.isRead());
+		row.put(SEEN, message.isRead());
 		Database.removeRows(MESSAGES, row);
 	}
 	
@@ -352,14 +352,14 @@ public class Account implements Constants {
 			Util.validateObject(row.get(CONTENT), STRING);
 			Util.validateObject(row.get(TYPE), STRING);
 			Util.validateObject(row.get(DATE), STRING);
-			Util.validateObject(row.get(READ), BOOLEAN);
+			Util.validateObject(row.get(SEEN), BOOLEAN);
 			
 			String sender = (String) row.get(SENDER);
 			String recipient = (String) row.get(RECIPIENT);
 			String content = (String) row.get(CONTENT);
 			String type = (String) row.get(TYPE);
 			String date = (String) row.get(DATE);
-			boolean read = (Boolean) row.get(READ);
+			boolean read = (Boolean) row.get(SEEN);
 			
 			result.add(new Message(sender, recipient, content, type, date, read));
 		}
@@ -382,14 +382,14 @@ public class Account implements Constants {
 			Util.validateObject(row.get(CONTENT), STRING);
 			Util.validateObject(row.get(TYPE), STRING);
 			Util.validateObject(row.get(DATE), STRING);
-			Util.validateObject(row.get(READ), BOOLEAN);
+			Util.validateObject(row.get(SEEN), BOOLEAN);
 			
 			String sender = (String) row.get(SENDER);
 			String recipient = (String) row.get(RECIPIENT);
 			String content = (String) row.get(CONTENT);
 			String type = (String) row.get(TYPE);
 			String date = (String) row.get(DATE);
-			boolean read = (Boolean) row.get(READ);
+			boolean read = (Boolean) row.get(SEEN);
 			
 			result.add(new Message(sender, recipient, content, type, date, read));
 		}

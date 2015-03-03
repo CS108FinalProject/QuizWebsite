@@ -10,7 +10,12 @@
 </head>
 <body>
 	<%
-		String name = (String)request.getParameter("id");
+		String name;
+		if (request.getParameter("id") != null) {
+			name = request.getParameter("id");
+		} else {
+			name = (String) request.getAttribute("username");
+		}
 	%>
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
@@ -20,15 +25,8 @@
 			Account account = AccountManager.getAccount(name);
 			List<Message> messages;
 			String msgToDisplay = request.getParameter("choice");
-			//System.out.println(msgToDisplay);
 			
-			// ????????????
-			/* Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
-			Message msg2 = new Message("Guy3", "Guy4", "Hi Guy!", Constants.MESSAGE_NOTE, "date", false);
-			messages = new ArrayList<Message>();
-			messages.add(0, msg1);
-			messages.add(1, msg2); */
-			
+			// Get messages
 			if (msgToDisplay.equals("Received Messages")) { 
 				messages = account.getReceivedMessages();		
 			} else {
@@ -37,9 +35,8 @@
 			
 			// Print messages
 			for (Message msg : messages) {
-				//String sender = (String) request.getAttribute("sender");
-				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
-					if (!msg.isRead()) {
+				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) { // case of friend request
+					if (!msg.isRead()) { // case of read message
 						out.println("<form action=\"MessageServlet\" method=\"post\">"); 
 						out.print("<li><p>" + msg.getSender() + " sent you a friend request!</p>");
 						out.println("<input type=\"submit\" value=\"Confirm\", name=\"message_button\"> <input type=\"submit\" value=\"Decline\", name=\"message_button\">");
@@ -54,11 +51,17 @@
 								out.println("<p> Already Friends! </p>");
 							} 
 						}
-						account.readMessage(msg); // uncomment!
+						account.readMessage(msg); 
+					} else { // case of unread message
+						if (account.isFriend(AccountManager.getAccount(msg.getSender()))) {
+							out.println("<li><p> You accepted " + msg.getSender() + "'s friend request</p>");
+						} else {
+							out.println("<li><p> You declined " + msg.getSender() + "'s friend request</p>");
+						}	
 					}
-				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {
+				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) { // case of challenge
 					// go to challenge page
-				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) {
+				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) { // case of note
 					out.println("<form action=\"MessageServlet\" method=\"post\">");
 					out.print("<li><p>" + msg.getSender() + " sent you a message!</p>");
 					out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
