@@ -91,7 +91,7 @@ form {
 .btn {
   background: #159aed;
   height: 30px;
-  width: 60px;
+  width: 70px;
   color: #fff;
   cursor: pointer;
   display: inline-block;
@@ -197,63 +197,181 @@ p a {
 
 /*
   ========================================
-  Table Layout for Welcome Page
+  Homepage Layout
   ========================================
 */
 
-table {
-  margin-bottom: 44px;
-  width: 100%;
-}
-table:last-child {
-  margin-bottom: 0;
-}
-th,
-td {
-  padding-bottom: 22px;
-  vertical-align: top;
-}
-th {
-  padding-right: 45px;
-  text-align: right;
-  width: 20%;
-}
-td {
-  width: 40%;
-}
-thead {
-  line-height: 44px;
-}
-thead th {
-  color: #fff;
-  font-size: 24px;
-}
-tbody th {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 400;
-  padding-top: 22px;
-  text-transform: uppercase;
-}
-tbody td {
-  border-top: 1px solid #dfe2e5;
-  padding-top: 21px;
-}
-tbody td:first-of-type {
-  padding-right: 15px;
-}
-tbody td:last-of-type {
-  padding-left: 15px;
-}
-tbody td:only-of-type {
-  padding-left: 0;
-  padding-right: 0;
-}
-table a {
-  color: #fff;
-}
-table h4 {
-  margin-bottom: 0;
+#greeting {
+	margin: 15px 0;
+	font-size: 
 }
 
+#announcements {
+	width: 35%;
+	float: left;
+	height: 30%;
+	padding: 24px 15px;
+	background-color: yellow;
+}
+
+#messages {
+	float: right;
+	width: 55%;
+	background-color: #fff;
+}
+
+#messages #view_messages {
+	float: left;
+	width: 40%;
+}
+
+#messages #send_messages  {
+	float: right;
+	width: 40%;
+}
+
+#achievments {
+	clear: both;
+}
+
+#row_1 {
+	margin: 30px;
+}
+
+#still_left {
+	clear: both;
+}
+/*
+  ========================================
+  Navigation
+  ========================================
+*/
+
+nav {
+  background-color: #fff;
+  border: 1px solid #dedede;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+  color: #888;
+  display: block;
+  overflow: hidden;
+  width: 100%; 
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  list-style-type: none;
+  
+  -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s; 
+}
+    
+nav > ul > li > a > .caret,
+nav > ul > li > div ul > li > a > .caret {
+  border-top: 4px solid #aaa;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  content: "";
+  display: inline-block;
+  height: 0;
+  width: 0;
+  vertical-align: middle;
+
+  -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+  -o-transition: color 0.1s linear;
+    transition: color 0.1s linear; 
+}
+    
+nav > ul > li > div ul > li > a > .caret {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-left: 4px solid #f2f2f2;
+    margin: 0 0 0 8px;
+}
+
+nav > ul > li > a {
+  color: #000;
+  display: block;
+  line-height: 56px;
+  padding: 0 24px;
+  text-decoration: none;
+}
+
+nav > ul > li:hover {
+  background-color: #000;
+}
+
+nav > ul > li:hover > a {
+  color: rgb( 255, 255, 255 );
+}
+
+nav > ul > li:hover > a > .caret {
+  border-top-color: rgb( 255, 255, 255 );
+}
+
+nav > ul > li > div ul > li:hover > a > .caret {
+    border-left-color: rgb(255,255,255);
+}
+    
+nav > ul > li > div,
+nav > ul > li > div ul > li > div {
+  background-color: rgb( 40, 44, 47 );
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+  display: none;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  width: 165px;
+  visibility: hidden;
+
+  -webkit-transiton: opacity 0.2s;
+  -moz-transition: opacity 0.2s;
+  -ms-transition: opacity 0.2s;
+  -o-transition: opacity 0.2s;
+  -transition: opacity 0.2s;
+}
+    
+nav > ul > li > div ul > li > div {
+    background-color: rgb( 40, 44, 47 );
+    border-radius: 0 4px 4px 4px;
+    box-shadow: inset 2px 0 5px rgba(0,0,0,.15);
+    margin-top: -42px;
+    right: -165px;
+}
+
+nav > ul > li:hover > div,
+nav > ul > li > div ul > li:hover > div {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+nav > ul > li > div ul > li,
+nav > ul > li > div ul > li > div ul > li {
+  display: block;
+  position: relative;
+}
+
+nav > ul > li > div ul > li > a,
+nav > ul > li > div ul > li > div ul > li > a {
+  color: #fff;
+  display: block;
+  padding: 12px 24px;
+  text-decoration: none;
+}
+
+nav > ul > li > div ul > li:hover > a {
+  background-color: rgba( 255, 255, 255, 0.1);
+}
 
