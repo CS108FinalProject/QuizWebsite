@@ -20,7 +20,7 @@
 			Account account = AccountManager.getAccount(name);
 			List<Message> messages;
 			String msgToDisplay = request.getParameter("choice");
-			System.out.println(msgToDisplay);
+			//System.out.println(msgToDisplay);
 			
 			// ????????????
 			/* Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
@@ -37,7 +37,6 @@
 			
 			// Print messages
 			for (Message msg : messages) {
-				//request.setAttribute("message", msg);
 				//String sender = (String) request.getAttribute("sender");
 				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
 					if (!msg.isRead()) {
