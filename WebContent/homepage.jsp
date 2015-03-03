@@ -35,6 +35,11 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = <%="\"homepage.jsp?id="+name+"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
+
+				<% System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
+
+
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
