@@ -59,9 +59,8 @@ public class RegistrationServlet extends HttpServlet {
 				dispatch.forward(request, response);
 			}
 			
-			//redirect to new users' homepage if account created successfully
-			/*
-			if (request.getParameter("isAdministrator") != null) { // case of admin
+			// case of new administrative account
+			if (request.getParameter("isAdministrator") != null) { 
 				AccountManager.getAccount(username).setAdmin(true);
 				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
 				dispatch.forward(request, response);
@@ -70,9 +69,11 @@ public class RegistrationServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			}
-			*/
+			/*
+			getServletContext().setAttribute("session_user",username);
 			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
 			dispatch.forward(request, response);
+			*/
 
 		}
 	}

@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="homepage.css" ></link>
 <%String name = (String)getServletContext().getAttribute("session_user");
-//Account acct = AccountManager.getAccount(name);
+Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
 
 %>
@@ -52,8 +52,6 @@ String sel_type = (String)request.getParameter("choice");
 			</tr>
 	</table>
 	<h2>Nice to see you, <%=name %></h2>
-
-	
 	
 	<table id = "content">
 		<tr>
