@@ -43,7 +43,6 @@ public class RegistrationServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		
 		//Redirect if username not valid
-		//if (!username.equals("Kelsey")) {
 		if (AccountManager.accountExists(username)) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("registration.jsp");
 			request.setAttribute("errMsg", "<h1>Sorry, the username, "+username+", already exists. Please choose another.</h1>");
@@ -62,11 +61,12 @@ public class RegistrationServlet extends HttpServlet {
 			getServletContext().setAttribute("session_user",username);
 			// case of new administrative account
 			if (request.getParameter("isAdministrator") != null) { 
+				System.out.println("Admin not null");
 				AccountManager.getAccount(username).setAdmin(true);
 				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			} else {
-				AccountManager.getAccount(username).setAdmin(false);
+				System.out.println("IS not admin");
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			}
