@@ -58,7 +58,7 @@ public class SendMessageServlet extends HttpServlet {
 		// create and send message according to message type
 		if (request.getParameter("message_type").equals("Add Friend")) {
 
-			if (!sender.friendshipPending(recipient)) {
+			if ((!sender.friendshipPending(recipient)) && (!sender.isFriend(recipient)) && (!recipient.isFriend(sender))) {
 				Message msg = new Message(sender_name, friend_name, "", Constants.MESSAGE_FRIEND_REQUEST, date, false);
 				sender.sendMessage(msg);
 			}
@@ -71,13 +71,14 @@ public class SendMessageServlet extends HttpServlet {
 			Message msg = new Message(sender_name, friend_name, request.getParameter("msg_content"), Constants.MESSAGE_NOTE, date, false);
 			sender.sendMessage(msg);
 		}
-		if (AccountManager.getAccount(sender_name).isAdmin()) {
-			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
-			dispatch.forward(request, response);
-		} else {
-			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
-			dispatch.forward(request, response);
-		}
+//		if (AccountManager.getAccount(sender_name).isAdmin()) {
+//			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
+//			dispatch.forward(request, response);
+//		} else {
+		request.setAttribute("friend_id", friend_name);
+		RequestDispatcher dispatch = request.getRequestDispatcher("accountProfile.jsp");
+		dispatch.forward(request, response);
+		//}
 	}
 
 }

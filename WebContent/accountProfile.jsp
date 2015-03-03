@@ -10,11 +10,16 @@
 <body>
 	
 	<%
-		String sender_name =  (String) request.getParameter("username");
-		String friend_name = (String)request.getParameter("friend_id");
-		System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
+		String sender_name =  (String) getServletContext().getAttribute("session_user");
+		String friend_name;
+		if (request.getParameter("friend_id") != null) {
+			friend_name = (String)request.getParameter("friend_id");
+		} else {
+			friend_name = (String)request.getAttribute("friend_id");
+		}
+		
+		//System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
-<<<<<<< HEAD
 	
 	<table id="header">
 			<tr>
@@ -48,15 +53,6 @@
 				<th>Quizzes</th>
 			</tr>
 	</table>
-	
-	<form action="addFriendServlet" method="post"> 
-		<input type="submit" name=message_type value="Add Friend">
-	</form>
-	<br>
-=======
-
-
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 	
 	<form action="SendMessageServlet" method="post"> 
 		<input type="text" value="" name="msg_content"> 
