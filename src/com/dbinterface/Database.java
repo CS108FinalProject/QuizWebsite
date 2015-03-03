@@ -356,11 +356,7 @@ public class Database implements Constants {
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-<<<<<<< HEAD
 			throw new RuntimeException("Problem with query: " + query);
-=======
-			throw new RuntimeException("Problem with query" + query);
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 		}
 		return tables.contains(tableName);
 	}
