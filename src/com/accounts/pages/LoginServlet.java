@@ -43,23 +43,24 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		if (AccountManager.accountExists(username)) {
-			System.out.println(username);
-
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
+					// if user is an administrator (still need to implemenet checkbox)
 					if (AccountManager.getAccount(username).isAdmin()) {
 						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
 						dispatch.forward(request, response);
 					} else {
+						System.out.println("Check");
 						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
 						dispatch.forward(request, response);
 					}
 				}
 			} catch (NoSuchAlgorithmException e) {			
 			}
+			return;
 		}
-			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-			dispatch.forward(request, response);	
+		RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
+		dispatch.forward(request, response);	
 	}
 
 }
