@@ -136,7 +136,7 @@ String sel_type = (String)request.getParameter("choice");
 					</form>
 					<%			
 
-						ArrayList<Message> messages = acct.getReceivedMessages();	
+						List<Message> messages = acct.getReceivedMessages();	
 		
 
 						if (messages.size() > 0) {
