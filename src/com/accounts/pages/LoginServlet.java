@@ -40,9 +40,9 @@ public class LoginServlet extends HttpServlet {
 
 		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
 		String username = request.getParameter("username");
-		System.out.println( username );
+		//System.out.println( username );
 		String password = request.getParameter("password");
-		System.out.println( password );
+		//System.out.println( password );
 
 		if (AccountManager.accountExists(username)) {
 			try {
@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 					getServletContext().setAttribute("session_user",username);
 					
 					if (AccountManager.getAccount(username).isAdmin()) {
-						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
+						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
 						dispatch.forward(request, response);
 					} else {
 						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
