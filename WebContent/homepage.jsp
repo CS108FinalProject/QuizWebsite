@@ -103,8 +103,9 @@ String sel_type = (String)request.getParameter("choice");
 							out.println("<table>");
 							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
-								Message msg = messages.get(i);
-								out.println("<td>"+msg.getSender()+"</td>");
+								Message msg = messages.get(i);								
+								out.println("<td><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+										+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a></td>");
 								out.println("<td>"+msg.getDate()+"</td>");
 								out.println("<td>"+msg.getType()+"</td>");
 								if (i == 4) i = messages.size();
