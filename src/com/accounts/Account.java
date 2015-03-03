@@ -209,8 +209,8 @@ public class Account implements Constants {
 		// Problem with DB if there is more than one.
 		if (statusList.size() != 1) {
 			throw new RuntimeException("Corrupt database integrity. Duplicate entry in: " 
-										+ FRIENDS + ", " + USERNAME + " " + userName 
-										+  FRIEND + " " + friendName); 
+										+ FRIENDS + ", " + USERNAME + ": " + userName 
+										+  ", " + FRIEND + ": " + friendName); 
 		}
 		
 		// Type validation.
@@ -228,6 +228,12 @@ public class Account implements Constants {
 	 * @param account friendship will be attempted with the owner of this account.
 	 */
 	public void addFriend(Account account) {
+		// TODO: front-end should catch this and display a helpful message.
+		// No self-friending.
+		if (account.getUserName().equals(userName)) {
+			throw new RuntimeException("You cannot make friends with yourself.");
+		}
+		
 		// If users are already friends, throw exception.
 		// TODO: front end should catch this and notify user.
 		if (isFriend(account)) {
