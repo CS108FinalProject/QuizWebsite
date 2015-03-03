@@ -137,11 +137,10 @@ String sel_type = (String)request.getParameter("choice");
 					<%			
 
 						List<Message> messages = acct.getReceivedMessages();	
-		
+						out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 
 						if (messages.size() > 0) {
 							out.println("<table>");
-							out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);

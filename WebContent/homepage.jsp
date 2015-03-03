@@ -30,7 +30,6 @@ String sel_type = (String)request.getParameter("choice");
 				} else {
 					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-				
 					*/%> 
 					
 				<th><a href = <%="\"homepage.jsp?id="+name+"\""%>>Homepage</a></th>
@@ -93,10 +92,10 @@ String sel_type = (String)request.getParameter("choice");
 					</form>
 					<%																
 						List<Message> messages = acct.getReceivedMessages();	
+						out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 
 						if (messages.size() > 0) {
 							out.println("<table>");
-							out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
