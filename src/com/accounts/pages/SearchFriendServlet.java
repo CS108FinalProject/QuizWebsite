@@ -38,6 +38,9 @@ public class SearchFriendServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String friend_id = request.getParameter("friend_id");
+		String sender = (String) getServletContext().getAttribute("session_user");
+//		request.setAttribute("sender", sender);
+		System.out.println("Recieved Eliezer?: " + sender);
 		
 		// Update request according to account existence 
 		if (AccountManager.accountExists(friend_id)) {
@@ -45,7 +48,7 @@ public class SearchFriendServlet extends HttpServlet {
 		} else request.setAttribute("account", null);
 		
 		// forward request back to searchFriends.jsp
-		RequestDispatcher dispatch = request.getRequestDispatcher("searchFriends.jsp");
+		RequestDispatcher dispatch = request.getRequestDispatcher("searchFriends.jsp?id=" + sender);
 		dispatch.forward(request, response);
 	}
 

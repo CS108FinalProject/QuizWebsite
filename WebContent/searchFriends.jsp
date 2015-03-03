@@ -11,7 +11,13 @@
 <body>
 	
 	<%
-		request.setAttribute("account", "not_searched");
+		// if we are coming from the homepage
+		if ( request.getParameter("id") != null ) {
+			String name = request.getParameter("id");
+			System.out.println( "Name: " + name);
+			request.setAttribute("sender", name);
+			System.out.println( "First Time: " + name);
+		}
 	%>
 	
 	<h2> Find Friends</h2>
@@ -23,14 +29,17 @@
 	<br>
 	
 	<%
-	String name = (String)request.getParameter("id");
+	//String name = (String)request.getParameter("");
 	//out.println("<p>" + name + "</p>");
-	
 	// Check whether account exists and prints a message accordingly
-	if ((request.getAttribute("account") != null) && (!((String) request.getAttribute("account")).equals("not_searched"))) {
+	if ((request.getAttribute("account") != null) ) {
 		// Case of account exists - print link to acount's profile
+		String name = (String) request.getAttribute("account");
+		String sender2 = (String) request.getAttribute("sender");
+		System.out.println( "In SearchFriends: Sender=" + sender2);
+		
 		out.println("<p> Friend found: </p><br>");
-		out.println("<p><a href=\"accountProfile.jsp?friend_id=" + name + "\">" + name + "</a></p>");
+		out.println("<p><a href=\"accountProfile.jsp?friend_id=" + name + "&username=" + sender2 + "</a></p>");
 	} else if (request.getAttribute("account") == null){
 		out.println("<p> Friend not found </p>");
 	}

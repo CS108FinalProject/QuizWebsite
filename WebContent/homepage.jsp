@@ -22,8 +22,8 @@
 			<tr>
 				<th>Announcements</th>
 				<th>My Achievements</th>
-
-				<th> <a href="searchFriends.jsp?name=<%=name%>"> Find Friends</a> </th>
+				<% System.out.println( "In Homepage: " + name); %>
+          		<th> <a href="searchFriends.jsp?id=<%=name%>"> Find Friends</a> </th>
 
 				<th>My Messages 
 					<form action = <%="\"homepage.jsp?id="+name+"\""%>>
