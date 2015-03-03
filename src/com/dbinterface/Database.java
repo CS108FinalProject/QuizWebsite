@@ -18,9 +18,7 @@ import com.util.Util;
 
 
 /**
- * This is a program that will provide an interface
- * for interacting with a remote mySql database.
- * 
+ * This class provides an interface to the remote mySql database.
  * @author eliezer && Sam
  */
 public class Database implements Constants {
@@ -29,7 +27,9 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Establishes a connection with the database
+	 * Establishes a connection with the database.
+	 * Has to be instantiated once before calling any of the static
+	 * methods in this class.
 	 */
 	public Database() {
 		con = new Connector();
@@ -38,10 +38,8 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Removes table.
-	 * User can check status of table by calling
-	 * showTables()
-	 * @param tableName name of the table in the database
+	 * Removes a table.
+	 * @param tableName name of the table in the database to be removed
 	 */
 	public static void removeTable(String tableName) {
 		if ( tableName == null ) {
@@ -58,9 +56,9 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Show Tables in database specified by MyDBInfo file.
-	 * Should be used for error checking and validation.
-	 * @return String list of tables in database
+	 * Shows all tables in database specified by MyDBInfo file.
+	 * To be used for error checking and validation.
+	 * @return String list of table names in the database
 	 */
 	public String displayTables() {
 		String output = "Empty";
@@ -131,7 +129,7 @@ public class Database implements Constants {
 	
 	
 	/*
-	 * Gets the corresponding table creation query
+	 * Returns the corresponding table creation query
 	 */
 	private static String getCreationQuery(String tableName, Map<String, String> columnTypeAndName ) {
 		if (columnTypeAndName == null) {
@@ -142,7 +140,7 @@ public class Database implements Constants {
 		
 		String output = "CREATE TABLE " + tableName + " (\n";
 		
-		// know we have atleast one column
+		// know we have at least one column
 		int count = 0;
 		for (String columnName : columnTypeAndName.keySet()) {
 			String type = columnTypeAndName.get(columnName);
@@ -161,7 +159,7 @@ public class Database implements Constants {
 	
 	
 	/*
-	 * Checks to see if the map's keys contain valid datatypes
+	 * Checks if the map's keys contain valid data-types
 	 */
 	private static void validateColumnTypeAndName(String tableName, Map<String, String> columnTypeAndName) {
 		if ( columnTypeAndName == null ) {
@@ -186,8 +184,7 @@ public class Database implements Constants {
 	}
 	
 	
-	//Helper
-	// get columnName and Type for given table
+	// Returns all columnNames and Types for the given table.
 	private static Map<String, String> getColumnNameAndType(String tableName) {
 		Map<String, String> map = new HashMap<String, String>();
 		if (!tableExists( tableName ) ) {
@@ -214,10 +211,9 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Should add the passed row to the specified table. Check correct type for each Object.
+	 * Adds the passed row to the specified table. 
 	 * @param tableName
-	 * @param row key = column name, value = table value
-	 * throw exception on failure (type miss-match, etc...)
+	 * @param row a Map that represents the row to be added. (key = column name, value = table value)
 	 */
 	public static void addRow(String tableName, Map<String, Object> row) {
 		Util.validateString(tableName);
@@ -258,8 +254,7 @@ public class Database implements Constants {
 	}
 
 	
-	// Private helper
-	// insert query
+	// Given a table name and a row, returns the SQL query to add it.
 	private static String insertQuery(String tableName, Map<String, Object> row ) {
 		String output = "";
 		output += "INSERT INTO " + tableName + " (\n";
@@ -280,7 +275,7 @@ public class Database implements Constants {
 	}
 	
 	
-	// Helper | formats the values query
+	// Formats the MySQL values query.
 	private static String formatValues(Collection<Object> values, String output) {
 		for (Object val : values) {
 			String type = val.getClass().toString().substring(16).toLowerCase();
@@ -296,7 +291,7 @@ public class Database implements Constants {
 	}
 	
 	
-	// Private method that gets row count of table
+	// Returns the row count of specified table.
 	private static int getRowCount(String tableName) {
 		int row = 0;
 		if (tableExists(tableName)) {
@@ -315,7 +310,7 @@ public class Database implements Constants {
 	}
 	
 	
-	// Private method that obtains the number of columns in a table
+	// Returns the number of columns in the specified table.
 	private static int getColumnCount(String tableName) {
 		int column = 0;
 		if (!tableExists(tableName)) {
@@ -333,15 +328,14 @@ public class Database implements Constants {
 			e.printStackTrace();
 			throw new RuntimeException("Problem executing query: " + query);
 		}		
-		
 		return column;
 	}
 	
 	
 	/**
-	 * Self explanatory.
+	 * Determines whether the specified table exists in the database.
 	 * @param tableName
-	 * @return
+	 * @return true if the specified table exists in the database, false otherwise.
 	 */
 	public static boolean tableExists(String tableName) {
 		Set<String> tables = new HashSet<String>();
@@ -363,10 +357,10 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Returns the whole table. Each row is a Map.
+	 * Returns a whole table. Each row is a Map.
 	 * Returns null if there is no such table or an empty list if the table is empty.
 	 * @param tableName name of the table in database
-	 * @return list of maps containing the row information
+	 * @return list of maps containing row entries
 	 */
 	public static List<Map<String, Object>> getTable(String tableName) {
 		if (!tableExists(tableName)) return null;
@@ -403,12 +397,13 @@ public class Database implements Constants {
 	}
 	
 	
+	// To be used for testing purposes only.
 	public static void main( String [] args ) {
 		new Database();
 	}
 	
 	
-	//Helper
+	// Given a type name and value in String form, returns the actual value Object. 
 	private static Object getObject(String className, String value) {
 		if ( className == "java.lang.String") { return value; } 
 		else if ( className == "java.lang.Long") {
@@ -439,7 +434,6 @@ public class Database implements Constants {
 	 * 
 	 * finds all the rows in the "Friends" table that have "Eliezer" under the "userName" column,
 	 * and "Sam" under the "Friend" column and removes them. 
-	 *  
 	 */
 	public static int removeRows(String tableName, String columnGuide1, Object guideValue1, 
 			String columnGuide2, Object guideValue2) {
@@ -515,7 +509,6 @@ public class Database implements Constants {
 		return rowCount - getRowCount(tableName);
 	}
 	
-	
 
 	/**
 	 * In the specified table, removes all the rows that match the given description.
@@ -556,17 +549,19 @@ public class Database implements Constants {
 	
 	
 	/**
-	 * Should return a list of rows (each a Map<String, Object>) where columnName is equals to the value.
+	 * Returns a list of rows (each a Map<String, Object>) where columnName is equals 
+	 * to the value.
 	 * 
-	 * Example: getRows("Accounts", "userName", "Eliezer") returns the List of rows (each a Map) where the
-	 * value under the userName column is Eliezer.
-	 * Should return null if no such row is found.
+	 * Example: getRows("Accounts", "userName", "Eliezer") returns the List of rows 
+	 * (each a Map) where the value under the userName column is Eliezer.
 	 * @param tableName 
-	 * @param columnName
-	 * @param value
-	 * @return
+	 * @param columnName to look for a match in
+	 * @param value to be matched
+	 * @return a list of rows in Map form, or null if criteria was not matched.
 	 */
-	public static List<Map<String, Object>> getRows(String tableName, String columnName, Object value) {
+	public static List<Map<String, Object>> getRows(String tableName, String columnName, 
+			Object value) {
+		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		Util.validateString(tableName);
@@ -618,16 +613,18 @@ public class Database implements Constants {
 	/**
 	 * Modifies the passed value in the specified table location.
 	 * @param tableName 
-	 * @param columnGuide name of the column that will be used to determine the row that should be modified  
-	 * @param guideValue all the rows that have this in value in the "columnGuide column" should be modified
-	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
-	 * 			modified in these rows
-	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
+	 * @param columnGuide name of the column that will be used to determine the row that 
+	 * should be modified  
+	 * @param guideValue all the rows that have this in value in the "columnGuide column" 
+	 * should be modified
+	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name 
+	 * of the column that should be modified in these rows
+	 * @param columnToBeSetValue the actual value that is being added 
 	 * @return amount of values that were modified
 	 * 
 	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
-	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
-	 * to be "thisIsMyNewPassword" 
+	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify 
+	 * their "password" column to be "thisIsMyNewPassword" 
 	 */
 	public static int setValues(String tableName, String columnGuide, Object guideValue,
 			String columnToBeSet, Object columnToBeSetValue) {
@@ -682,21 +679,26 @@ public class Database implements Constants {
 	/**
 	 * Modifies the passed value in the specified table location.
 	 * @param tableName 
-	 * @param columnGuide1 name of the first column that will be used to determine the row that should be modified  
-	 * @param guideValue1 all the rows that have this in value in the "columnGuide1 column" should be modified
-	 * @param columnGuide2 name of the second column that will be used to determine the row that should be modified  
-	 * @param guideValue2 all the rows that have this in value in the "columnGuide2 column" should be modified
-	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the column that should be 
-	 * 			modified in these rows
+	 * @param columnGuide1 name of the first column that will be used to determine the row that 
+	 * should be modified  
+	 * @param guideValue1 all the rows that have this in value in the "columnGuide1 column" 
+	 * should be modified
+	 * @param columnGuide2 name of the second column that will be used to determine the row that 
+	 * should be modified  
+	 * @param guideValue2 all the rows that have this in value in the "columnGuide2 column" should 
+	 * be modified
+	 * @param columnToBeSet once the rows has been located, the columnToBeSet is the name of the 
+	 * column that should be modified in these rows
 	 * @param columnToBeSetValue the actual value that is being added (check for type correctness)
 	 * @return amount of values that were modified
 	 * 
 	 * Example: setValue("Accounts", "userName", "Eliezer", "password", "thisIsMyNewPassword");
-	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify their "password" column
-	 * to be "thisIsMyNewPassword" 
+	 * look for all the rows that have value = "Eliezer" under the "userName" column and modify 
+	 * their "password" column to be "thisIsMyNewPassword" 
 	 */
-	public static int setValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2,
-			Object guideValue2, String columnToBeSet, Object columnToBeSetValue) {
+	public static int setValues(String tableName, String columnGuide1, Object guideValue1, 
+			String columnGuide2, Object guideValue2, String columnToBeSet, 
+			Object columnToBeSetValue) {
 		
 		Util.validateString(tableName);
 		Util.validateString(columnGuide1);
@@ -758,9 +760,9 @@ public class Database implements Constants {
 	 * 
 	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
 	 * 
-	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" and under the
-	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
-	 * Return the list or null if nothing was found.
+	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" 
+	 * and under the "status" column the value = "friends" take the value under the "friend" 
+	 * column and add it to a list.
 	 * 
 	 * @param tableName the requested table
 	 * @param columnGuide1 the first specified column
@@ -768,9 +770,11 @@ public class Database implements Constants {
 	 * @param columnGuide2 the second specified column
 	 * @param guideValue2 the second specified value
 	 * @param columnToGet the column where the returned values will be in.
-	 * @return a list of objects matching the specification.
+	 * @return a list of objects matching the specification, or null if non were found
 	 */
-	public static List<Object> getValues(String tableName, String columnGuide, Object guideValue, String columnToGet) {
+	public static List<Object> getValues(String tableName, String columnGuide, Object guideValue, 
+			String columnToGet) {
+		
 		Util.validateString(tableName);
 		Util.validateString(columnGuide);
 		Util.validateString(columnToGet);
@@ -813,9 +817,9 @@ public class Database implements Constants {
 	 * 
 	 * Example: getValues("Friends", "userName", "Eliezer", "status", "friends", "friend");
 	 * 
-	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" and under the
-	 * "status" column the value = "friends" take the value under the "friend" column and add it to a list.
-	 * Return the list or null if nothing was found.
+	 * In every row in the "Friends" table where under the "userName" column the value = "Eliezer" 
+	 * and under the "status" column the value = "friends" take the value under the "friend" column 
+	 * and add it to a list. 
 	 * 
 	 * @param tableName the requested table
 	 * @param columnGuide1 the first specified column
@@ -823,10 +827,10 @@ public class Database implements Constants {
 	 * @param columnGuide2 the second specified column
 	 * @param guideValue2 the second specified value
 	 * @param columnToGet the column where the returned values will be in.
-	 * @return a list of objects matching the specification.
+	 * @return a list of objects matching the specification, or null if non were found
 	 */
-	public static List<Object> getValues(String tableName, String columnGuide1, Object guideValue1, String columnGuide2, 
-			Object guideValue2, String columnToGet) {
+	public static List<Object> getValues(String tableName, String columnGuide1, Object guideValue1, 
+			String columnGuide2, Object guideValue2, String columnToGet) {
 		
 		Util.validateString(tableName);
 		Util.validateString(columnGuide1);
@@ -988,6 +992,7 @@ public class Database implements Constants {
 	}
 	
 	
+	// Establishes a new connection to the database and returns a new statement object.
 	private static Statement getNewStatement() {
 		Connection connection = con.getConnection();
 		Statement statement = null;
