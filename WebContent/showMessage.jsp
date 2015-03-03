@@ -58,6 +58,7 @@
 							} 
 						}
 						account.readMessage(msg); // uncomment!
+						
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) {
 					// go to challenge page
