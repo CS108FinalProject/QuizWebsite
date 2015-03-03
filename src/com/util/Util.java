@@ -13,7 +13,9 @@ public class Util implements Constants {
 	 */
 	public static void validateString(String str) {
 		if (str == null) throw new NullPointerException();
-		if (str.isEmpty()) throw new IllegalArgumentException();
+		if (str.isEmpty()) {
+			throw new IllegalArgumentException("The passed String is empty.");
+		}
 	}
 	
 	
