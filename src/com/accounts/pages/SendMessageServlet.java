@@ -18,7 +18,7 @@ import com.util.Constants;
 /**
  * Servlet implementation class addFriendServlet
  */
-@WebServlet("/addFriendServlet")
+@WebServlet("/SendMessageServlet")
 public class SendMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -46,14 +46,15 @@ public class SendMessageServlet extends HttpServlet {
 		String date = timeStamp.toString();
 		
 		// get accounts
-		String sender_name = (String)request.getParameter("id");
-		System.out.println(sender_name);
-		String friend_name = (String)request.getParameter("friend_id");
+		String sender_name = (String) request.getParameter("sender"); // why is this null
+		String friend_name = (String)request.getParameter("friend");
+		System.out.println( "Are you still null ? " + friend_name);
 		Account sender = AccountManager.getAccount(sender_name);
 		
 		// create and send message according to message type
 		if (request.getParameter("message_type").equals("Add Friend")) {
-			Message msg = new Message(sender_name, friend_name, "", Constants.MESSAGE_FRIEND_REQUEST, date, false);
+			Message msg = new Message(sender_name, friend_name, "none", Constants.MESSAGE_FRIEND_REQUEST, date, false);
+			System.out.println( "This is the Message: " + msg );
 			sender.sendMessage(msg);
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 		

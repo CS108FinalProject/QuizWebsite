@@ -9,18 +9,21 @@
 </head>
 <body>
 	<%
-		String sender_name = (String)request.getParameter("username");
+		String sender_name =  (String) request.getParameter("username");
 		String friend_name = (String)request.getParameter("friend_id");
 		System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
-	<form action="addFriendServlet" method="post"> 
+	<form action="SendMessageServlet" method="post"> 
+		<input type="hidden" name="sender"  value = <%= "\""+sender_name+"\"" %>>
+		<input type="hidden" name="friend"  value = <%= "\""+friend_name+"\"" %>>
 		<input type="submit" name=message_type value="Add Friend">
 	</form>
 	<br>
 	
 	<form action="SendMessageServlet" method="post"> 
 		<input type="text" value="" name="msg_content">
-		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "sender" value = <%="\""+sender_name+"\""%>>
+		<input type="hidden" name="friend"  value = <%= "\""+friend_name+"\"" %>>
 		<input type="submit" name=message_type value="Send Note">
 	</form>
 	
