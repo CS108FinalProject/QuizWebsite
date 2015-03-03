@@ -53,6 +53,7 @@ String sel_type = (String)request.getParameter("choice");
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				
 				<th>Quizzes</th>
 			</tr>
 	</table>
