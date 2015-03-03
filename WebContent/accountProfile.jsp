@@ -10,10 +10,11 @@
 <body>
 	
 	<%
-		String sender_name = (String)request.getParameter("username");
+		String sender_name =  (String) request.getParameter("username");
 		String friend_name = (String)request.getParameter("friend_id");
 		System.out.println( "Sender:" + sender_name + "\nFriend: " + friend_name);
 	%>
+<<<<<<< HEAD
 	
 	<table id="header">
 			<tr>
@@ -52,12 +53,26 @@
 		<input type="submit" name=message_type value="Add Friend">
 	</form>
 	<br>
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 	
 	<form action="SendMessageServlet" method="post"> 
-		<input type="text" value="" name="msg_content">
+		<input type="text" value="" name="msg_content"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Send Note">
 	</form>
+	
+		<form action="SendMessageServlet" method="post"> 
+		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
+
+		<input type="submit" name=message_type value="Add Friend">
+	</form>
+	<br>
+
 	
 	
 </body>

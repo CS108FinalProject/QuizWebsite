@@ -237,6 +237,7 @@ public class Database implements Constants {
 		for(String columnName : row.keySet()) {
 			Object value = row.get(columnName);
 			String type = getColumnType(tableName, columnName);
+			System.out.println( "Is Type empty? : " + type);
 			Util.validateObject(value, type);
 		}
 	    

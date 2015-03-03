@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ import com.util.Constants;
 /**
  * Servlet implementation class addFriendServlet
  */
-@WebServlet("/addFriendServlet")
+@WebServlet("/SendMessageServlet")
 public class SendMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -46,20 +47,36 @@ public class SendMessageServlet extends HttpServlet {
 		String date = timeStamp.toString();
 		
 		// get accounts
+
 		String sender_name = (String)request.getParameter("id");
-		System.out.println(sender_name);
 		String friend_name = (String)request.getParameter("friend_id");
+
 		Account sender = AccountManager.getAccount(sender_name);
-		
+
+		Account recipient = AccountManager.getAccount(friend_name);
+
 		// create and send message according to message type
 		if (request.getParameter("message_type").equals("Add Friend")) {
-			Message msg = new Message(sender_name, friend_name, "", Constants.MESSAGE_FRIEND_REQUEST, date, false);
-			sender.sendMessage(msg);
+
+			if (!sender.friendshipPending(recipient)) {
+				Message msg = new Message(sender_name, friend_name, "", Constants.MESSAGE_FRIEND_REQUEST, date, false);
+				sender.sendMessage(msg);
+			}
+
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 		
 		} else if (request.getParameter("message_type").equals("Send Note")) {
+
+
 			Message msg = new Message(sender_name, friend_name, request.getParameter("msg_content"), Constants.MESSAGE_NOTE, date, false);
 			sender.sendMessage(msg);
+		}
+		if (AccountManager.getAccount(sender_name).isAdmin()) {
+			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
+			dispatch.forward(request, response);
+		} else {
+			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
+			dispatch.forward(request, response);
 		}
 	}
 
