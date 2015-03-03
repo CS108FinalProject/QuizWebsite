@@ -13,14 +13,14 @@ import java.util.*;
 /**
  * Servlet implementation class adminServlet
  */
-@WebServlet("/adminServlet")
-public class adminServlet extends HttpServlet {
+@WebServlet("/AdminServlet")
+public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public adminServlet() {
+    public AdminServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

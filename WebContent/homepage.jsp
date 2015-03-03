@@ -52,41 +52,7 @@ String sel_type = (String)request.getParameter("choice");
 			</tr>
 	</table>
 	<h2>Nice to see you, <%=name %></h2>
-	<table id = "admin_content">
-		<tr>
-			<td>
-				<div id = "addAnnouncement">
-					Add an Announcement<br></br>
-					<form action = "adminServlet/?id=<%=name%>">
-						<textarea rows = "4" cols = "50" name = "new_ancmnt"></textarea>
-						<input type = "submit"></input>
-					</form>
-				</div>
-				<div id = "siteStats">
-					Site Statistics<br></br>	
-				</div>	
-			</td>
-		</tr>
-		<tr>
-			<td>
-					<div id = "removeAcct">
-						Remove Account<br></br>
-						<form action = "adminServlet/?id=<%=name%>">
-							Account id: <input type = "text" name = "remove_acct" value = <% 
-							String removed_id = request.getParameter("remove_success");
-							if (removed_id != null ) {
-								out.println("\"Account "+removed_id+" removed.\"");
-							} else {
-								out.println("\"No Account Removed\"");
-							}
-							%>></input>
-							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>							
-							<input type = "submit"></input>
-						</form>
-					</div>									
-			</td>
-		</tr>
-	</table>
+
 	
 	
 	<table id = "content">

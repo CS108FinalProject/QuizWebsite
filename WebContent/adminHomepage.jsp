@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="homepage.css" ></link>
 <%String name = (String)getServletContext().getAttribute("session_user");
-//Account acct = AccountManager.getAccount(name);
+Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
 
 %>
@@ -57,7 +57,8 @@ String sel_type = (String)request.getParameter("choice");
 			<td>
 				<div id = "addAnnouncement">
 					Add an Announcement<br></br>
-					<form action = "adminServlet/?id=<%=name%>">
+					<form action = "AdminServlet">
+						<input type = "hidden" name = "id" value = "<%=name %>">
 						<textarea rows = "4" cols = "50" name = "new_ancmnt"></textarea>
 						<input type = "submit"></input>
 					</form>
@@ -110,17 +111,19 @@ String sel_type = (String)request.getParameter("choice");
 				%>	
 			</div></td>
 			<td>
-				Send A Message
-				<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
-					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-					<input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend<br></input>
-					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-					<input type = "radio" name = "msg_type" value = "Challenge">Challenge<br></input>
-					<textarea rows="4" cols="20" name = "msg_content"></textarea>
-					<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
-					<input type = "submit" value = "Send Message">
-				</form>
-				<div id="messages">
+				<div id = "send_messages">
+					Send A Message
+					<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
+						<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
+						<input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend<br></input>
+						<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
+						<input type = "radio" name = "msg_type" value = "Challenge">Challenge<br></input>
+						<textarea rows="4" cols="20" name = "msg_content"></textarea>
+						<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
+						<input type = "submit" value = "Send Message">
+					</form>
+					</div>
+				<div id="read_messages">
 					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
 							<option>Received Messages</option>
@@ -128,7 +131,8 @@ String sel_type = (String)request.getParameter("choice");
 						</select>
 						<input type = "submit" value = "Display Messages">
 					</form>
-					<%						
+					<%			
+					/*
 					try {
 						ArrayList<String> messages = (ArrayList<String>)getServletContext().getAttribute(sel_type);
 						out.println("<table>");			
@@ -150,14 +154,14 @@ String sel_type = (String)request.getParameter("choice");
 							out.println("</td>");
 							out.println("</tr>");
 						out.println("</table>");
-					}
-						/*
+					}*/
+						
 						ArrayList<Message> messages = acct.getReceivedMessages();	
 		
 
 						if (messages.size() > 0) {
 							out.println("<table>");
-							out.println("<a href =\"showMessage.jsp?choice="+sel_name+"\">View All Messages</a>");
+							out.println("<a href =\"showMessage.jsp?choice="+sel_type+"\">View All Messages</a>");
 							for ( int i = 0; i < messages.size();i++ ) {
 								out.println("<tr>");
 								Message msg = messages.get(i);
@@ -168,7 +172,7 @@ String sel_type = (String)request.getParameter("choice");
 							}
 							out.println("</table>");
 						}
-						*/
+						
 					//TODO::Extension to add Sorting mechanisms to table cols					
 					%>
 

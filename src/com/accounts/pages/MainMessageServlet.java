@@ -47,6 +47,7 @@ public class MainMessageServlet extends HttpServlet {
 			dispatch.forward(request, response);
 		} else {
 			request.setAttribute("errMsg", "Friend not found.");
+			/*
 			if (curr_acct.isAdmin()) {
 				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+curr_acct_id); 
 				dispatch.forward(request, response);
@@ -54,7 +55,9 @@ public class MainMessageServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+curr_acct_id); 
 				dispatch.forward(request, response);
 			}
-
+			*/
+			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+curr_acct_id); 
+			dispatch.forward(request, response);
 		}
 				
 	}

@@ -47,6 +47,7 @@ public class LoginServlet extends HttpServlet {
 
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
+					/*
 					if (AccountManager.getAccount(username).isAdmin()) {
 						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
 						dispatch.forward(request, response);
@@ -54,12 +55,17 @@ public class LoginServlet extends HttpServlet {
 						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
 						dispatch.forward(request, response);
 					}
+					*/
+						getServletContext().setAttribute("session_user",username);
+						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
+						dispatch.forward(request, response);
 				}
 			} catch (NoSuchAlgorithmException e) {			
 			}
-		}
+		} else {
 			RequestDispatcher dispatch = request.getRequestDispatcher("reLogin.jsp"); 
-			dispatch.forward(request, response);	
+			dispatch.forward(request, response);
+		}
 	}
 
 }
