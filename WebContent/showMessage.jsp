@@ -15,6 +15,7 @@
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
 		<%
+		
 			// Check which messages to receive based on the Select tag in the homepage.jsp
 			//Account account = AccountManager.getAccount(name);
 			ArrayList<Message> messages;
