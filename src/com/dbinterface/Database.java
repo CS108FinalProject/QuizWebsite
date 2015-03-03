@@ -60,7 +60,7 @@ public class Database implements Constants {
 	 * To be used for error checking and validation.
 	 * @return String list of table names in the database
 	 */
-	public String displayTables() {
+	public static String displayTables() {
 		String output = "Empty";
 		String query = String.format("SHOW TABLES;");
 		try {
@@ -237,7 +237,6 @@ public class Database implements Constants {
 		for(String columnName : row.keySet()) {
 			Object value = row.get(columnName);
 			String type = getColumnType(tableName, columnName);
-			System.out.println( "Is Type empty? : " + type);
 			Util.validateObject(value, type);
 		}
 	    

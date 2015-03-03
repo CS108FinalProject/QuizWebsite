@@ -40,22 +40,16 @@ public class LoginServlet extends HttpServlet {
 
 		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
 		String username = request.getParameter("username");
-		//System.out.println( username );
 		String password = request.getParameter("password");
-		//System.out.println( password );
 
 		if (AccountManager.accountExists(username)) {
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
 					getServletContext().setAttribute("session_user",username);
-					System.out.println("Login as admin"+AccountManager.getAccount(username).isAdmin());
-					if (AccountManager.getAccount(username).isAdmin()) {
-						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
-						dispatch.forward(request, response);
-					} else {
+					
 						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
 						dispatch.forward(request, response);
-					}
+					
 					
 						/*
 						getServletContext().setAttribute("session_user",username);

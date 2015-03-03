@@ -308,7 +308,6 @@ public class Account implements Constants {
 		row.put(TYPE, message.getType());
 		row.put(DATE, message.getDate());
 		row.put(SEEN, message.isRead());
-		System.out.println( row.toString() );
 		Database.addRow(MESSAGES, row);
 	}
 	

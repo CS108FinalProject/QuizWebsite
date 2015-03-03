@@ -61,12 +61,10 @@ public class RegistrationServlet extends HttpServlet {
 			getServletContext().setAttribute("session_user",username);
 			// case of new administrative account
 			if (request.getParameter("isAdministrator") != null) { 
-				System.out.println("Admin not null");
 				AccountManager.getAccount(username).setAdmin(true);
 				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			} else {
-				System.out.println("IS not admin");
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			}

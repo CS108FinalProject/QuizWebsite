@@ -70,7 +70,7 @@
 			// Print messages
 			for (Message msg : messages) {
 				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) { // case of friend request
-					if (!msg.isRead()) { // case of read message
+					if (!msg.isRead()) { // case of unread message
 						out.println("<form action=\"MessageServlet\" method=\"post\">"); 
 						out.print("<li><p>" + msg.getSender() + " sent you a friend request!</p>");
 						out.println("<input type=\"submit\" value=\"Confirm\", name=\"message_button\"> <input type=\"submit\" value=\"Decline\", name=\"message_button\">");
@@ -78,15 +78,15 @@
 						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
 						out.println("</form>");
 						
-						if (request.getAttribute("isAdded") != null) {
+					/* 	if (request.getAttribute("isAdded") != null) {
 							if (((String)request.getAttribute("isAdded")).equals("added")) {
 								out.println("<p> Friend Added! </p>");
 							} else if (((String)request.getAttribute("isAdded")).equals("already_friends")) {
 								out.println("<p> Already Friends! </p>");
 							} 
-						}
+						} */
 						account.readMessage(msg); 
-					} else { // case of unread message
+					} else { // case of read message
 						if (account.isFriend(AccountManager.getAccount(msg.getSender()))) {
 							out.println("<li><p> You accepted <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
 									+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
