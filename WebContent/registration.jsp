@@ -20,6 +20,8 @@
 		<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
 		<input type = "submit"/>
 	</form>
+	<p>Already have an Account? <a href = "login.jsp">Login here!</a></p>
+	
 </body>
 </html>
 

@@ -138,21 +138,50 @@ public class DatabaseTestS implements Constants {
 
 	@Test
 	public void testSetValuesStringStringObjectStringObject() {
-		fail("Not yet implemented");
+		int modified = Database.setValues(TEST_TABLE, NAME, "sam", IS_CODING, false);
+		assertEquals(1, modified);
+		
+		List<Map<String, Object>> table = Database.getTable(TEST_TABLE);
+		assertEquals(1, table.size());
+		
+		Map<String, Object> row = table.get(0);
+		assertEquals("sam", row.get(NAME));
+		assertEquals(false, row.get(IS_CODING));
+		assertEquals(2, row.get(NUMBERS));
+		assertEquals(26.78, row.get(PRICE));
+		assertEquals(123456789l, row.get(HIGH_NUMBER));
 	}
 
 	@Test
 	public void testSetValuesStringStringObjectStringObjectStringObject() {
-		fail("Not yet implemented");
+		int modified = Database.setValues(TEST_TABLE, IS_CODING, true, PRICE, 
+				26.78, NAME, "john");
+		assertEquals(1, modified);
+		
+		List<Map<String, Object>> table = Database.getTable(TEST_TABLE);
+		assertEquals(1, table.size());
+		
+		Map<String, Object> row = table.get(0);
+		assertEquals("john", row.get(NAME));
+		assertEquals(true, row.get(IS_CODING));
+		assertEquals(2, row.get(NUMBERS));
+		assertEquals(26.78, row.get(PRICE));
+		assertEquals(123456789l, row.get(HIGH_NUMBER));
 	}
 
 	@Test
 	public void testGetValuesStringStringObjectString() {
-		fail("Not yet implemented");
+		List<Object> values = Database.getValues(TEST_TABLE, NAME, "sam", 
+				IS_CODING, true, NUMBERS);
+		
+		assertEquals(1, values.size());
+		assertEquals(2, values.get(0));
 	}
 
 	@Test
 	public void testGetValuesStringStringObjectStringObjectString() {
-		fail("Not yet implemented");
+		List<Object> values = Database.getValues(TEST_TABLE, PRICE, 26.78, IS_CODING);
+		assertEquals(1, values.size());
+		assertEquals(true, values.get(0));
 	}
 }

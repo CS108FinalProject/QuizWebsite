@@ -25,7 +25,12 @@
 </head>
 
 <body>	
-	<h1>Welcome to ExQuizit</h1>
+		<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%if (errMsg == null) { %>
+			<%="<h1>Welcome to ExQuizit</h1>"%>	
+	<%} else {%>
+		<%= errMsg%>
+	<%}%>
 	<form class="login_form" action = "LoginServlet" method = "POST"
 	onsubmit="return validateForm();">
 		<p>User <input class="usr" id="username" type = "text" name = "username"/></p>

@@ -4,19 +4,16 @@ package com.dbinterface;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
 public class DatabaseTest {
-	Database db;
 	
 	@Before
 	public void setUp() {
-		db = new Database();
+		new Database();
 	}
 	
 	/*
@@ -24,7 +21,7 @@ public class DatabaseTest {
 	 */
 	@Test(expected = RuntimeException.class)
 	public void test1() {
-		db.createTable(null, null);
+		Database.createTable(null, null);
 	}
 	
 	/*
@@ -36,7 +33,7 @@ public class DatabaseTest {
 		Map<String, String> columnTypeAndName = new HashMap<String, String>();
 		columnTypeAndName.put("university", "string" );
 		columnTypeAndName.put("price" , "double");
-		db.createTable("", columnTypeAndName);
+		Database.createTable("", columnTypeAndName);
 	}
 	
 	/*
@@ -47,7 +44,7 @@ public class DatabaseTest {
 		Map<String, String> columnTypeAndName = new HashMap<String, String>();
 		columnTypeAndName.put("university", "string" );
 		columnTypeAndName.put("price" , "double");
-		db.createTable("yourTable", columnTypeAndName);
+		Database.createTable("yourTable", columnTypeAndName);
 		
 	}
 	
@@ -69,7 +66,7 @@ public class DatabaseTest {
 	 */
 	@Test
 	public void getTableTest() {
-		assertEquals(null, db.getTable(null));
+		assertEquals(null, Database.getTable(null));
 	}
 	
 	/*
@@ -83,13 +80,4 @@ public class DatabaseTest {
 		metro.put("population", (long) 3000000);
 		Database.addRow("metropolises", metro);
 	}
-	
-	/*
-	 * Test getRows
-	 */
-	@Test 
-	public void getRowsTest() {
-		List<Map<String, Object>> map = Database.getRows("universities",  "metropolis", "London");
-	}
-	
 }
