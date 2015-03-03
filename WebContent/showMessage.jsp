@@ -23,17 +23,20 @@
 			//System.out.println(msgToDisplay);
 			
 			// ????????????
-			/* Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
+			///* Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
+
+		/* 	Message msg1 = new Message("Guy", "Guy", "", Constants.MESSAGE_FRIEND_REQUEST, "date", false);
 			Message msg2 = new Message("Guy3", "Guy4", "Hi Guy!", Constants.MESSAGE_NOTE, "date", false);
 			messages = new ArrayList<Message>();
 			messages.add(0, msg1);
 			messages.add(1, msg2); */
 			
-			if (msgToDisplay.equals("Received Messages")) { 
+			messages = account.getReceivedMessages();
+			/* if (msgToDisplay.equals("Received Messages")) { 
 				messages = account.getReceivedMessages();		
 			} else {
 				messages = account.getSentMessages();		
-			}
+			} */
 			
 			// Print messages
 			for (Message msg : messages) {
