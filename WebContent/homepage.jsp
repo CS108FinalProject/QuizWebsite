@@ -108,6 +108,7 @@ String sel_type = (String)request.getParameter("choice");
 							out.println("<td>"+msg.getDate()+"</td>");
 							out.println("<td>"+msg.getType()+"</td>");
 							if (i == messages.size() -5) i = -1;
+
 						}
 						out.println("</table>");
 					}

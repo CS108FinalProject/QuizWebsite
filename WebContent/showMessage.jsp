@@ -54,16 +54,20 @@
 						account.readMessage(msg); 
 					} else { // case of unread message
 						if (account.isFriend(AccountManager.getAccount(msg.getSender()))) {
-							out.println("<li><p> You accepted " + msg.getSender() + "'s friend request</p>");
+							out.println("<li><p> You accepted <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+									+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
+							
 						} else {
-							out.println("<li><p> You declined " + msg.getSender() + "'s friend request</p>");
+							out.println("<li><p> You declined <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+									+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
 						}	
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) { // case of challenge
 					// go to challenge page
 				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) { // case of note
 					out.println("<form action=\"MessageServlet\" method=\"post\">");
-					out.print("<li><p>" + msg.getSender() + " sent you a message!</p>");
+					out.print("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+							+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a> sent you a message!</p>");
 					out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
 					out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
 					out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
