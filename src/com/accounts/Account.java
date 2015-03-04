@@ -107,7 +107,7 @@ public class Account implements Constants {
 		}
 		
 		// Type validation.
-		Util.validateObject(currentPasswordList.get(0), STRING);
+		Util.validateObjectType(currentPasswordList.get(0), STRING);
 		String currentPassword = (String) currentPasswordList.get(0);
 		return currentPassword.equals(getHash(password));
 	}
@@ -142,7 +142,7 @@ public class Account implements Constants {
 		}
 		
 		// Type validation.
-		Util.validateObject(adminList.get(0), BOOLEAN);
+		Util.validateObjectType(adminList.get(0), BOOLEAN);
 		return (Boolean) adminList.get(0);
 	}
 
@@ -168,7 +168,7 @@ public class Account implements Constants {
 
 		List<Account> friends = new ArrayList<Account>();
 		for (Object friendName : friendNames) {
-			Util.validateObject(friendName, "String");
+			Util.validateObjectType(friendName, "String");
 			friends.add(new Account((String) friendName));
 		}
 		return friends;
@@ -214,7 +214,7 @@ public class Account implements Constants {
 		}
 		
 		// Type validation.
-		Util.validateObject(statusList.get(0), STRING);
+		Util.validateObjectType(statusList.get(0), STRING);
 		return statusList.get(0).equals(PENDING);
 	}
 	
@@ -358,12 +358,12 @@ public class Account implements Constants {
 		if (messages == null) return result;
 		
 		for (Map<String, Object> row : messages) {
-			Util.validateObject(row.get(SENDER), STRING);
-			Util.validateObject(row.get(RECIPIENT), STRING);
-			Util.validateObject(row.get(CONTENT), STRING);
-			Util.validateObject(row.get(TYPE), STRING);
-			Util.validateObject(row.get(DATE), STRING);
-			Util.validateObject(row.get(SEEN), BOOLEAN);
+			Util.validateObjectType(row.get(SENDER), STRING);
+			Util.validateObjectType(row.get(RECIPIENT), STRING);
+			Util.validateObjectType(row.get(CONTENT), STRING);
+			Util.validateObjectType(row.get(TYPE), STRING);
+			Util.validateObjectType(row.get(DATE), STRING);
+			Util.validateObjectType(row.get(SEEN), BOOLEAN);
 			
 			String sender = (String) row.get(SENDER);
 			String recipient = (String) row.get(RECIPIENT);
@@ -388,12 +388,12 @@ public class Account implements Constants {
 		if (messages == null) return result;
 		
 		for (Map<String, Object> row : messages) {
-			Util.validateObject(row.get(SENDER), STRING);
-			Util.validateObject(row.get(RECIPIENT), STRING);
-			Util.validateObject(row.get(CONTENT), STRING);
-			Util.validateObject(row.get(TYPE), STRING);
-			Util.validateObject(row.get(DATE), STRING);
-			Util.validateObject(row.get(SEEN), BOOLEAN);
+			Util.validateObjectType(row.get(SENDER), STRING);
+			Util.validateObjectType(row.get(RECIPIENT), STRING);
+			Util.validateObjectType(row.get(CONTENT), STRING);
+			Util.validateObjectType(row.get(TYPE), STRING);
+			Util.validateObjectType(row.get(DATE), STRING);
+			Util.validateObjectType(row.get(SEEN), BOOLEAN);
 			
 			String sender = (String) row.get(SENDER);
 			String recipient = (String) row.get(RECIPIENT);
@@ -423,7 +423,7 @@ public class Account implements Constants {
 		if (table == null) return null;
 		
 		for (Map<String, Object> account : table) {
-			Util.validateObject(account.get(USERNAME), STRING);
+			Util.validateObjectType(account.get(USERNAME), STRING);
 			users.add(new Account((String) account.get(USERNAME))); 
 		}
 		return users;

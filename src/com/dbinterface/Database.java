@@ -11,8 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.sql.Connection;
+
 import com.util.Constants;
 import com.util.Util;
 
@@ -237,7 +237,7 @@ public class Database implements Constants {
 		for(String columnName : row.keySet()) {
 			Object value = row.get(columnName);
 			String type = getColumnType(tableName, columnName);
-			Util.validateObject(value, type);
+			Util.validateObjectType(value, type);
 		}
 	    
 	    // Transform map for DB compatibility.
@@ -441,8 +441,8 @@ public class Database implements Constants {
 		Util.validateString(tableName);
 		Util.validateString(columnGuide1);
 		Util.validateString(columnGuide2);
-		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
-		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		Util.validateObjectType(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObjectType(guideValue2, getColumnType(tableName, columnGuide2));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -485,7 +485,7 @@ public class Database implements Constants {
 	public static int removeRows(String tableName, String columnGuide, Object guideValue) {
 		Util.validateString(tableName);
 		Util.validateString(columnGuide);
-		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		Util.validateObjectType(guideValue, getColumnType(tableName, columnGuide));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -573,7 +573,7 @@ public class Database implements Constants {
 		
 		// validate object type
 		String type = getColumnType(tableName, columnName);
-		Util.validateObject(value, type);
+		Util.validateObjectType(value, type);
 		
 		// Interface boolean.
 		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
@@ -632,8 +632,8 @@ public class Database implements Constants {
 		Util.validateString(tableName);
 		Util.validateString(columnGuide);
 		Util.validateString(columnToBeSet);
-		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
-		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		Util.validateObjectType(guideValue, getColumnType(tableName, columnGuide));
+		Util.validateObjectType(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -704,9 +704,9 @@ public class Database implements Constants {
 		Util.validateString(columnGuide1);
 		Util.validateString(columnGuide2);
 		Util.validateString(columnToBeSet);
-		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
-		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
-		Util.validateObject(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
+		Util.validateObjectType(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObjectType(guideValue2, getColumnType(tableName, columnGuide2));
+		Util.validateObjectType(columnToBeSetValue, getColumnType(tableName, columnToBeSet));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -778,7 +778,7 @@ public class Database implements Constants {
 		Util.validateString(tableName);
 		Util.validateString(columnGuide);
 		Util.validateString(columnToGet);
-		Util.validateObject(guideValue, getColumnType(tableName, columnGuide));
+		Util.validateObjectType(guideValue, getColumnType(tableName, columnGuide));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -835,8 +835,8 @@ public class Database implements Constants {
 		Util.validateString(columnGuide1);
 		Util.validateString(columnGuide2);
 		Util.validateString(columnToGet);
-		Util.validateObject(guideValue1, getColumnType(tableName, columnGuide1));
-		Util.validateObject(guideValue2, getColumnType(tableName, columnGuide2));
+		Util.validateObjectType(guideValue1, getColumnType(tableName, columnGuide1));
+		Util.validateObjectType(guideValue2, getColumnType(tableName, columnGuide2));
 		
 		if(!tableExists(tableName)) {
 			throw new RuntimeException("Table " +  tableName + " does not exist.");
@@ -967,7 +967,7 @@ public class Database implements Constants {
 		for (String name : nameAndType.keySet()) {
 			if (nameAndType.get(name).equals(DB_BOOLEAN)) {
 				// If the value is flagged as boolean, make sure it's an integer and transform it.
-				Util.validateObject(map.get(name), INT);
+				Util.validateObjectType(map.get(name), INT);
 				boolean value = getBooleanFromInt((Integer)map.get(name));
 				map.put(name, value);
 			}
