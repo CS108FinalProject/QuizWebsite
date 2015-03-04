@@ -608,6 +608,63 @@ public class Database implements Constants {
 		if (list.size() == 0) return null;
 		return list;
 	}
+	
+	
+	/**
+	 * Given a row specified by a Map, returns a list of rows that are equal to the passed row.
+	 * @param tableName
+	 * @param row
+	 */
+	public static List<Map<String, Object>> getRows(String tableName, Map<String, Object> row) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateObject(row);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// Interface boolean
+		normalizeObjectMapForDB(row);
+		
+		// Build query
+		String query = "SELECT * FROM " + tableName + " WHERE ";
+		int counter = 0;
+		for (String columnName : row.keySet()) {
+			query += columnName + " = \"" + row.get(columnName)  + "\"";
+				
+			if (++counter < row.size()) {
+				query += " AND ";
+			}
+		}
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				// Interface boolean.
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
 
 	
 	/**

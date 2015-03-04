@@ -34,7 +34,7 @@ public class Account implements Constants {
 		
 		// Ensure account doesn't already exists.
 		if (Database.getValues(ACCOUNTS, USERNAME, userName, USERNAME) != null) {
-			throw new RuntimeException("Username: " + userName + "already exists");
+			throw new IllegalArgumentException("Username: " + userName + "already exists");
 		}
 		
 		this.userName = userName;
@@ -62,7 +62,7 @@ public class Account implements Constants {
 		
 		// Make sure userName exists in DB.
 		if (Database.getValues(ACCOUNTS, USERNAME, userName, USERNAME) == null) {
-			throw new RuntimeException("Cannot find Username: " + userName);
+			throw new IllegalArgumentException("Cannot find Username: " + userName);
 		}
 		this.userName = userName;
 	}
