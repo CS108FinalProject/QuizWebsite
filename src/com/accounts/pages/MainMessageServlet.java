@@ -30,19 +30,28 @@ public class MainMessageServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		System.out.println("MESSAGAEServletget");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String message_type = (String)request.getParameter("msg_type");
+		System.out.println("MESSAGAEServletPOST");
+
+		String message_type = (String)request.getParameter("message_type");
 		String friend_id = (String)request.getParameter("friend_id");
 		String curr_acct_id = (String)request.getParameter("id");
 		Account curr_acct = AccountManager.getAccount(curr_acct_id);
 		//If friend not found?
 		if (AccountManager.accountExists(friend_id)) {
+			System.out.println("Msg type "+message_type);
+			System.out.println("Friend id "+friend_id);
+			System.out.println("Curr acct id"+curr_acct_id);
+			System.out.println("curr acc "+curr_acct);
+
+
 			RequestDispatcher dispatch = request.getRequestDispatcher("SendMessageServlet"); 
 			dispatch.forward(request, response);
 		} else {
@@ -55,9 +64,7 @@ public class MainMessageServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+curr_acct_id); 
 				dispatch.forward(request, response);
 			}
-		
-			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+curr_acct_id); 
-			dispatch.forward(request, response);
+
 		}
 				
 	}
