@@ -17,6 +17,7 @@
 		} else {
 			friend_name = (String)request.getAttribute("friend_id");
 		}
+		
 	%>
 	
 	<table id="header">
