@@ -59,14 +59,16 @@ public class SendMessageServlet extends HttpServlet {
 		if (request.getParameter("message_type").equals("Add Friend")) {
 
 			if ((!sender.friendshipPending(recipient)) && (!sender.isFriend(recipient)) && (!recipient.isFriend(sender))) {
-				Message msg = new Message(sender_name, friend_name, "", Constants.MESSAGE_FRIEND_REQUEST, date, false);
+//				System.out.println("sender name:" + sender_name);
+//				System.out.println("friend_name:" + friend_name);
+//				System.out.println("date:" + date);
+				Message msg = new Message(sender_name, friend_name, "friend_request", Constants.MESSAGE_FRIEND_REQUEST, date, false);
 				sender.sendMessage(msg);
 			}
 
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 		
 		} else if (request.getParameter("message_type").equals("Send Note")) {
-
 
 			Message msg = new Message(sender_name, friend_name, request.getParameter("msg_content"), Constants.MESSAGE_NOTE, date, false);
 			sender.sendMessage(msg);
