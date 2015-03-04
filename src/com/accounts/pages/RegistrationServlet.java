@@ -65,6 +65,7 @@ public class RegistrationServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			} else {
+				AccountManager.getAccount(username).setAdmin(false);
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			}

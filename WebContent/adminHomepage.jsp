@@ -53,7 +53,7 @@ String sel_type = (String)request.getParameter("choice");
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th>Find Friends</th>
+				<th> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
 				<th>Quizzes</th>
 				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
 			</tr>

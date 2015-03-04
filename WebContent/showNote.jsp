@@ -28,10 +28,6 @@
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<% //System.out.println( "In Homepage: " + name); %>
-          		<th> <a href="searchFriends.jsp?id=<%=sender%>"> Find Friends</a> </th>
-
-
 				<th>My Messages 
 					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
 						<select name = "choice">
@@ -44,6 +40,7 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				<th> <a href="searchFriends.jsp?id=<%=sender%>"> Lookup Users</a> </th>
 				<th>Quizzes</th>
 			</tr>
 	</table>

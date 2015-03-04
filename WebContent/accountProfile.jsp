@@ -33,10 +33,6 @@
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<% //System.out.println( "In Homepage: " + name); %>
-          		<th> <a href="searchFriends.jsp?id=<%=sender_name%>"> Find Friends</a> </th>
-
-
 				<th>My Messages 
 					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
 						<select name = "choice">
@@ -49,25 +45,42 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				<th> <a href="searchFriends.jsp?id=<%=sender_name%>"> Lookup Users</a> </th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
 	
 	<form action="SendMessageServlet" method="post"> 
-		<input type="text" value="" name="msg_content"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Send Note">
+		<input type="text" value="" name="msg_content" size="50">
 	</form>
 	
-		<form action="SendMessageServlet" method="post"> 
+	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 
-		<input type="submit" name=message_type value="Add Friend">
+		<input type="submit" name=message_type value="Send Friend Request">
 	</form>
-	<br>
+	
+	<form action="SendMessageServlet" method="post"> 
+		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 
+		<input type="submit" name=message_type value="Unfriend">
+	</form>
+	
+	<br>
+	<br>
+	
+	<%
+		// prints friendship errors (already friends, not friends, user befriends herself)
+		if (request.getAttribute("friendship_error") != null) {
+			out.println("<p>" + (String)request.getAttribute("friendship_error") + "</p>");
+		}
+	
+	%>
 	
 	
 </body>
