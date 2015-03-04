@@ -13,7 +13,8 @@
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
-
+System.out.println("Acct is "+acct);
+System.out.println("User is "+name);
 %>
 
 <title>Welcome <%=name%></title>
@@ -48,7 +49,8 @@ String sel_type = (String)request.getParameter("choice");
         </div>
       </li>
       <li><a href = <%="\"searchFriends.jsp?id="+name+"\""%>>Find Friends</a></li>
-      <li><a href = "#">Quizzes</a></li>
+      <li><a href = "#">Quizzes</a></li> 
+      <li><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></li>
     </ul>
   </nav>
 
@@ -89,7 +91,8 @@ String sel_type = (String)request.getParameter("choice");
 	           </select>
 	           <input type = "submit" value = "Display Messages">
 	         </form>
-	         <%                                
+	         <%          
+	         
 	           List<Message> messages = acct.getReceivedMessages();  
 	         out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
 	
@@ -106,7 +109,8 @@ String sel_type = (String)request.getParameter("choice");
 	
 	           }
 	           out.println("</table>");
-	         }       
+	         }  
+	           
 	         %>
 	 	</div>
 	 		

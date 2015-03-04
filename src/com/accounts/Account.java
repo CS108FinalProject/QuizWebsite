@@ -401,7 +401,12 @@ public class Account implements Constants {
 			String type = (String) row.get(TYPE);
 			String date = (String) row.get(DATE);
 			boolean read = (Boolean) row.get(SEEN);
-			
+			System.out.println("Sender is "+sender);
+			System.out.println("Recipient is "+recipient);
+			System.out.println("Content is "+content);
+			System.out.println("Type is "+type);
+			System.out.println("Date is "+date);
+
 			result.add(new Message(sender, recipient, content, type, date, read));
 		}
 		return result;

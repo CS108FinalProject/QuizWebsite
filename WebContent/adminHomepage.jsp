@@ -18,6 +18,7 @@
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
 
+
 %>
 <title>Welcome <%=name%></title>
 </head>
@@ -129,7 +130,7 @@ String sel_type = (String)request.getParameter("choice");
 						<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
 						<input type = "submit" value = "Send Message">
 					</form>
-					</div>
+				</div>
 				<div id="read_messages">
 					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
 						<select name = "choice">
@@ -139,10 +140,9 @@ String sel_type = (String)request.getParameter("choice");
 						<input type = "submit" value = "Display Messages">
 					</form>
 					<%			
-
+						//TODO: The ReceivedMessages is buggy.						
 						List<Message> messages = acct.getReceivedMessages();	
 						out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
-
 						if (messages.size() > 0) {
 							out.println("<table>");
 							for ( int i = messages.size() -1; i > -1;i-- ) {
