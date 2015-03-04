@@ -127,21 +127,23 @@ System.out.println("User is "+name);
 	         %>
 	 	</div>
 	 		
-	 	<div id="send_messages">
-	 		<h2>Reach out to a Friend</h2>
-	 		<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
-	         <input type = "text" name = "friend_id" value = "Enter Friends Username">
-	         <input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend
-	         <input type = "text" name = "quiz_name" value = "Enter Quiz Name">
-	         <input type = "radio" name = "msg_type" value = "Challenge">Challenge
-	         <textarea rows="4" cols="20" name = "msg_content"></textarea>
-	         <input type = "radio" name = "msg_type" value = "Send Note">Note
-	         <input type = "submit" value = "Send Message">
-	       </form>
-	 	</div>
-	 	
+
+				 	
 	 </section>
-  
+  			<section id="messages">
+			<div id="send_messages">
+			<h2>Reach out to a Friend</h2>
+				<form method = "POST" action = <%="\"MainMessageServlet?id="+name+"\""%> >
+					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
+					<input type = "radio" name = "messasge_type" value = "Add Friend" >Add Friend<br></input>
+					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
+					<input type = "radio" name = "message_type" value = "Challenge">Challenge<br></input>
+					<textarea rows="4" cols="20" name = "msg_content"></textarea>
+					<input type = "radio" name = "message_type" value = "Send Note">Note<br></input>
+					<input type = "submit" value = "Send Message">
+				</form>
+			</div>
+			</section>
   </div>
   
   <div id="still_left">
@@ -169,22 +171,8 @@ System.out.println("User is "+name);
 
 </section>
 
-<section id="messages">
-<div id="send_messages">
-<h2>Reach out to a Friend</h2>
-<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
-        <input type = "text" name = "friend_id" value = "Enter Friends Username">
-        <input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend
-        <input type = "text" name = "quiz_name" value = "Enter Quiz Name">
-        <input type = "radio" name = "msg_type" value = "Challenge">Challenge
-        <textarea rows="4" cols="20" name = "msg_content"></textarea>
-        <input type = "radio" name = "msg_type" value = "Send Note">Note
-        <input type = "submit" value = "Send Message">
-      </form>
-</div>
-</section>
 
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
+
   </div>
  
   <div id="still_left">

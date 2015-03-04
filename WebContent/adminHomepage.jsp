@@ -120,14 +120,14 @@ String sel_type = (String)request.getParameter("choice");
 			</div></td>
 			<td>
 				<div id = "send_messages">
-					Send A Message
-					<form action = <%="\"MainMessageServlet?id="+name+"\""%>>
+			<h2>Reach out to a Friend</h2>
+					<form method = "POST" action = <%="\"MainMessageServlet?id="+name+"\""%> >
 						<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-						<input type = "radio" name = "msg_type" value = "Add Friend" >Add Friend<br></input>
+						<input type = "radio" name = "messasge_type" value = "Add Friend" >Add Friend<br></input>
 						<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-						<input type = "radio" name = "msg_type" value = "Challenge">Challenge<br></input>
+						<input type = "radio" name = "message_type" value = "Challenge">Challenge<br></input>
 						<textarea rows="4" cols="20" name = "msg_content"></textarea>
-						<input type = "radio" name = "msg_type" value = "Send Note">Note<br></input>
+						<input type = "radio" name = "message_type" value = "Send Note">Note<br></input>
 						<input type = "submit" value = "Send Message">
 					</form>
 				</div>
