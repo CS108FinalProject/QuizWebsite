@@ -9,6 +9,14 @@ public class Matching extends Question {
 	private int id;
 	private Map<String, String> matches;
 
+	/**
+	 * Constructor
+	 * @param quizName
+	 * @param question
+	 * @param id unique indentifier for this Matching question.
+	 * each matching question within the same quiz should have one.
+	 * @param matches maps pairs of matching items.
+	 */
 	public Matching(String quizName, String question, int id, Map<String, String> matches) {
 		super(quizName, question);
 		

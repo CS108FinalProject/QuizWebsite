@@ -12,6 +12,11 @@ public class Response extends Question {
 
 	private List<String> answers;
 	
+	/**
+	 * @param quizName the name of the quiz
+	 * @param question the question or prompt in string form
+	 * @param answers a list of valid answers
+	 */
 	public Response(String quizName, String question, List<String> answers) {
 		super(quizName, question);
 		

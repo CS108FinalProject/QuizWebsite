@@ -1,7 +1,10 @@
 package com.quizzes;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.accounts.Account;
 import com.dbinterface.Database;
@@ -90,12 +93,55 @@ public class Quiz implements Constants {
 	}
 	
 	
+	public Set<String> getQuestionsAsStrings() {
+		Set<String> result = new HashSet<String>();
+
+		List<Object> questions = Database.getValues(RESPONSE, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		
+		questions = Database.getValues(FILL_BLANK, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		
+		questions = Database.getValues(MULTIPLE_CHOICE, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		
+		questions = Database.getValues(PICTURE, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		
+		questions = Database.getValues(MULTI_RESPONSE, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		
+		questions = Database.getValues(MATCHING, QUIZ_NAME, name, QUESTION);
+		for (Object question : questions) {
+			String cur = (String) question;
+			result.add(cur);
+		}
+		return result;
+	}
+	
+	
 	/**
-	 * Adds the passed question to the database.
+	 * Adds the passed question object to the database.
 	 * @param question
 	 */
 	public <T extends Question> void addQuestion(T question) {
 		Util.validateObject(question);
+		
 		if (question instanceof Response) addResponse((Response) question);
 		else if (question instanceof FillBlank) addFillBlank((FillBlank) question);
 		else if (question instanceof MultipleChoice) addMultipleChoice((MultipleChoice) question);
@@ -108,8 +154,37 @@ public class Quiz implements Constants {
 	}
 	
 	
-	public <T extends Question> void editQuestion(T question) {
-		// TODO: implement 
+	/**
+	 * Takes the old state of a question before it was modified and the new state after being
+	 * modified. Looks for the old state in the database and replaces it with the new one.
+	 * @param oldQuestion the question object before modification
+	 * @param newQuestion the question object after modification
+	 */
+	public <T extends Question> void editQuestion(T oldQuestion, T newQuestion) {
+		Util.validateObject(oldQuestion);
+		Util.validateObject(newQuestion);
+		
+		if (oldQuestion instanceof Response) {
+			editResponse((Response) oldQuestion, (Response) newQuestion);
+			
+		} else if (oldQuestion instanceof FillBlank) {
+			editFillBlank((FillBlank) oldQuestion, (FillBlank) newQuestion);
+			
+		} else if (oldQuestion instanceof MultipleChoice) {
+			editMultipleChoice((MultipleChoice) oldQuestion, (MultipleChoice) newQuestion);
+			
+		} else if (oldQuestion instanceof Picture) {
+			editPicture((Picture) oldQuestion, (Picture) newQuestion);
+			
+		} else if (oldQuestion instanceof MultiResponse) {
+			editMultiResponse((MultiResponse) oldQuestion, (MultiResponse) newQuestion);
+			
+		} else if (oldQuestion instanceof Matching) {
+			editMatching((Matching) oldQuestion, (Matching) newQuestion);
+			
+		} else {
+			throw new IllegalArgumentException("Passed question is invalid");
+		}
 	}
 	
 	
@@ -124,6 +199,11 @@ public class Quiz implements Constants {
 	
 	// Adds a Response question to the database.
 	private void addResponse(Response response) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(response.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+		
 		// Add a row for every answer in the question.
 		for (String answer : response.getAnswers()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -143,6 +223,11 @@ public class Quiz implements Constants {
 	
 	// Adds a FillBlank question to the database.
 	private void addFillBlank(FillBlank fillBlank) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(fillBlank.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+		
 		// Iterate over every blank.
 		for (String blank : fillBlank.getBlanksAndAnswers().keySet()) {
 			// Iterate over every answer per each blank.
@@ -166,6 +251,11 @@ public class Quiz implements Constants {
 	
 	// Adds a MultipleChoice question to the database.
 	private void addMultipleChoice(MultipleChoice multipleChoice) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(multipleChoice.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+		
 		// Add a row for every answer in the question.
 		for (String option : multipleChoice.getOptions().keySet()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -186,6 +276,11 @@ public class Quiz implements Constants {
 
 	// Adds a Picture question to the database.
 	private void addPicture(Picture picture) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(picture.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+				
 		// Add a row for every answer in the question.
 		for (String answer : picture.getAnswers()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -206,6 +301,11 @@ public class Quiz implements Constants {
 
 	// Adds a MultiResponse question to the database.
 	private void addMultiResponse(MultiResponse multiResponse) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(multiResponse.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+		
 		// Add a row for every answer in the question.
 		for (int i = 0; i < multiResponse.getAnswers().size(); i++) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -227,6 +327,11 @@ public class Quiz implements Constants {
 
 	// Adds a Matching question to the database.
 	private void addMatching(Matching matching) {
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(matching.getQuestion())) {
+			throw new IllegalArgumentException("The question already exists in " + name);
+		}
+		
 		// Add a row for every answer in the question.
 		for (String left : matching.getMatches().keySet()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -243,5 +348,60 @@ public class Quiz implements Constants {
 			
 			Database.addRow(MATCHING, row);
 		}
+	}
+	
+	
+	// Edits a Response question in the database.
+	private void editResponse(Response oldQuestion, Response newQuestion) {
+		// Check type consistency
+		if (!(newQuestion instanceof Response)) {
+			throw new IllegalArgumentException("Both passed questions have to be the same type");
+		}
+		
+		// Quiz name cannot be modified in a question.
+		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
+			throw new IllegalArgumentException("the quiz name in a question cannot be modified");
+		}
+		
+		// If the question was modified, ensure it is not duplicate.
+		if (!oldQuestion.getQuestion().equals(newQuestion.getQuestion())) {
+			if (getQuestionsAsStrings().contains(newQuestion.getQuestion())) {
+				throw new IllegalArgumentException("The question already exists in" 
+						+ newQuestion.getQuizName());
+			}
+		}
+		
+		// remove oldQuestion
+		addQuestion(newQuestion);
+	}
+	
+	
+	// Edits a FillBlank question in the database.
+	private void editFillBlank(FillBlank oldQuestion, FillBlank newQuestion) {
+		
+	}
+	
+	
+	// Edits a MultipleChoice question in the database.
+	private void editMultipleChoice(MultipleChoice oldQuestion, MultipleChoice newQuestion) {
+		
+	}
+	
+	
+	// Edits a Picture question in the database.
+	private void editPicture(Picture oldQuestion, Picture newQuestion) {
+		
+	}
+	
+	
+	// Edits a MultiResponse question in the database.
+	private void editMultiResponse(MultiResponse oldQuestion, MultiResponse newQuestion) {
+		
+	}
+	
+	
+	// Edits a Matching question in the database.
+	private void editMatching(Matching oldQuestion, Matching newQuestion) {
+		
 	}
 }

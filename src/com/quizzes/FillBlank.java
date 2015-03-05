@@ -19,8 +19,8 @@ public class FillBlank extends Question {
 
 	/**
 	 * Constructor
-	 * @param quizName
-	 * @param question
+	 * @param quizName 
+	 * @param question the question in string form
 	 * @param blanksAndAnswers maps a blank to a set of correct questions for it.
 	 * blank Strings have to be substrings of question.
 	 */

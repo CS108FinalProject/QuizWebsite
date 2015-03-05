@@ -9,6 +9,12 @@ public class Picture extends Question {
 	private String pictureUrl;
 	private List<String> answers;
 
+	/**
+	 * @param quizName
+	 * @param question
+	 * @param pictureUrl the url for the picture
+	 * @param answers a list of possible answers to this question
+	 */
 	public Picture(String quizName, String question, String pictureUrl,
 			List<String> answers) {
 		
