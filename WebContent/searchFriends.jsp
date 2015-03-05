@@ -40,7 +40,6 @@
 			</tr>
 	</table>
 	
-	
 	<h2> Lookup Users</h2>
 	
 	<form action="SearchFriendServlet" method="post"> 
