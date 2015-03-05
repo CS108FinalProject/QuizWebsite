@@ -49,8 +49,5 @@
 <br> <br>
 <p> <%=content%> </p>
 
-
-
-
 </body>
 </html>

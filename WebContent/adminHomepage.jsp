@@ -58,6 +58,7 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
 			</tr>
 	</table>
+	
 	<h2>Nice to see you, <%=name %></h2>
 	<table id = "admin_content">
 		<tr>

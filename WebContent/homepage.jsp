@@ -63,6 +63,7 @@ System.out.println("User is "+name);
       <li><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></li>
     </ul>
   </nav>
+  
 
   <section id="greeting">
   

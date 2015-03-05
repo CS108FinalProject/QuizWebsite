@@ -27,6 +27,7 @@
 				}
 					*/%> 
 					
+					
 				<th><a href = <%="\"homepage.jsp?id="+ name +"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>

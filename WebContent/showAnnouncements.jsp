@@ -48,6 +48,7 @@ ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttrib
 			</tr>
 	</table>
 
+
 <div id="announcements">Announcements
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
