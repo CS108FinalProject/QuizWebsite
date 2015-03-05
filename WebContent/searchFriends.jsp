@@ -23,10 +23,6 @@
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
-				<% //System.out.println( "In Homepage: " + name); %>
-          		<th> <a href="searchFriends.jsp?id=<%=(String) request.getAttribute("sender")%>"> Find Friends</a> </th>
-
-
 				<th>My Messages 
 					<form action = <%="\"showMessage.jsp?id="+(String) request.getAttribute("sender")+"\""%>>					
 						<select name = "choice">
@@ -39,11 +35,12 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
+				<th> <a href="searchFriends.jsp?id=<%=(String) request.getAttribute("sender")%>"> Find Friends</a> </th>
 				<th>Quizzes</th>
 			</tr>
 	</table>
 	
-	<h2> Find Friends</h2>
+	<h2> Lookup Users</h2>
 	
 	<form action="SearchFriendServlet" method="post"> 
 		<input type="text" value="" name="friend_id">

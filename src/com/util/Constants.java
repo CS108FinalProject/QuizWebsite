@@ -1,5 +1,9 @@
 package com.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Holds the constants that are used throughout the project.
  * @author Sam
@@ -41,7 +45,7 @@ public interface Constants {
 	// History table
 	public static final String HISTORY = "History";
 	public static final String SCORE = "score";
-	public static final String TIME = "time";
+	public static final String ELAPSED_TIME = "elapsed_time";
 
 	// Response table
 	public static final String RESPONSE = "Response";
@@ -68,9 +72,14 @@ public interface Constants {
 	
 	//Matching table
 	public static final String MATCHING = "Matching";
-	public static final String GROUP = "group";
+	public static final String QUESTION_ID = "question_id";
 	public static final String LEFT = "left";
 	public static final String RIGHT = "right";
+	
+	// Question Types list
+	public static final List<String> QUESTION_TYPES = new ArrayList<String>(
+			Arrays.asList(RESPONSE, FILL_BLANK, MULTIPLE_CHOICE, PICTURE, 
+					MULTI_RESPONSE, MATCHING));
 	
 	// Types
 	public static final String STRING = "string"; 

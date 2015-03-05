@@ -58,11 +58,12 @@ System.out.println("User is "+name);
         </div>
 
       </li>
-      <li><a href = <%="\"searchFriends.jsp?id="+name+"\""%>>Find Friends</a></li>
+      <li><a href = <%="\"searchFriends.jsp?id="+name+"\""%>>Lookup Users</a></li>
       <li><a href = "#">Quizzes</a></li> 
       <li><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></li>
     </ul>
   </nav>
+  
 
   <section id="greeting">
   

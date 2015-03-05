@@ -12,6 +12,7 @@
 	<form action = "RegistrationServlet" method = "POST">
 		<p>User: <input type = "text" name = "user"/></p>
 		<p>Password:<input type = "text" name = "password"/></p>
+		<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
 		<input type = "submit"/>
 	</form>
 </body>
