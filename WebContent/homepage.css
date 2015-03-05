@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: white;
+	color: black;
+}
+
+div {
+	border: solid 2px black;
+}
+
+#header th {
+	border: solid 2px black;
+}
+
+t1 {
+	horizontal-align: center;
+}
+
+td {
+	margin-right: 200px;
+	 
+}
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	color: red;
+}
+
+h1 {
+	color: red;
+	font-size: 16px;
+}
+
+
+
+
