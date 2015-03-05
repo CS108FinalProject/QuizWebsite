@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
+    	<%@ page import = "com.accounts.*"%>
+	<%@ page import = "java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,6 +14,7 @@
 	<%
 		String sender_name =  (String) getServletContext().getAttribute("session_user");
 		String friend_name;
+		Account acct = AccountManager.getAccount(sender_name);
 		if (request.getParameter("friend_id") != null) {
 			friend_name = (String)request.getParameter("friend_id");
 		} else {
@@ -22,14 +25,12 @@
 	
 	<table id="header">
 			<tr>
-				<%/*if(acct.isAdmin()) {
+				<%if(acct.isAdmin()) {
 					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-					*/%> 
-					
-				<th><a href = <%="\"homepage.jsp?id="+ sender_name +"\""%>>Homepage</a></th>
+					%> 			
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 

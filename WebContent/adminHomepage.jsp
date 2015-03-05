@@ -30,13 +30,13 @@ String sel_type = (String)request.getParameter("choice");
 	<%}%>
 	<table id="header">
 			<tr>
-				<%/*if(acct.isAdmin()) {
+				<%if(acct.isAdmin()) {
 					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				
-					*/%> 
+					%> 
 					
 				<th><a href = <%="\"adminHomepage.jsp?id="+name+"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
@@ -121,16 +121,7 @@ String sel_type = (String)request.getParameter("choice");
 			</div></td>
 			<td>
 				<div id = "send_messages">
-			<h2>Reach out to a Friend</h2>
-					<form method = "POST" action = <%="\"MainMessageServlet?id="+name+"\""%> >
-						<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-						<input type = "radio" name = "messasge_type" value = "Add Friend" >Add Friend<br></input>
-						<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-						<input type = "radio" name = "message_type" value = "Challenge">Challenge<br></input>
-						<textarea rows="4" cols="20" name = "msg_content"></textarea>
-						<input type = "radio" name = "message_type" value = "Send Note">Note<br></input>
-						<input type = "submit" value = "Send Message">
-					</form>
+					<a href = "searchFriends.jsp?id=<%=name%>">Reach Out To A Friend.</a>
 				</div>
 				<div id="read_messages">
 					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>

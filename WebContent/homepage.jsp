@@ -14,8 +14,8 @@ pageEncoding="UTF-8"%>
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
-System.out.println("Acct is "+acct);
-System.out.println("User is "+name);
+//System.out.println("Acct is "+acct);
+//System.out.println("User is "+name);
 %>
 
 
@@ -132,18 +132,9 @@ System.out.println("User is "+name);
 				 	
 	 </section>
   			<section id="messages">
-			<div id="send_messages">
-			<h2>Reach out to a Friend</h2>
-				<form method = "POST" action = <%="\"MainMessageServlet?id="+name+"\""%> >
-					<input type = "text" name = "friend_id" value = "Enter Friends Username"></input>
-					<input type = "radio" name = "messasge_type" value = "Add Friend" >Add Friend<br></input>
-					<input type = "text" name = "quiz_name" value = "Enter Quiz Name"></input>
-					<input type = "radio" name = "message_type" value = "Challenge">Challenge<br></input>
-					<textarea rows="4" cols="20" name = "msg_content"></textarea>
-					<input type = "radio" name = "message_type" value = "Send Note">Note<br></input>
-					<input type = "submit" value = "Send Message">
-				</form>
-			</div>
+				<div id = "send_messages">
+					<a href = "searchFriends.jsp?id=<%=name%>">Reach Out To A Friend.</a>
+				</div>
 			</section>
   </div>
   
