@@ -157,10 +157,7 @@ String sel_type = (String)request.getParameter("choice");
 						}
 						
 					//TODO::Extension to add Sorting mechanisms to table cols					
-					%>
-
-					
-					
+					%>				
 				</div>
 			</td>
 		</tr>

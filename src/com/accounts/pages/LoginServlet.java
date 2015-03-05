@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
 						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
 						dispatch.forward(request, response);
 					} else {
-						RequestDispatcher dispatch = request.getRequestDispatcher("\"homepage.jsp?id="+ username +"\""); 
+						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+ username); 
 						dispatch.forward(request, response);
 					}
 				} else {
@@ -66,7 +66,6 @@ public class LoginServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
 				dispatch.forward(request, response);
 			}
-
 		} else {
 			/*Needed for the case that the Account fails to exist */
 			request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
