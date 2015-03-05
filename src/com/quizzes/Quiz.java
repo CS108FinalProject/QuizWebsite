@@ -1,5 +1,6 @@
 package com.quizzes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -83,12 +84,9 @@ public class Quiz implements Constants {
 		}
 		
 		// Remove questions for this quiz.
-		Database.removeRows(RESPONSE, QUIZ_NAME, name);
-		Database.removeRows(FILL_BLANK, QUIZ_NAME, name);
-		Database.removeRows(MATCHING, QUIZ_NAME, name);
-		Database.removeRows(MULTIPLE_CHOICE, QUIZ_NAME, name);
-		Database.removeRows(MULTI_RESPONSE, QUIZ_NAME, name);
-		Database.removeRows(PICTURE, QUIZ_NAME, name);
+		for (String tableName : QUESTION_TYPES) {
+			Database.removeRows(tableName, QUIZ_NAME, name);
+		}
 		
 		name = null;
 	}
@@ -102,43 +100,48 @@ public class Quiz implements Constants {
 	}
 	
 	
+	public <T extends Question> List<T> getQuestions() {
+		List<T> result = new ArrayList<T>();
+		
+		for (String tableName : QUESTION_TYPES) {
+			List<Map<String, Object>> questions = Database.getRows(tableName, QUIZ_NAME, name);
+			
+			// Move on to next table if there are no questions here.
+			if (questions == null) continue;
+			
+			String question = (String) questions.get(0).get(QUESTION);
+			
+			
+			
+			
+			for (Map<String, Object> row : questions) {
+				
+			}
+			
+			
+//			for (Object question : questions) {
+//				String cur = (String) question;
+//				result.add(cur);
+//			}
+		}
+		return result;
+	}
+	
+	
+	
+	/**
+	 * Returns all the current questions for this quiz in string form.
+	 * See getQuestions to get the Question Objects.
+	 */
 	public Set<String> getQuestionsAsStrings() {
 		Set<String> result = new HashSet<String>();
-
-		List<Object> questions = Database.getValues(RESPONSE, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
-		}
 		
-		questions = Database.getValues(FILL_BLANK, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
-		}
-		
-		questions = Database.getValues(MULTIPLE_CHOICE, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
-		}
-		
-		questions = Database.getValues(PICTURE, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
-		}
-		
-		questions = Database.getValues(MULTI_RESPONSE, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
-		}
-		
-		questions = Database.getValues(MATCHING, QUIZ_NAME, name, QUESTION);
-		for (Object question : questions) {
-			String cur = (String) question;
-			result.add(cur);
+		for (String tableName : QUESTION_TYPES) {
+			List<Object> questions = Database.getValues(tableName, QUIZ_NAME, name, QUESTION);
+			for (Object question : questions) {
+				String cur = (String) question;
+				result.add(cur);
+			}
 		}
 		return result;
 	}
