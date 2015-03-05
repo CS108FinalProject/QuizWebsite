@@ -1,24 +1,26 @@
 package com.quizzes;
 
-import java.util.List;
+import java.util.TreeMap;
 
 import com.util.Util;
 
 public class MultiResponse extends Question {
 	
-	private List<String> answers;
+	private TreeMap<Integer, String> answers;
 	private boolean isOrdered;
 
 	/**
 	 * @param quizName
 	 * @param question
-	 * @param answers a list of valid answers for this question.
-	 * If isOrdered = true, then the order is the insertion order
-	 * in the answers list
+	 * @param answers a map of valid answers for this question.
+	 * Maps from an int representing an ascending order of the answers
+	 * to each answer in string form.
+	 * If isOrdered = true, then the order is taken into account, otherwise
+	 * is ignored.
 	 * @param isOrdered determines if answers have to be provided in a 
 	 * specific order
 	 */
-	public MultiResponse(String quizName, String question, List<String> answers,
+	public MultiResponse(String quizName, String question, TreeMap<Integer, String> answers,
 			boolean isOrdered) {
 		super(quizName, question);
 		
@@ -31,7 +33,7 @@ public class MultiResponse extends Question {
 	/**
 	 * @return the answers
 	 */
-	public List<String> getAnswers() {
+	public TreeMap<Integer, String> getAnswers() {
 		return answers;
 	}
 
@@ -39,7 +41,7 @@ public class MultiResponse extends Question {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(List<String> answers) {
+	public void setAnswers(TreeMap<Integer, String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}
@@ -49,9 +51,9 @@ public class MultiResponse extends Question {
 	 * Adds the passed answer to the question.
 	 * @param answer
 	 */
-	public void addAnswer(String answer) {
+	public void addAnswer(int order, String answer) {
 		Util.validateString(answer);
-		answers.add(answer);
+		answers.put(order, answer);
 	}
 	
 	
@@ -60,10 +62,15 @@ public class MultiResponse extends Question {
 	 */
 	public void removeAnswer(String answer) {
 		Util.validateString(answer);
-		if (!answers.contains(answer)) {
-			throw new IllegalArgumentException(answer + " is not currently in this question.");
+		
+		for (int order : answers.keySet()) {
+			String cur = answers.get(order);
+			if (cur.equals(answer)) {
+				answers.remove(order);
+				return;
+			}
 		}
-		answers.remove(answer);
+		throw new IllegalArgumentException(answer + " is not currently in this question.");
 	}
 
 

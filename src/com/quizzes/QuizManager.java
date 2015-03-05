@@ -1,10 +1,14 @@
 package com.quizzes;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.accounts.Account;
 import com.dbinterface.Database;
 import com.util.Constants;
+import com.util.Util;
 
 /**
  * Provides the necessary functionality to perform Quiz operations.
@@ -88,11 +92,94 @@ public class QuizManager implements Constants {
 			Map<String, String> columns = new LinkedHashMap<String, String>();
 			columns.put(QUIZ_NAME, STRING);
 			columns.put(QUESTION, STRING);
-			columns.put(QUESTION_ID, INT);
 			columns.put(LEFT, STRING);
 			columns.put(RIGHT, STRING);
 			Database.createTable(MATCHING, columns);
 		}
+	}
+	
+	
+	/**
+	 * Creates a new Quiz.
+	 * @param name quiz name
+	 * @param creator the Account of the creator
+	 * @param description a brief description of the quiz
+	 * @param date creation time in string form
+	 * @param isRandom should the order be randomized
+	 * @param isOnePage will it be delivered in one page
+	 * @param isImmediate will the user get immediate answer feedback
+	 * @return the Quiz object
+	 */
+	public static Quiz createQuiz(String name, Account creator, String description, 
+			String date, boolean isRandom, boolean isOnePage, boolean isImmediate) {
+		return new Quiz(name, creator, description, date, isRandom, isOnePage, 
+				isImmediate);
+	}
+	
+	
+	/**
+	 * Given a quiz name, returns its Quiz object.
+	 */
+	public static Quiz getQuiz(String quizName) {
+		Util.validateString(quizName);
+		return new Quiz(quizName);
+	}
+	
+	
+	/**
+	 * Removes the passed quiz.
+	 */
+	public static void removeAccount(Quiz quiz) {
+		Util.validateObject(quiz);
+		quiz.removeQuiz();
+	}
+	
+	
+	/**
+	 * Checks if the quiz name is already in use.
+	 * @return true if it does, false otherwise
+	 */
+	public static boolean quizNameInUse(String quizName) {
+		Util.validateString(quizName);
+		try {
+			new Quiz(quizName);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Returns all quizzes in the database or null if none exist.
+	 */
+	public static List<Quiz> qetAllQuizzes() {
+		List<Map<String, Object>> table = Database.getTable(QUIZZES);
+		if (table == null || table.size() == 0) return null;
+		
+		List<Quiz> result = new ArrayList<Quiz>();
+		
+		for (Map<String, Object> row : table) {
+			result.add(new Quiz((String) row.get(QUIZ_NAME)));
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Given a creator account, returns a list of quizzes made by that creator.
+	 */
+	public static List<Quiz> getQuizzes(Account creator) {
+		Util.validateObject(creator);
+		List<Map<String, Object>> table = Database.getRows(QUIZZES, CREATOR, creator);
+		if (table == null || table.size() == 0) return null;
+		
+		List<Quiz> result = new ArrayList<Quiz>();
+		
+		for (Map<String, Object> row : table) {
+			result.add(new Quiz((String) row.get(QUIZ_NAME)));
+		}
+		return result;
 	}
 
 }

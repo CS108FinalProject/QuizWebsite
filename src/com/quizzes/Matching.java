@@ -6,38 +6,21 @@ import com.util.Util;
 
 public class Matching extends Question {
 	
-	private int id;
 	private Map<String, String> matches;
 
 	/**
 	 * Constructor
 	 * @param quizName
 	 * @param question
-	 * @param id unique indentifier for this Matching question.
-	 * each matching question within the same quiz should have one.
 	 * @param matches maps pairs of matching items.
 	 */
-	public Matching(String quizName, String question, int id, Map<String, String> matches) {
+	public Matching(String quizName, String question, Map<String, String> matches) {
 		super(quizName, question);
 		
 		Util.validateObject(matches);
-		this.id = id;
 		this.matches = matches;
 	}
 
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the matches

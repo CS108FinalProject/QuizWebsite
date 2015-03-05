@@ -1,6 +1,6 @@
 package com.quizzes;
 
-import java.util.List;
+import java.util.Set;
 
 import com.util.Util;
 
@@ -10,14 +10,14 @@ import com.util.Util;
  */
 public class Response extends Question {
 
-	private List<String> answers;
+	private Set<String> answers;
 	
 	/**
 	 * @param quizName the name of the quiz
 	 * @param question the question or prompt in string form
 	 * @param answers a list of valid answers
 	 */
-	public Response(String quizName, String question, List<String> answers) {
+	public Response(String quizName, String question, Set<String> answers) {
 		super(quizName, question);
 		
 		Util.validateObject(answers);
@@ -28,7 +28,7 @@ public class Response extends Question {
 	/**
 	 * @return the answers
 	 */
-	public List<String> getAnswers() {
+	public Set<String> getAnswers() {
 		return answers;
 	}
 
@@ -36,7 +36,7 @@ public class Response extends Question {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(List<String> answers) {
+	public void setAnswers(Set<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}

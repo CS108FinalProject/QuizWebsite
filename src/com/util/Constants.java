@@ -72,7 +72,6 @@ public interface Constants {
 	
 	//Matching table
 	public static final String MATCHING = "Matching";
-	public static final String QUESTION_ID = "question_id";
 	public static final String LEFT = "left";
 	public static final String RIGHT = "right";
 	

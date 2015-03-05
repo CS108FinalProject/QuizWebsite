@@ -98,7 +98,6 @@ public class AccountManager implements Constants {
 		try {
 			new Account(username);
 		} catch (RuntimeException e) {
-			System.out.println("false");
 			return false;
 		}
 		return true;

@@ -1,13 +1,13 @@
 package com.quizzes;
 
-import java.util.List;
+import java.util.Set;
 
 import com.util.Util;
 
 public class Picture extends Question {
 	
 	private String pictureUrl;
-	private List<String> answers;
+	private Set<String> answers;
 
 	/**
 	 * @param quizName
@@ -16,7 +16,7 @@ public class Picture extends Question {
 	 * @param answers a list of possible answers to this question
 	 */
 	public Picture(String quizName, String question, String pictureUrl,
-			List<String> answers) {
+			Set<String> answers) {
 		
 		super(quizName, question);
 		
@@ -46,14 +46,14 @@ public class Picture extends Question {
 	/**
 	 * @return the answers
 	 */
-	public List<String> getAnswers() {
+	public Set<String> getAnswers() {
 		return answers;
 	}
 
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(List<String> answers) {
+	public void setAnswers(Set<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}
