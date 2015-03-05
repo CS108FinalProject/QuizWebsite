@@ -121,7 +121,7 @@ String sel_type = (String)request.getParameter("choice");
 			</div></td>
 			<td>
 				<div id = "send_messages">
-					<a href = "searchFriends.jsp?id=<%=name%>">Reach Out To A Friend.</a>
+					<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
 				</div>
 				<div id="read_messages">
 					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>

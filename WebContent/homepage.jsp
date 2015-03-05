@@ -37,14 +37,13 @@ String sel_type = (String)request.getParameter("choice");
 
   <nav>
     <ul>
-      <%/*if(acct.isAdmin()) {
-          out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+      <%if(acct.isAdmin()) {
+          out.println("<li><a href = \"adminHomepage.jsp\">Homepage</a></li>");
         } else {
-          out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+          out.println("<li><a href = \"homepage.jsp\">Homepage</a></li>");
         }
-      */%> 
+      %> 
 
-      <li><a href = <%="\"homepage.jsp?id="+name+"\""%>>Homepage</a></li>
       <li><a href = "showAnnouncements.jsp">Announcements</a></li>
       <li><a href = "#">My Achievements</a></li>
       <li>
@@ -96,6 +95,10 @@ String sel_type = (String)request.getParameter("choice");
 	 </section>
 	 
 	 <section id="messages">
+	 			<div id = "send_messages">
+					<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
+				</div>
+				
 	 	<div id="view_messages">
 	 		<h2>My Messages</h2>
 	 		<form action = <%="\"homepage.jsp?id="+name+"\""%>>
@@ -127,15 +130,9 @@ String sel_type = (String)request.getParameter("choice");
 	           
 	         %>
 	 	</div>
-	 		
-
-				 	
+	 						 	
 	 </section>
-  			<section id="messages">
-				<div id = "send_messages">
-					<a href = "searchFriends.jsp?id=<%=name%>">Reach Out To A Friend.</a>
-				</div>
-			</section>
+
   </div>
   
   <div id="still_left">
