@@ -50,7 +50,6 @@
 			</tr>
 	</table>
 	
-	
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
