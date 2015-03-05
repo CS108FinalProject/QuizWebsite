@@ -81,6 +81,15 @@ public class Quiz implements Constants {
 		if (removed != 1) {
 			throw new RuntimeException("Problem removing rows. Removed " + removed + " rows");
 		}
+		
+		// Remove questions for this quiz.
+		Database.removeRows(RESPONSE, QUIZ_NAME, name);
+		Database.removeRows(FILL_BLANK, QUIZ_NAME, name);
+		Database.removeRows(MATCHING, QUIZ_NAME, name);
+		Database.removeRows(MULTIPLE_CHOICE, QUIZ_NAME, name);
+		Database.removeRows(MULTI_RESPONSE, QUIZ_NAME, name);
+		Database.removeRows(PICTURE, QUIZ_NAME, name);
+		
 		name = null;
 	}
 	
