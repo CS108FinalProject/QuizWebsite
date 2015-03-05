@@ -103,19 +103,25 @@ public class Quiz implements Constants {
 	public <T extends Question> List<T> getQuestions() {
 		List<T> result = new ArrayList<T>();
 		
-		for (String tableName : QUESTION_TYPES) {
-			List<Map<String, Object>> questions = Database.getRows(tableName, QUIZ_NAME, name);
+		for (String questionType : QUESTION_TYPES) {
+			List<Map<String, Object>> questions = Database.getRows(questionType, QUIZ_NAME, name);
 			
 			// Move on to next table if there are no questions here.
 			if (questions == null) continue;
 			
-			String question = (String) questions.get(0).get(QUESTION);
-			
-			
-			
+			// Get first row and question
+			Question question = questionFactory(questionType, questions.get(0));
+			String curQuestion = (String) questions.get(0).get(QUESTION);
 			
 			for (Map<String, Object> row : questions) {
-				
+				String newQuestion = (String) row.get(QUESTION);
+				if (!newQuestion.equals(curQuestion)) {
+					
+					//make a new object
+					
+				} else {
+					// continue to a
+				}
 			}
 			
 			
@@ -416,4 +422,34 @@ public class Quiz implements Constants {
 	private void editMatching(Matching oldQuestion, Matching newQuestion) {
 		
 	}
+	
+	
+	// Given a question type and a database row in the form of a Map<String, Object>,
+	// returns a Question Object.
+	public Question questionFactory(String questionType, Map<String, Object> row) {
+		Util.validateString(questionType);
+		Util.validateObject(row);
+		
+		String question = (String) row.get(QUESTION);
+		
+		if (questionType.equals(RESPONSE)) {
+			List<String> answers = new ArrayList<String>();
+			answers.add((String) row.get(ANSWER));
+			return new Response(name, question, answers);
+			
+		} else if (questionType.equals(FILL_BLANK)) {
+			Set<String> answers = new HashSet<String>();
+			answers.add((String) row.get(ANSWER));
+			Map<String, Set<String>> blanksAndAnswers = new HashMap<String, Set<String>>();
+			blanksAndAnswers.put((String) row.get(BLANK), answers);
+			return new FillBlank(name, question, blanksAndAnswers);
+		}
+		
+		
+		
+		
+		return null;
+	}
+	
+	
 }
