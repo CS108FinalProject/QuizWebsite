@@ -68,12 +68,6 @@ public class RegistrationServlet extends HttpServlet {
 				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
 				dispatch.forward(request, response);
 			}
-			/*
-			getServletContext().setAttribute("session_user",username);
-			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
-			dispatch.forward(request, response);
-			*/
-
 		}
 	}
 
