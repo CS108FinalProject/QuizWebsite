@@ -1,8 +1,6 @@
-/**
- * 
- */
 package com.quizzes;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,17 +48,27 @@ public class FillBlank extends Question {
 	
 	
 	/**
-	 * Adds a blank with a corresponding set of answers to the question.
+	 * Adds a blank with a corresponding answer to the question.
+	 * If the blank already exists the passed answer is added to its corresponding
+	 * set, if not, a the new blank and answer are added to the question.
 	 * @param blank
 	 * @param answers
 	 */
-	public void addBlank(String blank, Set<String> answers) {
+	public void addBlank(String blank, String answer) {
 		Util.validateString(blank);
-		Util.validateObject(answers);
+		Util.validateString(answer);
 		if (!question.contains(blank)) {
 			throw new IllegalArgumentException(blank + " is not a substring of " + question);
 		}
-		blanksAndAnswers.put(blank, answers);
+		
+		if (blanksAndAnswers.containsKey(blank)) {
+			blanksAndAnswers.get(blank).add(answer);
+			
+		} else {
+			Set<String> answers = new HashSet<String>();
+			answers.add(answer);
+			blanksAndAnswers.put(blank, answers);
+		}
 	}
 	
 	

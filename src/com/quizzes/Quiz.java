@@ -3,9 +3,11 @@ package com.quizzes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.accounts.Account;
 import com.dbinterface.Database;
@@ -60,7 +62,7 @@ public class Quiz implements Constants {
 	 * if it doesn't. 
 	 * @param userName
 	 */
-	public Quiz(String name) {
+	protected Quiz(String name) {
 		Util.validateString(name);
 		
 		// Make sure quiz name exists in DB.
@@ -100,39 +102,40 @@ public class Quiz implements Constants {
 	}
 	
 	
-	public <T extends Question> List<T> getQuestions() {
-		List<T> result = new ArrayList<T>();
+	/**
+	 * Returns all question Objects.
+	 */
+	public List<Question> getQuestions() {
+		List<Question> result = new ArrayList<Question>();
+		Map<String, Question> questions = new LinkedHashMap<String, Question>();
 		
 		for (String questionType : QUESTION_TYPES) {
-			List<Map<String, Object>> questions = Database.getRows(questionType, QUIZ_NAME, name);
+			// Get all rows for each question table for this quiz.
+			List<Map<String, Object>> rows = Database.getRows(questionType, QUIZ_NAME, name);
 			
 			// Move on to next table if there are no questions here.
-			if (questions == null) continue;
+			if (rows == null) continue;
 			
-			// Get first row and question
-			Question question = questionFactory(questionType, questions.get(0));
-			String curQuestion = (String) questions.get(0).get(QUESTION);
-			
-			for (Map<String, Object> row : questions) {
-				String newQuestion = (String) row.get(QUESTION);
-				if (!newQuestion.equals(curQuestion)) {
-					
-					//make a new object
+			for (Map<String, Object> row : rows) {
+				String question = (String) row.get(QUESTION);
+				
+				if (questions.containsKey(question)) {
+					addToQuestion(questions.get(question), row);
 					
 				} else {
-					// continue to a
+					Question newQuestion = questionFactory(questionType, row);
+					questions.put(question, newQuestion);
 				}
 			}
-			
-			
-//			for (Object question : questions) {
-//				String cur = (String) question;
-//				result.add(cur);
-//			}
 		}
+		
+		for (String question : questions.keySet()) {
+			result.add(questions.get(question));
+		}
+		
+		if (result.size() == 0) return null;
 		return result;
 	}
-	
 	
 	
 	/**
@@ -157,8 +160,13 @@ public class Quiz implements Constants {
 	 * Adds the passed question object to the database.
 	 * @param question
 	 */
-	public <T extends Question> void addQuestion(T question) {
+	public void addQuestion(Question question) {
 		Util.validateObject(question);
+		
+		// No duplicate questions.
+		if (getQuestionsAsStrings().contains(question.getQuestion())) {
+			throw new IllegalArgumentException(question.getQuestion() + " already exists in " + name);
+		}
 		
 		if (question instanceof Response) addResponse((Response) question);
 		else if (question instanceof FillBlank) addFillBlank((FillBlank) question);
@@ -173,41 +181,53 @@ public class Quiz implements Constants {
 	
 	
 	/**
+	 * Edits a question from the old state to the new state.
 	 * Takes the old state of a question before it was modified and the new state after being
 	 * modified. Looks for the old state in the database and replaces it with the new one.
 	 * @param oldQuestion the question object before modification
 	 * @param newQuestion the question object after modification
 	 */
-	public <T extends Question> void editQuestion(T oldQuestion, T newQuestion) {
+	public void editQuestion(Question oldQuestion, Question newQuestion) {
 		Util.validateObject(oldQuestion);
 		Util.validateObject(newQuestion);
 		
-		if (oldQuestion instanceof Response) {
-			editResponse((Response) oldQuestion, (Response) newQuestion);
-			
-		} else if (oldQuestion instanceof FillBlank) {
-			editFillBlank((FillBlank) oldQuestion, (FillBlank) newQuestion);
-			
-		} else if (oldQuestion instanceof MultipleChoice) {
-			editMultipleChoice((MultipleChoice) oldQuestion, (MultipleChoice) newQuestion);
-			
-		} else if (oldQuestion instanceof Picture) {
-			editPicture((Picture) oldQuestion, (Picture) newQuestion);
-			
-		} else if (oldQuestion instanceof MultiResponse) {
-			editMultiResponse((MultiResponse) oldQuestion, (MultiResponse) newQuestion);
-			
-		} else if (oldQuestion instanceof Matching) {
-			editMatching((Matching) oldQuestion, (Matching) newQuestion);
-			
-		} else {
-			throw new IllegalArgumentException("Passed question is invalid");
+		// Ensure question belongs to this quiz.
+		if (!oldQuestion.getQuizName().equals(name)) {
+			throw new IllegalArgumentException("The question is not in this quiz.");
 		}
+		
+		// Check type consistency
+		if (oldQuestion.getClass() != newQuestion.getClass()) {
+			throw new IllegalArgumentException("Both questions have to be the same type");
+		}
+		
+		// Quiz name cannot be modified in a question.
+		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
+			throw new IllegalArgumentException("The quiz name in a question cannot be modified");
+		}
+		
+		// If the question prompt was modified, ensure it is not duplicate.
+		if (!oldQuestion.getQuestion().equals(newQuestion.getQuestion())) {
+			if (getQuestionsAsStrings().contains(newQuestion.getQuestion())) {
+				throw new IllegalArgumentException("The question already exists in" 
+						+ newQuestion.getQuizName());
+			}
+		}
+		
+		// Remove old and add new.
+		removeQuestion(oldQuestion);
+		addQuestion(newQuestion);
 	}
 	
 	
-	public <T extends Question> void removeQuestion(T question) {
-		// TODO: implement
+	/**
+	 * Removes the passed question object from the Quiz.
+	 */
+	public void removeQuestion(Question question) {
+		Util.validateObject(question);
+		for (String tableName : QUESTION_TYPES) {
+			Database.removeRows(tableName, QUIZ_NAME, name, QUESTION, question);
+		}
 	}
 	
 	
@@ -217,11 +237,6 @@ public class Quiz implements Constants {
 	
 	// Adds a Response question to the database.
 	private void addResponse(Response response) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(response.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-		
 		// Add a row for every answer in the question.
 		for (String answer : response.getAnswers()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -241,11 +256,6 @@ public class Quiz implements Constants {
 	
 	// Adds a FillBlank question to the database.
 	private void addFillBlank(FillBlank fillBlank) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(fillBlank.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-		
 		// Iterate over every blank.
 		for (String blank : fillBlank.getBlanksAndAnswers().keySet()) {
 			// Iterate over every answer per each blank.
@@ -269,11 +279,6 @@ public class Quiz implements Constants {
 	
 	// Adds a MultipleChoice question to the database.
 	private void addMultipleChoice(MultipleChoice multipleChoice) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(multipleChoice.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-		
 		// Add a row for every answer in the question.
 		for (String option : multipleChoice.getOptions().keySet()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -294,11 +299,6 @@ public class Quiz implements Constants {
 
 	// Adds a Picture question to the database.
 	private void addPicture(Picture picture) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(picture.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-				
 		// Add a row for every answer in the question.
 		for (String answer : picture.getAnswers()) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -319,11 +319,6 @@ public class Quiz implements Constants {
 
 	// Adds a MultiResponse question to the database.
 	private void addMultiResponse(MultiResponse multiResponse) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(multiResponse.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-		
 		// Add a row for every answer in the question.
 		for (int i = 0; i < multiResponse.getAnswers().size(); i++) {
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -345,17 +340,11 @@ public class Quiz implements Constants {
 
 	// Adds a Matching question to the database.
 	private void addMatching(Matching matching) {
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(matching.getQuestion())) {
-			throw new IllegalArgumentException("The question already exists in " + name);
-		}
-		
 		// Add a row for every answer in the question.
 		for (String left : matching.getMatches().keySet()) {
 			Map<String, Object> row = new HashMap<String, Object>();
 			row.put(QUIZ_NAME, name);
 			row.put(QUESTION, matching.getQuestion());
-			row.put(QUESTION_ID, matching.getId());
 			row.put(LEFT, left);
 			row.put(RIGHT, matching.getMatches().get(left));
 			
@@ -369,71 +358,18 @@ public class Quiz implements Constants {
 	}
 	
 	
-	// Edits a Response question in the database.
-	private void editResponse(Response oldQuestion, Response newQuestion) {
-		// Check type consistency
-		if (!(newQuestion instanceof Response)) {
-			throw new IllegalArgumentException("Both passed questions have to be the same type");
-		}
-		
-		// Quiz name cannot be modified in a question.
-		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
-			throw new IllegalArgumentException("the quiz name in a question cannot be modified");
-		}
-		
-		// If the question was modified, ensure it is not duplicate.
-		if (!oldQuestion.getQuestion().equals(newQuestion.getQuestion())) {
-			if (getQuestionsAsStrings().contains(newQuestion.getQuestion())) {
-				throw new IllegalArgumentException("The question already exists in" 
-						+ newQuestion.getQuizName());
-			}
-		}
-		
-		// remove oldQuestion
-		addQuestion(newQuestion);
-	}
-	
-	
-	// Edits a FillBlank question in the database.
-	private void editFillBlank(FillBlank oldQuestion, FillBlank newQuestion) {
-		
-	}
-	
-	
-	// Edits a MultipleChoice question in the database.
-	private void editMultipleChoice(MultipleChoice oldQuestion, MultipleChoice newQuestion) {
-		
-	}
-	
-	
-	// Edits a Picture question in the database.
-	private void editPicture(Picture oldQuestion, Picture newQuestion) {
-		
-	}
-	
-	
-	// Edits a MultiResponse question in the database.
-	private void editMultiResponse(MultiResponse oldQuestion, MultiResponse newQuestion) {
-		
-	}
-	
-	
-	// Edits a Matching question in the database.
-	private void editMatching(Matching oldQuestion, Matching newQuestion) {
-		
-	}
-	
-	
-	// Given a question type and a database row in the form of a Map<String, Object>,
-	// returns a Question Object.
-	public Question questionFactory(String questionType, Map<String, Object> row) {
+	/*
+	 * Given a question type and a database row in the form of a Map<String, Object>,
+	 * returns a Question Object.
+	 */
+	private Question questionFactory(String questionType, Map<String, Object> row) {
 		Util.validateString(questionType);
 		Util.validateObject(row);
 		
 		String question = (String) row.get(QUESTION);
 		
 		if (questionType.equals(RESPONSE)) {
-			List<String> answers = new ArrayList<String>();
+			Set<String> answers = new HashSet<String>();
 			answers.add((String) row.get(ANSWER));
 			return new Response(name, question, answers);
 			
@@ -443,13 +379,64 @@ public class Quiz implements Constants {
 			Map<String, Set<String>> blanksAndAnswers = new HashMap<String, Set<String>>();
 			blanksAndAnswers.put((String) row.get(BLANK), answers);
 			return new FillBlank(name, question, blanksAndAnswers);
+			
+		} else if (questionType.equals(MULTIPLE_CHOICE)) {
+			Map<String, Boolean> options = new HashMap<String, Boolean>();
+			options.put((String) row.get(OPTION), (Boolean) row.get(IS_ANSWER));
+			return new MultipleChoice(name, question, options);
+		
+		} else if (questionType.equals(PICTURE)) {
+			Set<String> answers = new HashSet<String>();
+			answers.add((String) row.get(ANSWER));
+			return new Picture(name, question, (String) row.get(PICTURE_URL), answers);
+			
+		} else if (questionType.equals(MULTI_RESPONSE)) {
+			TreeMap<Integer, String> answers = new TreeMap<Integer, String>();
+			answers.put((Integer) row.get(ORDER), (String) row.get(ANSWER));
+			boolean isOrdered = (Boolean) row.get(IS_ORDERED);
+			return new MultiResponse(name, question, answers, isOrdered);
+			
+		} else if (questionType.equals(MATCHING)) {
+			Map<String, String> matches = new HashMap<String, String>();
+			matches.put((String) row.get(LEFT), (String) row.get(RIGHT));
+			return new Matching(name, question, matches);
 		}
 		
-		
-		
-		
-		return null;
+		throw new IllegalArgumentException(questionType + " is not a valid question type.");
 	}
 	
+	
+	/*
+	 * Adds the passed row to the passed Question object.
+	 */
+	private void addToQuestion(Question question, Map<String, Object> row) {
+		if (question instanceof Response) {
+			Response response = (Response) question;
+			response.addAnswer((String) row.get(ANSWER));
+		 	
+		} else if (question instanceof FillBlank) {
+			FillBlank fillBlank = (FillBlank) question;
+			fillBlank.addBlank((String) row.get(BLANK), (String) row.get(ANSWER));
+			
+		} else if (question instanceof MultipleChoice) {
+			MultipleChoice multChoice = (MultipleChoice) question;
+			multChoice.addOption((String) row.get(OPTION), (Boolean) row.get(IS_ANSWER));
+			
+		} else if (question instanceof Picture) {
+			Picture picture = (Picture) question;
+			picture.addAnswer((String) row.get(ANSWER));
+			
+		} else if (question instanceof MultiResponse) {
+			MultiResponse multResponse = (MultiResponse) question;
+			multResponse.addAnswer((Integer) row.get(ORDER), (String) row.get(ANSWER));
+			
+		} else if (question instanceof Matching) {
+			Matching matching = (Matching) question;
+			matching.addMatch((String) row.get(LEFT), (String) row.get(RIGHT));
+		
+		} else {
+			throw new IllegalArgumentException("Invalid question object.");
+		}
+	}
 	
 }
