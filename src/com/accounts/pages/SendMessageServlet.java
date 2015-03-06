@@ -57,6 +57,9 @@ public class SendMessageServlet extends HttpServlet {
 		System.out.println("friend_name:" + friend_name);
 //		System.out.println("date:" + date);
 
+		
+		//get content
+		String msg_content = request.getParameter("msg_content");
 
 		// create and send message according to message type
 		if (request.getParameter("message_type").equals("Add Friend")) {
@@ -99,10 +102,14 @@ public class SendMessageServlet extends HttpServlet {
 			}	
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 		
-		} else if (request.getParameter("message_type").equals("Send Note")) {
-			Message msg = new Message(sender_name, friend_name, request.getParameter("msg_content"), Constants.MESSAGE_NOTE, date, false);
+		} else if (request.getParameter("message_type").equals("Send Note") && !msg_content.equals("")) {
+			
+			Message msg = new Message(sender_name, friend_name,msg_content , Constants.MESSAGE_NOTE, date, false);
 			sender.sendMessage(msg);
+		} else if (msg_content.equals("")) {
+			request.setAttribute("errMsg", "Please enter a non-empty message.");
 		}
+		
 //		if (AccountManager.getAccount(sender_name).isAdmin()) {
 //			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
 //			dispatch.forward(request, response);

@@ -5,7 +5,7 @@
 	<%@ page import = "javax.swing.*" %>
 
 	
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -57,7 +57,6 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
 			</tr>
 	</table>
-	
 	<h2>Nice to see you, <%=name %></h2>
 	<table id = "admin_content">
 		<tr>
@@ -80,7 +79,7 @@ String sel_type = (String)request.getParameter("choice");
 					<div id = "removeAcct">
 						Remove Account<br></br>
 						<form action = "AdminServlet" method = "POST">
-							Account id: <input type = "text" name = "remove_acct" value = <% 
+							Account id: <input type = "text" name = "remove_acct" placeholder = <% 
 							String removed_id = request.getParameter("remove_acct");
 							if (removed_id != null ) {
 								out.println("\"Account "+removed_id+" removed.\"");
