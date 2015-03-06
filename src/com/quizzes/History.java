@@ -33,5 +33,4 @@ public class History implements Constants {
 		row.put(ELAPSED_TIME, record.getElapsedTime());
 		Database.addRow(HISTORY, row);
 	}
-
 }

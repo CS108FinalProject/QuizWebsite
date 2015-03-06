@@ -475,6 +475,67 @@ public class Database implements Constants {
 	
 	
 	/**
+	 * Returns a list of rows (each a Map<String, Object>) where columnName1 equals 
+	 * value1 and columnName2 equals value2.
+	 */
+	public static List<Map<String, Object>> getRows(String tableName, String columnName1, 
+			Object value1, String columnName2, Object value2) {
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateString(columnName1);
+		Util.validateString(columnName1);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName1);
+		Util.validateObjectType(value1, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value1 = getIntFromBoolean((Boolean) value1);
+		
+		type = getColumnType(tableName, columnName2);
+		Util.validateObjectType(value2, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value2 = getIntFromBoolean((Boolean) value2);
+		
+		String query = "SELECT * FROM " + tableName + " WHERE " + columnName1 + " = " + "\"" 
+						+ value1 + "\" AND " + columnName2 + " = " + "\"" + value2 + "\"";
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
+	
+	
+	/**
 	 * Given a row specified by a Map, returns a list of rows that are equal to the passed row.
 	 * @param tableName
 	 * @param row
