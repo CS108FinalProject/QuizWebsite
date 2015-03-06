@@ -48,6 +48,10 @@ public class MessageServlet extends HttpServlet {
 		request.setAttribute("username", request.getParameter("recipient"));
 		String recipient = request.getParameter("recipient");
 		String sender = request.getParameter("sender");
+		
+		System.out.println("recipient: " + recipient);
+		System.out.println("sender: " + sender);
+		
 		Account receiver_account = AccountManager.getAccount(recipient);
 		Account sender_account = AccountManager.getAccount(sender);
 		

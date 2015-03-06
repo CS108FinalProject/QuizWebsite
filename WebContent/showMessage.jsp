@@ -99,6 +99,7 @@
 					out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
 					out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
 					out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+					out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
 					out.println("</form>");
 				}
 				
