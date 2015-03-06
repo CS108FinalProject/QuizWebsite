@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.dbinterface.Database;
 import com.util.Constants;
+import com.util.Util;
 
 /**
  * Provides functionality to operate on the History database table.
@@ -22,7 +23,7 @@ public class History implements Constants {
 	 * @param elapsedTime how long did it take the user to finish
 	 */
 	public static void addRecord(Record record) {
-		
+		Util.validateObject(record);
 		
 		Map<String, Object> row = new HashMap<String, Object>();
 		row.put(QUIZ_NAME, record.getQuizName());
@@ -32,7 +33,5 @@ public class History implements Constants {
 		row.put(ELAPSED_TIME, record.getElapsedTime());
 		Database.addRow(HISTORY, row);
 	}
-	
-	
-	
+
 }

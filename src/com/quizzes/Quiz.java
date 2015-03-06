@@ -244,7 +244,7 @@ public class Quiz implements Constants {
 		
 		List<Record> result = new ArrayList<Record>();
 		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, 
-				name, SCORE, true);
+				name, SCORE, true, ELAPSED_TIME, false);
 		
 		if (rows == null) return null;
 		
