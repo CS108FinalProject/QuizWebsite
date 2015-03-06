@@ -14,8 +14,6 @@ pageEncoding="UTF-8"%>
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
-//System.out.println("Acct is "+acct);
-//System.out.println("User is "+name);
 %>
 
 

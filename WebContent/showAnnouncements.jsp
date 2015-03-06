@@ -20,14 +20,15 @@ ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttrib
 
 <table id="header">
 			<tr>
-				<%/*if(acct.isAdmin()) {
+				<%
+				Account acct = AccountManager.getAccount(name);
+				if(acct.isAdmin()) {
 					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-					*/%> 
+				%> 
 					
-				<th><a href = <%="\"homepage.jsp?id="+ name +"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
