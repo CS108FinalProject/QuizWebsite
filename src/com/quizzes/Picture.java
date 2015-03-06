@@ -50,6 +50,7 @@ public class Picture extends Question {
 		return answers;
 	}
 
+	
 	/**
 	 * @param answers the answers to set
 	 */
@@ -81,5 +82,16 @@ public class Picture extends Question {
 	}
 	
 	
+	/**
+	 * Determines whether the passed answer is correct.
+	 * @param answer provided by the test taker
+	 * @return true if correct, false otherwise.
+	 */
+	public boolean answerIsCorrect(String answer) {
+		Util.validateString(answer);
+	
+		if (answers.contains(answer)) return true;
+		return false;
+	}
 
 }

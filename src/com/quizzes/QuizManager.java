@@ -129,7 +129,7 @@ public class QuizManager implements Constants {
 	/**
 	 * Removes the passed quiz.
 	 */
-	public static void removeAccount(Quiz quiz) {
+	public static void removeQuiz(Quiz quiz) {
 		Util.validateObject(quiz);
 		quiz.removeQuiz();
 	}
