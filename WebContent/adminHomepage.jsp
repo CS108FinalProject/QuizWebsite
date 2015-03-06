@@ -17,8 +17,6 @@
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
-
-
 %>
 <title>Welcome <%=name%></title>
 </head>
@@ -31,13 +29,14 @@ String sel_type = (String)request.getParameter("choice");
 	<table id="header">
 			<tr>
 				<%if(acct.isAdmin()) {
-					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				
 					%> 
 					
+				<th><a href = <%="\"adminHomepage.jsp?id="+name+"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 				<th>My Messages 
@@ -45,6 +44,7 @@ String sel_type = (String)request.getParameter("choice");
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
+							<option>Send A Message</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
 						<input name="id" type="hidden" value=<%=name%>>
@@ -56,6 +56,7 @@ String sel_type = (String)request.getParameter("choice");
 				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
 			</tr>
 	</table>
+	
 	<h2>Nice to see you, <%=name %></h2>
 	<table id = "admin_content">
 		<tr>
@@ -79,8 +80,9 @@ String sel_type = (String)request.getParameter("choice");
 						Remove Account<br></br>
 						<form action = "AdminServlet" method = "POST">
 							Account id: <input type = "text" name = "remove_acct" placeholder = <% 
-							String removed_id = request.getParameter("remove_acct");
+							Object removed_id = request.getAttribute("remove_acct");
 							if (removed_id != null ) {
+								removed_id = (String)removed_id;
 								out.println("\"Account "+removed_id+" removed.\"");
 							} else {
 								out.println("\"No Account Removed\"");
@@ -92,16 +94,31 @@ String sel_type = (String)request.getParameter("choice");
 						</form>
 					</div>									
 			</td>
+			<td>
+			<tr>
+			<td> Promote User To Admin
+				<form action = "AdminServlet" method = "POST">
+					Account<input type = "text" name = "promote_acct" placeholder = <% 
+							Object promoted_id = request.getAttribute("promote_acct");
+							if (promoted_id != null ) {
+								promoted_id = (String)promoted_id;
+								out.println("\"Account "+promoted_id+" promoted to Administrator.\"");
+							} else {
+								out.println("\"No Account Promoted\"");
+							}
+							%>></input>
+							<input type = "submit"></input>
+				</form>
+			</td>
+		</tr>
+			</td>
 		</tr>
 	</table>
-	
 	
 	<table id = "content">
 		<tr>
 			<%//Displays any admin announcements as a list%>
-			<%
-			ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
-			%>
+			<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
 			<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
@@ -115,7 +132,7 @@ String sel_type = (String)request.getParameter("choice");
 					out.println("<br></br>Hello, no new announcements.");
 				}
 				%>	
-			</div></td>
+			</div> </td>		
 			<td>
 				<div id = "send_messages">
 					<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
