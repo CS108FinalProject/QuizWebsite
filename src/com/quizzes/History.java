@@ -3,10 +3,8 @@ package com.quizzes;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.accounts.Account;
 import com.dbinterface.Database;
 import com.util.Constants;
-import com.util.Util;
 
 /**
  * Provides functionality to operate on the History database table.
