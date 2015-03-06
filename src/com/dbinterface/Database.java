@@ -482,6 +482,83 @@ public class Database implements Constants {
 		if (list.size() == 0) return null;
 		return list;
 	}
+	
+	
+	/**
+	 * Returns a list of sorted rows that match the specified criteria.
+	 * @param tableName to get rows from
+	 * @param columnName to match a value for
+	 * @param value value to be matched
+	 * @param orderBy column to sort
+	 * @param descending sort descending if true, ascending if false.
+	 * @return a list of matching rows or null ir none were found.
+	 */
+	public static List<Map<String, Object>> getSortedRows(String tableName, String columnName, 
+			Object value, String orderBy, boolean descending) {
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateString(columnName);
+		Util.validateString(orderBy);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName);
+		Util.validateObjectType(value, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
+		
+		// Define query
+		String query = "SELECT * FROM " + tableName + " WHERE " + 
+						columnName + " = " + "\"" + value + "\" ORDER BY " + orderBy;
+		
+		if (descending) {
+			query += " DESC";
+		}
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	/**

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.accounts.Account;
+import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
 import com.util.Util;
@@ -228,6 +229,46 @@ public class Quiz implements Constants {
 		for (String tableName : QUESTION_TYPES) {
 			Database.removeRows(tableName, QUIZ_NAME, name, QUESTION, question);
 		}
+	}
+	
+	
+	/**
+	 * Returns the top scorers for the quiz.
+	 * @param numRecords number of top scorers to return. (all if numRecords = 0)
+	 * @return a list of top scorers as Record Objects.
+	 */
+	public List<Record> getTopScorers(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, 
+				name, SCORE, true);
+		
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+		}
+		return result;
 	}
 	
 	
