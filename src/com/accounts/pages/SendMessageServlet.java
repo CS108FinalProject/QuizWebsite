@@ -53,18 +53,18 @@ public class SendMessageServlet extends HttpServlet {
 		Account sender = AccountManager.getAccount(sender_name);
 		Account recipient = AccountManager.getAccount(friend_name);
 		
-		System.out.println("sender name:" + sender_name);
-		System.out.println("friend_name:" + friend_name);
+		//System.out.println("sender name:" + sender_name);
+		//System.out.println("friend_name:" + friend_name);
 //		System.out.println("date:" + date);
 
 
 		// create and send message according to message type
-		if (request.getParameter("message_type").equals("Add Friend")) {
+		if (request.getParameter("message_type").equals("Send Friend Request")) {
 			
-			System.out.println("!sender.friendshipPending(recipient): " + !sender.friendshipPending(recipient));
-			System.out.println("!recipient.friendshipPending(sender)" + !recipient.friendshipPending(sender));
-			System.out.println("!sender.isFriend(recipient)" + !sender.isFriend(recipient));
-			System.out.println("!recipient.isFriend(sender)" + !recipient.isFriend(sender));
+//			System.out.println("!sender.friendshipPending(recipient): " + !sender.friendshipPending(recipient));
+//			System.out.println("!recipient.friendshipPending(sender)" + !recipient.friendshipPending(sender));
+//			System.out.println("!sender.isFriend(recipient)" + !sender.isFriend(recipient));
+//			System.out.println("!recipient.isFriend(sender)" + !recipient.isFriend(sender));
 			if ((!sender.friendshipPending(recipient)) && (!sender.isFriend(recipient)) && (!recipient.isFriend(sender))) {
 				System.out.println("adding friend");
 				Message msg = new Message(sender_name, friend_name, "friend_request", Constants.MESSAGE_FRIEND_REQUEST, date, false);

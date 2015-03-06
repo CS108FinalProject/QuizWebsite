@@ -87,7 +87,10 @@
 						}
 						
 					} else { // case of read message
-						if (account.isFriend(AccountManager.getAccount(msg.getSender())) || AccountManager.getAccount(msg.getSender()).isFriend(account)) {
+						System.out.println("name: " + name + " sender: " + msg.getSender());
+						Account sender_account = AccountManager.getAccount(msg.getSender());
+						Account recipient_account = AccountManager.getAccount(msg.getRecipient());
+						if (recipient_account.isFriend(sender_account) || sender_account.isFriend(recipient_account)) {
 							if (msgToDisplay.equals("Received Messages")) { 
 								out.println("<li><p> You accepted <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
 										+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
