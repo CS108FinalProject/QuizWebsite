@@ -61,5 +61,24 @@ public class Matching extends Question {
 		}
 		matches.remove(match);
 	}
+	
+	
+	/**
+	 * Determines whether passed answer is correct
+	 * @param left match on the left side provided by user
+	 * @param right match on the right side provided by user
+	 * @return true if correct, false otherwise
+	 */
+	public boolean answerIsCorrect(String left, String right) {
+		Util.validateString(left);
+		Util.validateString(right);
+		
+		if (!matches.containsKey(left)) {
+			throw new IllegalArgumentException(left + " is not a valid match in this question.");
+		}
+		
+		if (matches.get(left).equals(right)) return true;
+		return false;
+	}
 
 }

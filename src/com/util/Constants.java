@@ -80,6 +80,10 @@ public interface Constants {
 			Arrays.asList(RESPONSE, FILL_BLANK, MULTIPLE_CHOICE, PICTURE, 
 					MULTI_RESPONSE, MATCHING));
 	
+	// Record
+	public static final double MIN_SCORE = 0.0;
+	public static final double MAX_SCORE = 100.0;
+	
 	// Types
 	public static final String STRING = "string"; 
 	public static final String BOOLEAN = "boolean";

@@ -1,9 +1,12 @@
 package com.quizzes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.accounts.Account;
 import com.dbinterface.Database;
@@ -129,7 +132,7 @@ public class QuizManager implements Constants {
 	/**
 	 * Removes the passed quiz.
 	 */
-	public static void removeAccount(Quiz quiz) {
+	public static void removeQuiz(Quiz quiz) {
 		Util.validateObject(quiz);
 		quiz.removeQuiz();
 	}
@@ -178,6 +181,98 @@ public class QuizManager implements Constants {
 		
 		for (Map<String, Object> row : table) {
 			result.add(new Quiz((String) row.get(QUIZ_NAME)));
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a sorted list of most popular quizzes (index 0 is most popular and so on...) 
+	 * @param numRecords number of desired entries in the list (0 for all)
+	 * @return a list of Quiz objects.
+	 */
+	public static List<Quiz> getMostPopularQuizzes(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0");
+		}
+		
+		List<Quiz> result = new LinkedList<Quiz>();
+		
+		List<Map<String, Object>> rows = Database.getTable(HISTORY);
+		if (rows == null) return null;
+		
+		// Count all quiz occurrences.
+		Map<String, Integer> quizCount = new HashMap<String, Integer>();
+		for (Map<String, Object> row : rows) {
+			String quizName = (String) row.get(QUIZ_NAME);
+			
+			if (quizCount.containsKey(quizName)) {
+				quizCount.put(quizName, quizCount.get(quizName) + 1);
+				
+			} else {
+				quizCount.put(quizName, 1);
+			}
+		}
+		
+		// Create a new TreeMap and switch key-value for value-key so that
+		// TreeMap sorts automatically.
+		Map<Integer, List<String>> sortedCount = new TreeMap<Integer, List<String>>();
+		for (String quizName : quizCount.keySet()) {
+			if (sortedCount.containsKey(quizCount.get(quizName))) {
+				sortedCount.get(quizCount.get(quizName)).add(quizName);
+				
+			} else {
+				List<String> quizzes = new ArrayList<String>();
+				quizzes.add(quizName);
+				sortedCount.put(quizCount.get(quizName), quizzes);
+			}
+		}
+		
+		// Iterate over sorted TreeMap inserting the values in the resulting
+		// list so that sort order is reversed.
+		for (int count : sortedCount.keySet()) {
+			for (String quizName : sortedCount.get(count)) {
+				result.add(0, QuizManager.getQuiz(quizName));
+			}
+		}
+		
+		if (numRecords != 0 && numRecords < result.size()) {
+			for (int i = result.size() - 1; i > numRecords - 1; i--) {
+				result.remove(i);
+			}
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a list of recently created quizzes.
+	 * @param numRecords desired number of entries in list (0 for all)
+	 * @return a list of Quiz objects.
+	 */
+	public static List<Quiz> getRecentlyCreatedQuizzes(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
+		List<Quiz> result = new ArrayList<Quiz>();
+		
+		List<Map<String, Object>> rows = Database.getSortedTable(QUIZZES, DATE_CREATED, true);
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(getQuiz((String) row.get(QUIZ_NAME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(getQuiz((String) row.get(QUIZ_NAME)));
+			}
 		}
 		return result;
 	}

@@ -62,4 +62,16 @@ public class Response extends Question {
 		}
 		answers.remove(answer);
 	}
+	
+	
+	/**
+	 * Determines whether the passed answer is correct.
+	 * @param answer provided by the user who is taking quiz.
+	 * @return true if correct, false otherwise.
+	 */
+	public boolean answerIsCorrect(String answer) {
+		Util.validateString(answer);
+		if (answers.contains(answer)) return true;
+		return false;
+	}
 }

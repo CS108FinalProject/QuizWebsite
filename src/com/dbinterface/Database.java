@@ -238,6 +238,53 @@ public class Database implements Constants {
 	
 	
 	/**
+	 * Returns a whole sorted table. Each row is a Map.
+	 * Returns null if there is no such table or an empty list if the table is empty.
+	 * @param tableName name of the table in database
+	 * @param sortBy column to sort by
+	 * @param descending if true sort descending, and ascending if false 
+	 * @return list of maps containing row entries
+	 */
+	public static List<Map<String, Object>> getSortedTable(String tableName, String sortBy, 
+			boolean descending) {
+		
+		if (!tableExists(tableName)) return null;
+		
+		int c = getRowCount(tableName);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if ( c == 0 ) return list; // empty list
+		
+		String query = "SELECT * FROM " + tableName + " ORDER BY " + sortBy;
+		if (descending) query += " DESC";
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int columnCount = rsmd.getColumnCount();
+			
+			while ( rs.next() ) {
+				Map<String, Object> entry = new HashMap<String, Object>();
+				for(int i = 1; i <= columnCount; i++) {
+					String className = rsmd.getColumnClassName(i);
+					String columnName = rsmd.getColumnName(i);
+					String value = rs.getString(columnName);
+					Object valObj = getObject(className, value);
+					entry.put(columnName, valObj);
+				}
+				
+				normalizeObjectMap(tableName, entry);
+				list.add( entry );
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		return list;
+	}
+	
+	
+	/**
 	 * In the specified table, removes all the rows that match the given description.
 	 * @param tableName
 	 * @param columnGuide1 name of the 1st column that will be used to determine the row  
@@ -428,6 +475,67 @@ public class Database implements Constants {
 	
 	
 	/**
+	 * Returns a list of rows (each a Map<String, Object>) where columnName1 equals 
+	 * value1 and columnName2 equals value2.
+	 */
+	public static List<Map<String, Object>> getRows(String tableName, String columnName1, 
+			Object value1, String columnName2, Object value2) {
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateString(columnName1);
+		Util.validateString(columnName1);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName1);
+		Util.validateObjectType(value1, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value1 = getIntFromBoolean((Boolean) value1);
+		
+		type = getColumnType(tableName, columnName2);
+		Util.validateObjectType(value2, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value2 = getIntFromBoolean((Boolean) value2);
+		
+		String query = "SELECT * FROM " + tableName + " WHERE " + columnName1 + " = " + "\"" 
+						+ value1 + "\" AND " + columnName2 + " = " + "\"" + value2 + "\"";
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
+	
+	
+	/**
 	 * Given a row specified by a Map, returns a list of rows that are equal to the passed row.
 	 * @param tableName
 	 * @param row
@@ -482,7 +590,140 @@ public class Database implements Constants {
 		if (list.size() == 0) return null;
 		return list;
 	}
-
+	
+	
+	/**
+	 * Returns a list of sorted rows that match the specified criteria.
+	 * @param tableName to get rows from
+	 * @param columnName to match a value for
+	 * @param value value to be matched
+	 * @param sortBy column to sort
+	 * @param descending sort descending if true, ascending if false.
+	 * @return a list of matching rows or null ir none were found.
+	 */
+	public static List<Map<String, Object>> getSortedRows(String tableName, String columnName, 
+			Object value, String sortBy, boolean descending) {
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateString(columnName);
+		Util.validateString(sortBy);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName);
+		Util.validateObjectType(value, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
+		
+		// Define query
+		String query = "SELECT * FROM " + tableName + " WHERE " + 
+						columnName + " = " + "\"" + value + "\" ORDER BY " + sortBy;
+		
+		if (descending) {
+			query += " DESC";
+		}
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
+	
+	
+	/**
+	 * Returns a list of sorted rows that match the specified criteria.
+	 * @param tableName to get rows from
+	 * @param columnName to match a value for
+	 * @param value to be matched
+	 * @param sortBy1 first column to sort by
+	 * @param sortBy2 second column to sort by
+	 * @param descending1 sort the first column descending if true, ascending if false.
+	 * @param descending2 sort the seconde column descending if true, ascending if false.
+	 * @return a list of matching rows or null ir none were found.
+	 */
+	public static List<Map<String, Object>> getSortedRows(String tableName, String columnName, 
+			Object value, String sortBy1, boolean descending1, String sortBy2, boolean descending2) {
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		Util.validateString(tableName);
+		Util.validateString(columnName);
+		Util.validateString(sortBy1);
+		Util.validateString(sortBy2);
+		
+		if (!tableExists(tableName)) { 
+			throw new RuntimeException(tableName + " does not exist in the database.");
+		}
+		
+		// validate object type
+		String type = getColumnType(tableName, columnName);
+		Util.validateObjectType(value, type);
+		
+		// Interface boolean.
+		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
+		
+		String order1 = (descending1) ? " DESC, " : ", ";
+		String order2 = (descending2) ? " DESC" : "";
+		
+		
+		// Define query
+		String query = "SELECT * FROM " + tableName + " WHERE " + columnName + " = " 
+						+ "\"" + value + "\" ORDER BY " + sortBy1 + order1 + sortBy2 + order2;
+		
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next() ) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int numColumns = getColumnCount(tableName);
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				for(int i = 1; i <= numColumns; i++) {
+					
+					Object obj = rs.getObject(i);
+					String column = rsmd.getColumnName(i);
+					map.put(column, obj);
+				}
+				
+				normalizeObjectMap(tableName, map);
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem executing query: " + query);
+		}
+		
+		if (list.size() == 0) return null;
+		return list;
+	}
+	
 	
 	/**
 	 * Modifies the passed value in the specified table location.

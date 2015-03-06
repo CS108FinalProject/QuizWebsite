@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.accounts.Account;
+import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
 import com.util.Util;
@@ -230,6 +231,88 @@ public class Quiz implements Constants {
 		}
 	}
 	
+	
+	/**
+	 * Returns the top scorers for the quiz.
+	 * @param numRecords number of top scorers to return. (all if numRecords = 0)
+	 * @return a list of top scorers as Record Objects.
+	 */
+	public List<Record> getTopScorers(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, 
+				name, SCORE, true, ELAPSED_TIME, false);
+		
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * TODO: client-side has to allow sorting this table by different fields.
+	 * Given a user account, returns the user's past performance in this quiz.
+	 * @param user to look records for
+	 * @param numRecords desired number of entries to return (0 for all)
+	 * @return a list of Record objects.
+	 */
+	public List<Record> getPastUserPerformance(Account user, int numRecords) {
+		Util.validateObject(user);
+		
+		List<Record> result = new ArrayList<Record>();
+		
+		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name, 
+				USERNAME, user.getUserName());
+		
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(String) row.get(ELAPSED_TIME)));
+			}
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
 	
 	
 	//--------------------------- Helper Methods -------------------------------//

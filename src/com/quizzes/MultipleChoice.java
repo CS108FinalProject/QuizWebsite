@@ -63,6 +63,20 @@ public class MultipleChoice extends Question {
 	}
 	
 	
-	
+	/**
+	 * Determines whether the passed answer is correct.
+	 * @param option selected by the quiz taker
+	 * @return true if correct, false otherwise.
+	 */
+	public boolean answerIsCorrect(String option) {
+		Util.validateString(option);
+		
+		if (!options.containsKey(option)) {
+			throw new IllegalArgumentException(option + "is not a valid "
+					+ "option for this question.");
+		}
+		
+		return options.get(option);
+	}
 
 }
