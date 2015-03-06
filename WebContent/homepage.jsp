@@ -52,7 +52,6 @@ String sel_type = (String)request.getParameter("choice");
           <ul>
             <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Received Messages</a></li>
             <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Sent Messages</a></li>
-            <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Send A Message</a></li>
           </ul>
         </div>
 

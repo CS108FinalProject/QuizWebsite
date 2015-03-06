@@ -39,7 +39,6 @@
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
-							<option>Send A Message</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
 						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
