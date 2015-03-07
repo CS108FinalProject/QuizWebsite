@@ -6,7 +6,7 @@
     // This array will include question objects
     // with a subject and a question
     var questions = new Array(); // will contain list of 'question' objects
-    var quizObject;
+    var questions = new Set();
     var newQuestion;
     var newSubject;
     var currentObjectId;
@@ -56,24 +56,24 @@
      * pendingQuiz -- an object containing quizMetaData and questions
      */
     function storePendingQuiz(pendingQuiz) {
-        localStorage.pendingQuiz = JSON.stringify(pendingQuiz);
+        localStorage.pendingQuiz =  JSON.stringify(pendingQuiz);
     }
 
     /* clears all the quiz info in local storage */
     function clearPendingQuiz() {
-        localStorage.pendingQuiz = JSON.stringify({});
+        localStorage.removeItem( "pendingQuiz")
     }
 
 
-    /* Returns the questions stored in localStorage. */
-    function getStoredQuestions() {
-        if (!localStorage.questions) {
-            // default to empty array
-            localStorage.questions = JSON.stringify([]);
-        }
+    // /* Returns the questions stored in localStorage. */
+    // function getStoredQuestions() {
+    //     if (!localStorage.questions) {
+    //         // default to empty array
+    //         localStorage.questions = JSON.stringify([]);
+    //     }
 
-        return JSON.parse(localStorage.questions);
-    }
+    //     return JSON.parse(localStorage.questions);
+    // }
 
     /* Store the given questions array in localStorage.
      *
@@ -103,6 +103,11 @@
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
             event.preventDefault();
+
+            // clear local storage of any quizzes that might be pending
+            clearPendingQuiz();
+            console.log( getPendingQuiz() );
+
             templates.renderQuestionType();
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
@@ -118,10 +123,14 @@
 
                 quizMetaData = { name: quizName, description: description, isImmediate: isImmediate, 
                                 isRandom: isRandom, isSinglePage: isSinglePage };
-                quizObject = { quizMetaData: quizMetaData, questions: [] };
-                storePendingQuiz( quizObject );
+                var newQuiz = { quizMetaData: quizMetaData, questions: new Array() };
+
+                // will overwrite whatever is in pending quiz with this form
+                var pendingQuiz = getPendingQuiz();
+                pendingQuiz = newQuiz;
+                storePendingQuiz(pendingQuiz);
                 
-                console.log(quizObject);
+                console.log( getPendingQuiz() );
                 
                 $('#right-pane').html( templates.renderQuestionType() );
 
@@ -143,23 +152,35 @@
 
         // Choosing Question Types
         if ( event.target.className === "btn types") {
+
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
+                    var questionInfo = {};
+                    questionInfo["type"] = "Fill In The Blank";
+                    questions.push( questionInfo );
+                    getPendingQuiz().questions = questions;
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
+                    questions.type = "Multiple Choice";
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
+                    questions.type = "Fill In The Blank";
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
+                    questions.type = "Fill In The Blank";
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
+                    questions.type = "Fill In The Blank";
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
+                    questions.type = "Fill In The Blank";
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
                 default: 
