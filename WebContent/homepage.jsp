@@ -14,8 +14,6 @@ pageEncoding="UTF-8"%>
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
-//System.out.println("Acct is "+acct);
-//System.out.println("User is "+name);
 %>
 
 
@@ -37,14 +35,13 @@ String sel_type = (String)request.getParameter("choice");
 
   <nav>
     <ul>
-      <%/*if(acct.isAdmin()) {
-          out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+      <%if(acct.isAdmin()) {
+          out.println("<li><a href = \"adminHomepage.jsp\">Homepage</a></li>");
         } else {
-          out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+          out.println("<li><a href = \"homepage.jsp\">Homepage</a></li>");
         }
-      */%> 
+      %> 
 
-      <li><a href = <%="\"homepage.jsp?id="+name+"\""%>>Homepage</a></li>
       <li><a href = "showAnnouncements.jsp">Announcements</a></li>
       <li><a href = "#">My Achievements</a></li>
       <li>
@@ -53,7 +50,6 @@ String sel_type = (String)request.getParameter("choice");
           <ul>
             <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Received Messages</a></li>
             <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Sent Messages</a></li>
-            <li><a href=<%="\"showMessage.jsp?id="+name+"\""%>>Send A Message</a></li>
           </ul>
         </div>
 
@@ -64,15 +60,11 @@ String sel_type = (String)request.getParameter("choice");
     </ul>
   </nav>
   
-
   <section id="greeting">
   
   <h2>Nice to see you, <%=name %></h2>
-
   </section>
-
   <div id="row_1">
-
 	 <section id="announcements">
 	 	<%//Displays any admin announcements as a list%>
 	     <%
@@ -96,6 +88,10 @@ String sel_type = (String)request.getParameter("choice");
 	 </section>
 	 
 	 <section id="messages">
+	 			<div id = "send_messages">
+					<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
+				</div>
+				
 	 	<div id="view_messages">
 	 		<h2>My Messages</h2>
 	 		<form action = <%="\"homepage.jsp?id="+name+"\""%>>
@@ -127,15 +123,8 @@ String sel_type = (String)request.getParameter("choice");
 	           
 	         %>
 	 	</div>
-	 		
-
-				 	
+	 						 	
 	 </section>
-  			<section id="messages">
-				<div id = "send_messages">
-					<a href = "searchFriends.jsp?id=<%=name%>">Reach Out To A Friend.</a>
-				</div>
-			</section>
   </div>
   
   <div id="still_left">
@@ -155,16 +144,7 @@ String sel_type = (String)request.getParameter("choice");
 	  </aside>
 	  	
 	  </section>
-
-
-
-
-
-
 </section>
-
-
-
   </div>
  
   <div id="still_left">
@@ -172,19 +152,15 @@ String sel_type = (String)request.getParameter("choice");
   <h2>My Achievements</h2>
   <h2>Friends Achievements</h2>
   </section>
-
   <section id="quizzes">
   <h2>Newly Created Quizzes</h2>
   <h2>Most Popular Quizzes</h2>
   <h2>Recent Quizzes</h2>
   </section>
-
   <aside id="history">
   <h2>My History</h2>
   </aside>
   </section>
-
   </div>
 </body>
-
 </html>
