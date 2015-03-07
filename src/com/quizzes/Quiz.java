@@ -77,6 +77,134 @@ public class Quiz implements Constants {
 	
 	
 	/**
+	 * @return the quiz name for this Quiz.
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	
+	/**
+	 * @return the Account of the quiz creator.
+	 */
+	public Account getCreator() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, CREATOR);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find creator for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return AccountManager.getAccount((String) values.get(0));
+	}
+	
+	
+	/**
+	 * @return the quiz description.
+	 */
+	public String getDescription() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, DESCRIPTION);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return (String) values.get(0);
+	}
+	
+	
+	/**
+	 * @return the Quiz creation date.
+	 */
+	public String getCreationDate() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, DATE_CREATED);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find creation date for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return (String) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is random.
+	 */
+	public boolean isRandom() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_RANDOM);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isRandom field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is one page.
+	 */
+	public boolean isOnePage() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_ONE_PAGE);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isOnePage field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is immediate.
+	 */
+	public boolean isImmediate() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_IMMEDIATE);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isImmediate field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
 	 * Removes the quiz from the database and sets the name to null
 	 * so it can no longer be used.
 	 */
@@ -94,14 +222,6 @@ public class Quiz implements Constants {
 		}
 		
 		name = null;
-	}
-	
-	
-	/**
-	 * @return the quiz name for this Quiz.
-	 */
-	public String getName() {
-		return name;
 	}
 	
 	
