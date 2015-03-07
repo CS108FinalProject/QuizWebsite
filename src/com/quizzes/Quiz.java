@@ -377,7 +377,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 			
 		} else {
@@ -387,7 +387,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
 		return result;
@@ -404,6 +404,10 @@ public class Quiz implements Constants {
 	public List<Record> getPastUserPerformance(Account user, int numRecords) {
 		Util.validateObject(user);
 		
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
 		List<Record> result = new ArrayList<Record>();
 		
 		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name, 
@@ -418,7 +422,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 			
 		} else {
@@ -428,7 +432,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
 		
@@ -468,10 +472,79 @@ public class Quiz implements Constants {
 					(String) row.get(QUIZ_NAME), 
 					AccountManager.getAccount((String) row.get(USERNAME)),
 					(Double) row.get(SCORE), (String) row.get(DATE), 
-					(String) row.get(ELAPSED_TIME)));
+					(Double) row.get(ELAPSED_TIME)));
 		}
 		
 		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the recent performance, good and bad, for this quiz.
+	 * @param numRecords number of desired entries in the response.
+	 * @return a list of Record objects.
+	 */
+	public List<Record> getRecentPerformance(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		
+		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, name, 
+				DATE, true);
+		
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the overall average performance for the Quiz.
+	 * @return a Map with keys "score" and "elapsed_time" providing such values.
+	 */
+	public Map<String, Double> getAveragePerformance() {
+		List<Map<String, Object>> rows = Database.getTable(HISTORY);
+		if (rows == null || rows.size() == 0) return null;
+		
+		double avgScore = 0;
+		double avgElapsed = 0;
+		
+		for (Map<String, Object> row : rows) {
+			avgScore += (Double) row.get(SCORE);
+			avgElapsed += (Double) row.get(ELAPSED_TIME);
+		}
+		
+		avgScore = avgScore / rows.size();
+		avgElapsed = avgElapsed / rows.size();
+		
+		Map<String, Double> result = new HashMap<String, Double>();
+		result.put(SCORE, avgScore);
+		result.put(ELAPSED_TIME, avgElapsed);
 		return result;
 	}
 	

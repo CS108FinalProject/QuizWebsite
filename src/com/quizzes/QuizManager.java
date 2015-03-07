@@ -42,7 +42,7 @@ public class QuizManager implements Constants {
 			columns.put(USERNAME, STRING);
 			columns.put(SCORE, DOUBLE);
 			columns.put(DATE, STRING); 
-			columns.put(ELAPSED_TIME, STRING); 
+			columns.put(ELAPSED_TIME, DOUBLE); 
 			Database.createTable(HISTORY, columns);
 		}
 		
