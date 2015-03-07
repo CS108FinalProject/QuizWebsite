@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Quizzes</title>
+        <meta charset="utf-8" />
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/normalize.css" />
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <header>
+            <h1><a href="/">Quizzes</a></h1>
+        </header>
+
+        <div id="wrapper">
+            <div id="navigation">
+                <div id="interactors">
+                    <!-- buttons and search -->
+                    <a href="#" class="btn" id="new_quiz_button">New Quiz</a>
+                    <input type="text" name="search" id="search"
+                        placeholder="Search questions..." />
+                </div>
+
+                <div id="left-pane">
+                    <!-- add questions to this container -->
+                </div>
+            </div>
+
+                <div id="right-pane">
+                <!-- add quiz form, quiz-type form, and creation form
+                     container when a question is selected -->
+                </div>
+        </div>
+
+        <!-- Handlebars Templates to Render various views -->
+        <!-- template to display QUIZ CREATION FORM in #main-panel tag -->
+        <script type="text/x-handlebars-template" id="quiz-form-template">
+            <form class="cf" id="quiz-form">
+                <h2>Create a <span>quiz</span></h2>
+                <p>Enter a quiz name and description to get started.</p>
+
+                <div>
+                    <input type="text" name="quiz-name" id="quiz_name" placeholder="Quiz Name" />
+                </div>
+
+                <div>
+                    <textarea rows="5" cols="40" name="quiz-description" id="quiz_description"
+                        placeholder="Description"></textarea>
+                </div>
+
+                <div id="checkbox">
+                    <input type="checkbox" name="is-random" id="quiz_random"/>  Create randomly generated quiz <br/>
+                    <input type="checkbox" name="is-single_page" id="quiz_single_page" />  Render quiz on a single page <br/>
+                    <input type="checkbox" name="is-immediate" id="quiz_immediate"/>  Give immediate feedback <br/>
+                </div>  
+               
+                <input type="submit" class="btn" id="main_add_question" value="Add Questions" /> 
+                
+            </form>
+        </script>
+
+        <!-- template to display QUESITON TYPE FORM -->
+        <script type="text/x-handlebars-template" id="question-type-template">
+            <form class="cf" id="question-types">
+                <h2>Choose Question Type</h2>
+
+                <div id="question_types">
+                    <input type="button" class="btn types" value="Fill In The Blank" /> <br/>
+                    <input type="button" class="btn types" value="Multiple Choice" /> <br/>
+                    <input type="button" class="btn types" value="Picture" /> <br/>
+                    <input type="button" class="btn types" value="Multi-Response" /> <br/>
+                    <input type="button" class="btn types" value="Matching" /> <br/>
+                    <input type="button" class="btn types" value="Response" /><br/>
+                </div>
+
+            </form>
+        </script>
+
+        <!-- template to display FILL IN THE BLANK QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="fill-in-the-blank-template">
+            <form class="cf specifc_quiz_form" id="fill-in-the-blank">
+                <h2>Create Fill in the Blank Question</h2>
+
+                <div>
+                    <textarea rows="5" cols="40" name="description"
+                        placeholder="Enter question or statement"></textarea>
+                </div>
+                
+                <div id="blank_and_answer">
+                    <label for="enter_blank">Enter Blank</label>
+                    <input type="text" id="enter_blank">
+
+                    <label for="enter_answer">Enter Answer</label>
+                    <input type="text" id="enter_answer">
+                        
+                    <input type="button" id="add_blank_answer" class="btn" value="Add Answer">
+                </div>
+
+                <div class="cf" id="main_buttons">
+                        <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                        <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+
+            </form>
+        </script>
+
+        <!-- template to display MULTIPLE CHOICE QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="multiple-choice-template">
+            <form class="cf specifc_quiz_form" id="multi-response">
+                <h2>Create Multi-Response Question</h2>
+
+                <h3>Question</h3>
+                <div>
+                    <textarea rows="5" cols="40" id="question" name="description"
+                        placeholder="Enter question or statement"></textarea>
+                </div>
+
+                <div>
+                <h3>Options</h3>
+                </div>
+
+                <div>
+                    <textarea rows="1" cols="40" id="response" name="description"
+                        placeholder="Enter Answer"></textarea>
+                </div>
+
+                <div>
+                    <label><input type="checkbox" id="multiplce_choice_answer" name="is_random" /> Is An Answer</label> 
+                </div>
+                
+                <div>
+
+                    <input type="button" id="add_blank_answer" class="btn" value="Add Option" /> 
+                </div>
+                
+                
+
+                <div class="cf" id="main_buttons">
+                        <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                        <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+                
+            </form>
+        </script>
+
+        <!-- template to display PICTURE QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="picture-template">
+            <form class="cf specifc_quiz_form" id="picture">
+                <h2>Create Picture Question</h2>
+
+                <h3>Question</h3>
+                <div>
+                    <textarea rows="5" cols="40" name="description"
+                        placeholder="Enter question"></textarea>
+                </div>
+
+                <h3>Answer</h3>
+                <div>
+                    <textarea rows="5" cols="40" name="description"
+                        placeholder="Enter Answer"></textarea>
+                </div>
+                
+                <h3>Picture URL</h3>
+                <div>
+                    <textarea rows="1" cols="40" name="description"
+                        placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
+                </div>
+                
+                <div class="cf" id="main_buttons">
+                        <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                        <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+                
+            </form>
+        </script>
+
+        <!-- template to display MULTI-RESPONSE QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="multi-response-template">
+            <form class="cf specifc_quiz_form" id="multi-response">
+                <h2>Create Multi-Response Question</h2>
+
+                <h3>Question</h3>
+                <div>
+                    <textarea rows="5" cols="40" id="question" name="description"
+                        placeholder="Enter question or statement"></textarea>
+                </div>
+
+                <div>
+                <h3>Answer</h3>
+                <input type="checkbox" name="is_random" />  Keep Answers in Order<br/>
+                </div>
+
+                <div>
+                    <textarea rows="1" cols="40" id="response" name="description"
+                        placeholder="Enter Answer"></textarea>
+                </div>
+
+                <div>
+                    <input type="button" id="add_blank_answer" class="btn" value="Add Answer" /> 
+                </div>
+                
+                
+
+                <div class="cf" id="main_buttons">
+                        <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                        <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+                
+            </form>
+        </script>
+
+        <!-- template to display MATCHING QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="matching-template">
+            <form class="cf specifc_quiz_form" id="matching">
+                <h2>Create Matching Question</h2>
+
+                <div class="cf">
+                    <textarea rows="5" cols="40" class="matching" name="description"
+                        placeholder="Enter question or Leave Empty is No Question"></textarea>
+                    <textarea rows="5" cols="40" class="matching" name="description"
+                        placeholder="Enter a comma seperated list of Answers.(Ex. United States, Canada, Japan) Or leave empty if no answer"></textarea> 
+                </div>
+                <div class="cf">
+                    <input type="button" id="add_blank_answer" class="btn" value="Add Question" />
+                </div>
+                
+                <div class"cf">
+                    <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                    <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+                
+            </form>
+        </script>
+
+        <!-- template to display RESPONSE QUESTION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="response-template">
+            <form class="cf specifc_quiz_form" id="response">
+                <h2>Create Single-Response Question</h2>
+
+                <h3>Question</h3>
+                <div>
+                    <textarea rows="5" cols="40" id="question" name="description"
+                        placeholder="Enter question or statement"></textarea>
+                </div>
+
+                <h3>Answer</h3>
+                
+                <div>
+                    <textarea rows="5" cols="40" id="response" name="description"
+                        placeholder="Enter Answer"></textarea>
+                </div>
+
+                <div class="cf" id="main_buttons">
+                        <input type="button" class="btn question_staging" value="Return to Question Type"/>
+                        <input type="button" class="btn question_staging" value="Create Question" /> 
+                </div>
+                
+            </form>
+        </script>
+
+        <!-- template to display SUBMISSION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="submission-template">
+            <form class="cf" id="submission">
+                <h2>Question Added</h2>
+
+                <div class="cf">
+                    <input type="button" class="btn submission" value="Add Another Quesiton" /> 
+                </div>
+
+                <div class="cf">
+                    <input type="button" class="btn submission" value="Cancel Quiz" /> 
+                </div>
+
+                <div class="cf">
+                    <input type="button" class="btn submission" value="Finish and Create Quiz" /> 
+                </div>
+            </form>
+        
+        </script>
+
+        <!-- Libraries: JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <!-- JavaScript -->
+        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+    </body>
+</html>
