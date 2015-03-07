@@ -1,6 +1,7 @@
 package com.accounts;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,10 +123,18 @@ public class AccountManager implements Constants {
 	
 	
 	/**
-	 * Returns a list of all user Accounts.
-	 * @return a list of all user Accounts.
+	 * @return a list of all user Accounts, or null if the table doesn't exist.
 	 */
 	public static List<Account> getAllUsers() {
-		return Account.getAllUsers();
+		List<Account> users = new ArrayList<Account>();
+		
+		List<Map<String, Object>> table = Database.getTable(ACCOUNTS);
+		if (table == null) return null;
+		
+		for (Map<String, Object> account : table) {
+			Util.validateObjectType(account.get(USERNAME), STRING);
+			users.add(new Account((String) account.get(USERNAME))); 
+		}
+		return users;
 	}
 }
