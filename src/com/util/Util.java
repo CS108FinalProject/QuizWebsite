@@ -99,4 +99,10 @@ public class Util implements Constants {
 		if (object instanceof Long) return LONG;
 		throw new IllegalArgumentException("Illegal type for " + object);
 	}
+	
+	
+	// To be used for testing purposes only.
+	public static void main( String [] args ) {}
+	
+	
 }
