@@ -1,12 +1,19 @@
 package com.quizzes.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.quizzes.*;
+import com.util.*;
+
 /**
  * Servlet implementation class RemoveQuiz
  */
@@ -33,6 +40,30 @@ public class RemoveQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 response.setContentType("application/json");
+		 PrintWriter out = response.getWriter();
+		 Map<String, Object> response_map = new HashMap<String, Object>();
+		 
+		String dataString = (String)request.getParameter("json");
+		 Map<String, Object> dataMap = Json.parseJsonObject(dataString);
+		 Map<String, Object> quizMetadata  =  (Map<String, Object>)dataMap.get("quizMetaData");
+		 String quizName = (String)quizMetadata.get("name");
+		
+		 
+		//Only proceed to remove who's name exists 
+		if (QuizManager.quizNameInUse(quizName)) {
+			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
+			QuizManager.removeQuiz(qz_to_remove);
+			response_map.put("status", true);
+			response_map.put("response", "");
+			} else {
+			response_map.put("status", false);
+			response_map.put("response","There was no quiz found named, "+quizName);
+		}
+		//Turn the response_map into a "json" string
+		String response_str = Json.getJsonString(response_map);
+		//Give back to method which invoked this servlet
+		out.write(response_str);
 	}
 
 }
