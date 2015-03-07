@@ -72,12 +72,34 @@ public class FillBlank extends Question {
 	}
 	
 	
+	/**
+	 * Removes the passed blank from the question
+	 */
 	public void removeBlank(String blank) {
 		Util.validateString(blank);
 		if (!blanksAndAnswers.containsKey(blank)) {
 			throw new IllegalArgumentException(blank + " is not currently in the question");
 		}
 		blanksAndAnswers.remove(blank);
+	}
+	
+	
+	/**
+	 * Determines whether the provided answer for the provided blank is correct.
+	 * @param blank that answer corresponds to
+	 * @param answer provided by the quiz taker
+	 * @return true if correct, false otherwise
+	 */
+	public boolean answerIsCorrect(String blank, String answer) {
+		Util.validateString(blank);
+		Util.validateString(answer);
+
+		if (!blanksAndAnswers.containsKey(blank)) {
+			throw new IllegalArgumentException(blank + " is not a part of this question");
+		}
+		
+		if (blanksAndAnswers.get(blank).contains(answer)) return true;
+		return false;
 	}
 	
 	

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
+import com.quizzes.Quiz;
+import com.quizzes.QuizManager;
+import com.quizzes.Record;
 import com.util.Constants;
 import com.util.Util;
 
@@ -414,21 +417,72 @@ public class Account implements Constants {
 	
 	
 	/**
-	 * @return a list of all user Accounts, or null if the table doesn't exist.
+	 * Returns the user's past performance for all taken quizzes or null if there
+	 * are no records.
+	 * @param numRecords amount of entries desired (0 for all).
 	 */
-	public static List<Account> getAllUsers() {
-		List<Account> users = new ArrayList<Account>();
+	public List<Record> getPastPerformance(int numRecords) {
+		List<Record> result = new ArrayList<Record>();
 		
-		List<Map<String, Object>> table = Database.getTable(ACCOUNTS);
-		if (table == null) return null;
-		
-		for (Map<String, Object> account : table) {
-			Util.validateObjectType(account.get(USERNAME), STRING);
-			users.add(new Account((String) account.get(USERNAME))); 
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
 		}
-		return users;
+		
+		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, USERNAME, 
+				userName, DATE, true);
+		
+		// Nothing on record.
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+		}
+		return result;
 	}
 	
+	
+	/**
+	 * Returns the most recently created quizzes for the user.
+	 * @param numRecords amount of desired entries in result (0 for all)
+	 * @return a list of Quiz objects.
+	 */
+	public List<Quiz> getRecentlyCreated(int numRecords) {
+		List<Quiz> result = new ArrayList<Quiz>();
+		
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
+		List<Map<String, Object>> rows = Database.getSortedRows(QUIZZES, CREATOR, userName, 
+				DATE_CREATED, true);
+		
+		// No results.
+		if (rows == null) return null;
+		
+		for (Map<String, Object> row : rows) {
+			result.add(QuizManager.getQuiz((String) row.get(QUIZ_NAME)));
+		}
+		
+		if (result.size() == 0) return null; 
+		return result;
+	}
 	
 	
 	

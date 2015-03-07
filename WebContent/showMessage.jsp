@@ -20,15 +20,15 @@
 	
 	<table id="header">
 			<tr>
-				<%/*if(acct.isAdmin()) {
-					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				<%
+				Account acct = AccountManager.getAccount(name);
+				if(acct.isAdmin()) {
+					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-					*/%> 
+				%> 			
 					
-					
-				<th><a href = <%="\"homepage.jsp?id="+ name +"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
@@ -37,7 +37,6 @@
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
-							<option>Send A Message</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
 						<input name="id" type="hidden" value=<%=name%>>
@@ -68,39 +67,68 @@
 			
 			// Print messages
 			for (Message msg : messages) {
-				//Account sender = AccountManager.getAccount(msg.getSender());
-				//Account recipient = AccountManager.getAccount(msg.getRecipient());
-				//if (request.getAttribute("message_read") != null) account.readMessage(msg);
 				request.setAttribute("message", msg);
 				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) { // case of friend request
 					if (!msg.isRead()) { // case of unread message
-						out.println("<form action=\"MessageServlet\" method=\"post\">"); 
-						out.print("<li><p>" + msg.getSender() + " sent you a friend request!</p>");
-						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
-						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
-						out.println("<input type=\"submit\" value=\"Confirm\" name=\"message_button\"> <input type=\"submit\" value=\"Decline\" name=\"message_button\">");
-						out.println("</form>");
-						//if () account.readMessage(msg); 
+						if (msgToDisplay.equals("Received Messages")) { 
+							out.println("<form action=\"MessageServlet\" method=\"post\">"); 
+							out.print("<li><p>" + msg.getSender() + " sent you a friend request!</p>");
+							out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+							out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
+							out.println("<input type=\"submit\" value=\"Confirm\" name=\"message_button\"> <input type=\"submit\" value=\"Decline\" name=\"message_button\">");
+							out.println("</form>");
+						} else {
+							out.println("<form action=\"MessageServlet\" method=\"post\">"); 
+							out.print("<li><p> You sent " + msg.getRecipient() + "</a> a friend request!</p>");
+							out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+							out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
+							out.println("<input type=\"submit\" value=\"Confirm\" name=\"message_button\"> <input type=\"submit\" value=\"Decline\" name=\"message_button\">");
+							out.println("</form>");
+						}
+						
 					} else { // case of read message
 						if (account.isFriend(AccountManager.getAccount(msg.getSender())) || AccountManager.getAccount(msg.getSender()).isFriend(account)) {
-							out.println("<li><p> You accepted <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
-									+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
+							if (msgToDisplay.equals("Received Messages")) { 
+								out.println("<li><p> You accepted <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+										+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
+							} else {
+								out.println("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+										+ "&username=" + msg.getRecipient() + "\">" + msg.getRecipient() + "</a> accepted your friend request");
+							}
 							
 						} else {
-							out.println("<li><p> You declined <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
-									+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
+							if (msgToDisplay.equals("Received Messages")) { 
+								out.println("<li><p> You declined <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+										+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a>'s friend request</p>");
+							} else {
+								out.println("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+										+ "&username=" + msg.getRecipient() + "\">" + msg.getRecipient() + "</a> declined your friend request");
+							}
+							
 						}	
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) { // case of challenge
 					// go to challenge page
 				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) { // case of note
-					out.println("<form action=\"MessageServlet\" method=\"post\">");
-					out.print("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
-							+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a> sent you a message!</p>");
-					out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
-					out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
-					out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
-					out.println("</form>");
+					if (msgToDisplay.equals("Received Messages")) { 
+						out.println("<form action=\"MessageServlet\" method=\"post\">");
+						out.print("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+								+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a> sent you a message!</p>");
+						out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
+						out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
+						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
+						out.println("</form>");
+					} else {
+						out.println("<form action=\"MessageServlet\" method=\"post\">");
+						out.print("<li><p>You sent <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+								+ "&username=" + msg.getRecipient() + "\">" + msg.getRecipient() + "</a> a message!</p>");
+						out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
+						out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
+						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");
+						out.println("<input name=\"recipient\" " + "type=\"hidden\" value=\"" + msg.getRecipient() + "\"/>");
+						out.println("</form>");
+					}	
 				}
 				
 			} 

@@ -12,14 +12,16 @@
 	
 	<table id="header">
 			<tr>
-				<%/*if(acct.isAdmin()) {
-					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				<%
+				String name = (String)getServletContext().getAttribute("session_user");
+				Account acct = AccountManager.getAccount(name);
+				if(acct.isAdmin()) {
+					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
-					*/%> 
+				%> 
 					
-				<th><a href = <%="\"homepage.jsp?id="+ (String) request.getAttribute("sender") +"\""%>>Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
@@ -28,7 +30,6 @@
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
-							<option>Send A Message</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
 						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>

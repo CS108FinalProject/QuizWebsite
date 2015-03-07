@@ -125,6 +125,7 @@ String sel_type = (String)request.getParameter("choice");
 	 	</div>
 	 						 	
 	 </section>
+
   </div>
   
   <div id="still_left">

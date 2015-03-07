@@ -88,4 +88,31 @@ public class MultiResponse extends Question {
 	public void setOrdered(boolean isOrdered) {
 		this.isOrdered = isOrdered;
 	}
+	
+	
+	/**
+	 * TODO: client-side needs to forbid the user from entering duplicate answers.
+	 * 
+	 * Determines whether the passed answer is correct.
+	 * Ignores the order parameter if question isOrdered = false.
+	 */
+	public boolean answerIsCorrect(String answer, int order) {
+		Util.validateString(answer);
+		
+		if (isOrdered) {
+			if (!answers.containsKey(order)) {
+				throw new IllegalArgumentException(order + " is not a valid "
+						+ "order for this question");
+			}
+			
+			if (answers.get(order).equals(answer)) return true;
+			return false;
+			
+		} else {
+			for (int storedOrder : answers.keySet()) {
+				if (answers.get(storedOrder).equals(answer)) return true;
+			}
+			return false;
+		}
+	}
 }
