@@ -1,0 +1,298 @@
+*:focus {
+    outline: 0px none transparent;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font: 14px/1.5 "Open Sans", "PT Sans", "Source Sans Pro",
+        "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+    background-color: #ECF0F1;
+    color: #333;
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 10px;
+    font-weight: bold;
+    margin-top: 0px;
+}
+
+h1 {
+    font-size: 200%;
+}
+
+h2 {
+    font-size: 170%;
+}
+
+h2 span, h3 {
+    color: #34495E;
+}
+
+h3 {
+    font-size: 130%;
+}
+
+h4 {
+    font-size: 110%;
+}
+
+a {
+    text-decoration: none;
+}
+
+p {
+    margin-top: 0px;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+}
+
+input[type="text"], textarea {
+    margin-right: 4px;
+}
+
+/*========================
+    Checkboxes
+ =========================*/
+
+form .checkbox #checkbox {
+    float: right;
+}
+
+/* End Checkboxes */
+
+textarea {
+    padding: 8px 10px;
+    width: 100%;
+}
+
+input[type="text"] {
+    padding: 6px 8px;
+    width: 180px;
+}
+
+header {
+    position: relative; 
+    height: 50px;
+    background-color: #34495E; 
+    padding-top: 10px;
+}
+
+header h1 a {
+    color: #fff;
+    padding-left: 25px;
+}
+
+#wrapper {
+    width: 1200px;
+    height: 100%;
+}
+
+#navigation {
+    float: left;
+    width: 450px;
+    min-height: 100%;
+    background: #fff;
+    box-shadow: 2px 0px 10px #dfdfdf;
+    border-right: 1px solid #ddd;
+}
+
+#right-pane {
+    float: left;
+    width: 600px;
+    padding: 50px 0 50px 70px; 
+}
+
+#right-pane textarea {
+    width: 577px;
+}
+
+#interactors {
+    min-height: 40px;
+    background-color: #ECF0F1;
+    position: relative;
+    height: 70px;
+}
+
+#interactors .btn {
+    padding: 5px 20px 6px;
+    margin-top: 3px;
+}
+
+#response-form {
+    margin-top: 40px;
+}
+
+#search {
+    position: absolute;
+    top: 20px;
+    left: 220px;
+}
+
+#interactors .btn {
+    position: absolute;
+    top: 17px;
+    left: 25px;
+}
+
+.question {
+    padding: 20px 20px;
+    background-color: #fff;
+    box-shadow: 2px 0px 10px #dfdfdf;
+}
+
+.resolve-container {
+    margin-top: 15px;
+    overflow: hidden;
+    margin-bottom 0;
+}
+
+.responses {
+    margin-top: 15px;
+}
+
+.response {
+    padding: 10px 20px;
+    overflow: hidden;
+    margin-top: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-question {
+    padding: 20px 30px;
+    margin-bottom: 0px;
+    border-bottom: 1px dotted #ddd;
+    overflow: hidden;
+}
+
+.list-question p {
+    color: #232323;
+}
+
+.question-info:hover {
+    cursor: pointer;
+}
+
+/*==============================*
+         BUTTONS
+ *==============================*/
+
+#question-types h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#question-types .btn {
+    clear: both;
+    float: left;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    text-align: center;
+}
+
+.specifc_quiz_form #main-buttons {
+    margin-top: 5px;
+}
+
+#add_blank_answer {
+    background-color: rgb(52, 134, 38);
+}
+
+.specifc_quiz_form .btn {
+    float: none;
+    display: inline;
+    text-align: center;
+    margin-right: 5px ;
+}
+
+.btn {
+    float: right;
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 7px 20px 8px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #48a2de;
+}
+
+
+/*==============================*
+         FILL IN THE BLANK
+ *==============================*/
+
+#blank_and_answer {
+    margin-bottom: 15px;
+}
+
+#blank_and_answer #blank, #answer {
+    display: inline;
+}
+
+/*==============================*
+         MATCHING QUESTION
+ *==============================*/
+
+
+ #right-pane textarea.matching {
+    float: left;
+    width: 45%;
+}
+
+
+/*==============================*
+         SUBMISSION FORM
+ *==============================*/
+
+ #submission div {
+    margin-top: 20px;
+    clear: both;
+    float: left;
+    margin-bottom: 0;
+ }
+
+ #submission {
+    width: 80%;
+    margin-left: auto;
+ }
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
