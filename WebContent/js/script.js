@@ -55,7 +55,7 @@
      * Arguments: 
      * pendingQuiz -- an object containing quizMetaData and questions
      */
-    function storePendingQuiz(pendingQuiz) {
+    function updatePendingQuiz(pendingQuiz) {
         localStorage.pendingQuiz =  JSON.stringify(pendingQuiz);
     }
 
@@ -106,7 +106,6 @@
 
             // clear local storage of any quizzes that might be pending
             clearPendingQuiz();
-            console.log( getPendingQuiz() );
 
             templates.renderQuestionType();
             var quizName = $('#quiz_name').val();
@@ -128,17 +127,37 @@
                 // will overwrite whatever is in pending quiz with this form
                 var pendingQuiz = getPendingQuiz();
                 pendingQuiz = newQuiz;
-                storePendingQuiz(pendingQuiz);
-                
-                console.log( getPendingQuiz() );
-                
+                updatePendingQuiz(pendingQuiz);         
                 $('#right-pane').html( templates.renderQuestionType() );
 
             }
 
         });
     });
+    
 
+    // Helper which will add the questions type 
+    // based on a click on the question types page
+    function addQuestionInfo(questionType) {
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = {};
+        questionInfo["type"] = questionType;
+        questions.push( questionInfo );
+        quiz.questions = questions;;
+        updatePendingQuiz( quiz );
+    }
+
+    // If the user goes back to the question type form
+    // from a question page we clear last question 
+    // in the local storage
+    function clearLastSelectedQuestionType() {
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        quiz.questions = questions;
+        updatePendingQuiz( quiz);
+    }
 
     /*
      * This function listens to all click events on the page
@@ -157,30 +176,27 @@
             var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
-                    var questionInfo = {};
-                    questionInfo["type"] = "Fill In The Blank";
-                    questions.push( questionInfo );
-                    getPendingQuiz().questions = questions;
+                    addQuestionInfo("Fill In The Blank");
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
-                    questions.type = "Multiple Choice";
+                    addQuestionInfo("Multiple Choice");
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
-                    questions.type = "Fill In The Blank";
+                    addQuestionInfo("Picture");
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
-                    questions.type = "Fill In The Blank";
+                    addQuestionInfo("Multi-Response");
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
-                    questions.type = "Fill In The Blank";
+                    addQuestionInfo("Matching");
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
-                    questions.type = "Fill In The Blank";
+                    addQuestionInfo("Response");
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
                 default: 
@@ -191,6 +207,9 @@
             === "btn submission") {
             switch( event.target.value ) {
                 case "Return to Question Type":
+                        // Indicates user changed mind on question type 
+                        clearLastSelectedQuestionType();
+                        console.log( getPendingQuiz() );
                         rightPane.innerHTML = templates.renderQuestionType();
                         break;
                 case "Create Question":
