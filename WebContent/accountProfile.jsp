@@ -22,6 +22,11 @@
 		}
 		
 	%>
+
+	<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%if (errMsg != null) { %>
+		<%= errMsg%>
+	<%}%>
 	
 	<table id="header">
 			<tr>
@@ -54,7 +59,7 @@
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Send Note">
-		<input type="text" value="" name="msg_content" size="50">
+		<textarea rows = "4" cols = "20"  name="msg_content" ></textarea>
 	</form>
 	
 	<form action="SendMessageServlet" method="post"> 

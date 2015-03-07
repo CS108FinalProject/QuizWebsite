@@ -5,7 +5,7 @@ pageEncoding="UTF-8"%>
 <%@ page import = "javax.swing.*" %>
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" href="css//main.css" ></link>
@@ -60,15 +60,11 @@ String sel_type = (String)request.getParameter("choice");
     </ul>
   </nav>
   
-
   <section id="greeting">
   
   <h2>Nice to see you, <%=name %></h2>
-
   </section>
-
   <div id="row_1">
-
 	 <section id="announcements">
 	 	<%//Displays any admin announcements as a list%>
 	     <%
@@ -149,16 +145,7 @@ String sel_type = (String)request.getParameter("choice");
 	  </aside>
 	  	
 	  </section>
-
-
-
-
-
-
 </section>
-
-
-
   </div>
  
   <div id="still_left">
@@ -166,19 +153,15 @@ String sel_type = (String)request.getParameter("choice");
   <h2>My Achievements</h2>
   <h2>Friends Achievements</h2>
   </section>
-
   <section id="quizzes">
   <h2>Newly Created Quizzes</h2>
   <h2>Most Popular Quizzes</h2>
   <h2>Recent Quizzes</h2>
   </section>
-
   <aside id="history">
   <h2>My History</h2>
   </aside>
   </section>
-
   </div>
 </body>
-
 </html>

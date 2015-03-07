@@ -441,7 +441,7 @@ public class Account implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 			
 		} else {
@@ -451,7 +451,7 @@ public class Account implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
 		return result;

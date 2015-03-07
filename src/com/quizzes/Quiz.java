@@ -1,6 +1,8 @@
 package com.quizzes;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -75,6 +77,134 @@ public class Quiz implements Constants {
 	
 	
 	/**
+	 * @return the quiz name for this Quiz.
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	
+	/**
+	 * @return the Account of the quiz creator.
+	 */
+	public Account getCreator() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, CREATOR);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find creator for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return AccountManager.getAccount((String) values.get(0));
+	}
+	
+	
+	/**
+	 * @return the quiz description.
+	 */
+	public String getDescription() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, DESCRIPTION);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return (String) values.get(0);
+	}
+	
+	
+	/**
+	 * @return the Quiz creation date.
+	 */
+	public String getCreationDate() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, DATE_CREATED);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find creation date for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), STRING);
+		return (String) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is random.
+	 */
+	public boolean isRandom() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_RANDOM);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isRandom field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is one page.
+	 */
+	public boolean isOnePage() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_ONE_PAGE);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isOnePage field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
+	 * @return whether or not the quiz is immediate.
+	 */
+	public boolean isImmediate() {
+		List<Object> values = Database.getValues(QUIZZES, QUIZ_NAME, name, IS_IMMEDIATE);
+		if (values == null) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find isImmediate field for " + name);
+		}
+		
+		if (values.size() > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+		
+		Util.validateObjectType(values.get(0), BOOLEAN);
+		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
 	 * Removes the quiz from the database and sets the name to null
 	 * so it can no longer be used.
 	 */
@@ -92,14 +222,6 @@ public class Quiz implements Constants {
 		}
 		
 		name = null;
-	}
-	
-	
-	/**
-	 * @return the quiz name for this Quiz.
-	 */
-	public String getName() {
-		return name;
 	}
 	
 	
@@ -255,7 +377,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 			
 		} else {
@@ -265,7 +387,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
 		return result;
@@ -282,6 +404,10 @@ public class Quiz implements Constants {
 	public List<Record> getPastUserPerformance(Account user, int numRecords) {
 		Util.validateObject(user);
 		
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
 		List<Record> result = new ArrayList<Record>();
 		
 		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name, 
@@ -296,7 +422,7 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 			
 		} else {
@@ -306,11 +432,119 @@ public class Quiz implements Constants {
 						(String) row.get(QUIZ_NAME), 
 						AccountManager.getAccount((String) row.get(USERNAME)),
 						(Double) row.get(SCORE), (String) row.get(DATE), 
-						(String) row.get(ELAPSED_TIME)));
+						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
 		
 		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the top scorers within the last specified time period.
+	 * @param hours time period to get results for (3 for 3 hours, 0.25 for 15 minutes,
+	 * 0 for all history)
+	 * @return a list of Record objects.
+	 */
+	public List<Record> topScorersWithinTimePeriod(double hours) {
+		if (hours < 0) throw new IllegalArgumentException(hours + " cannot be less than 0");
+		if (hours > (365 * 24)) {
+			throw new IllegalArgumentException("Easy now! The site doesn't go back that long");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		
+		long interval = (long) (hours * 60 * 60 * 1000);
+		long timeCut = System.currentTimeMillis() - interval;
+		Date date = new Date(timeCut);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		format.format(date);
+		String cut = format.toString();
+		
+		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
+				true, cut, SCORE, true);
+		
+		if (rows == null) return null;
+		
+		for (Map<String, Object> row : rows) {
+			result.add(new Record(
+					(String) row.get(QUIZ_NAME), 
+					AccountManager.getAccount((String) row.get(USERNAME)),
+					(Double) row.get(SCORE), (String) row.get(DATE), 
+					(Double) row.get(ELAPSED_TIME)));
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the recent performance, good and bad, for this quiz.
+	 * @param numRecords number of desired entries in the response.
+	 * @return a list of Record objects.
+	 */
+	public List<Record> getRecentPerformance(int numRecords) {
+		if (numRecords < 0) {
+			throw new IllegalArgumentException(numRecords + " cannot be less than 0.");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		
+		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, name, 
+				DATE, true);
+		
+		if (rows == null) return null;
+		
+		// Get all records.
+		if (numRecords == 0) {
+			for (Map<String, Object> row : rows) {
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+			
+		} else {
+			for (int i = 0; i < Math.min(numRecords, rows.size()); i++) {
+				Map<String, Object> row = rows.get(i);
+				result.add(new Record(
+						(String) row.get(QUIZ_NAME), 
+						AccountManager.getAccount((String) row.get(USERNAME)),
+						(Double) row.get(SCORE), (String) row.get(DATE), 
+						(Double) row.get(ELAPSED_TIME)));
+			}
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the overall average performance for the Quiz.
+	 * @return a Map with keys "score" and "elapsed_time" providing such values.
+	 */
+	public Map<String, Double> getAveragePerformance() {
+		List<Map<String, Object>> rows = Database.getTable(HISTORY);
+		if (rows == null || rows.size() == 0) return null;
+		
+		double avgScore = 0;
+		double avgElapsed = 0;
+		
+		for (Map<String, Object> row : rows) {
+			avgScore += (Double) row.get(SCORE);
+			avgElapsed += (Double) row.get(ELAPSED_TIME);
+		}
+		
+		avgScore = avgScore / rows.size();
+		avgElapsed = avgElapsed / rows.size();
+		
+		Map<String, Double> result = new HashMap<String, Double>();
+		result.put(SCORE, avgScore);
+		result.put(ELAPSED_TIME, avgElapsed);
 		return result;
 	}
 	
