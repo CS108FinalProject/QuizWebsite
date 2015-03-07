@@ -94,8 +94,8 @@ String sel_type = (String)request.getParameter("choice");
 						</form>
 					</div>									
 			</td>
-			<td>
-			<tr>
+		</tr>
+		<tr>
 			<td> Promote User To Admin
 				<form action = "AdminServlet" method = "POST">
 					Account<input type = "text" name = "promote_acct" placeholder = <% 
@@ -109,8 +109,6 @@ String sel_type = (String)request.getParameter("choice");
 							%>></input>
 							<input type = "submit"></input>
 				</form>
-			</td>
-		</tr>
 			</td>
 		</tr>
 	</table>
