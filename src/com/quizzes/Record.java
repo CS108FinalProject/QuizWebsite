@@ -14,7 +14,7 @@ public class Record implements Constants {
 	private Account user;
 	private double score;
 	private String date;
-	private String elapsedTime;
+	private double elapsedTime;
 	
 	
 	/**
@@ -22,15 +22,14 @@ public class Record implements Constants {
 	 * @param user Account of the quiz taker
 	 * @param score on a scale of 100
 	 * @param date when was the quiz taken
-	 * @param elapsedTime how long did it take the user to finish
+	 * @param elapsedTime how long (in minutes) did it take the user to finish
 	 */
 	public Record(String quizName, Account user, double score, String date,
-			String elapsedTime) {
+			double elapsedTime) {
 		
 		Util.validateString(quizName);
 		Util.validateObject(user);
 		Util.validateString(date);
-		Util.validateString(elapsedTime);
 		if (score < MIN_SCORE || score > MAX_SCORE) {
 			throw new IllegalArgumentException(score + " is not between " + MIN_SCORE 
 					+ " and " + MAX_SCORE);
@@ -79,7 +78,7 @@ public class Record implements Constants {
 	/**
 	 * @return the elapsedTime
 	 */
-	public String getElapsedTime() {
+	public double getElapsedTime() {
 		return elapsedTime;
 	}
 }
