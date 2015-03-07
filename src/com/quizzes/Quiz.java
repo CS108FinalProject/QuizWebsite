@@ -1,6 +1,8 @@
 package com.quizzes;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -308,6 +310,45 @@ public class Quiz implements Constants {
 						(Double) row.get(SCORE), (String) row.get(DATE), 
 						(String) row.get(ELAPSED_TIME)));
 			}
+		}
+		
+		if (result.size() == 0) return null;
+		return result;
+	}
+	
+	
+	/**
+	 * Returns the top scorers within the last specified time period.
+	 * @param hours time period to get results for (3 for 3 hours, 0.25 for 15 minutes,
+	 * 0 for all history)
+	 * @return a list of Record objects.
+	 */
+	public List<Record> topScorersWithinTimePeriod(double hours) {
+		if (hours < 0) throw new IllegalArgumentException(hours + " cannot be less than 0");
+		if (hours > (365 * 24)) {
+			throw new IllegalArgumentException("Easy now! The site doesn't go back that long");
+		}
+		
+		List<Record> result = new ArrayList<Record>();
+		
+		long interval = (long) (hours * 60 * 60 * 1000);
+		long timeCut = System.currentTimeMillis() - interval;
+		Date date = new Date(timeCut);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		format.format(date);
+		String cut = format.toString();
+		
+		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
+				true, cut, SCORE, true);
+		
+		if (rows == null) return null;
+		
+		for (Map<String, Object> row : rows) {
+			result.add(new Record(
+					(String) row.get(QUIZ_NAME), 
+					AccountManager.getAccount((String) row.get(USERNAME)),
+					(Double) row.get(SCORE), (String) row.get(DATE), 
+					(String) row.get(ELAPSED_TIME)));
 		}
 		
 		if (result.size() == 0) return null;
