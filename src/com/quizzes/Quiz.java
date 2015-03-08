@@ -33,7 +33,7 @@ public class Quiz implements Constants {
 	/**
 	 * Constructs a new Quiz object and adds the quiz info to the database.
 	 */
-	public Quiz(String name, Account creator, String description, String date, 
+	protected Quiz(String name, Account creator, String description, String date, 
 			boolean isRandom, boolean isOnePage, boolean isImmediate) {
 		
 		Util.validateString(name);
@@ -60,8 +60,11 @@ public class Quiz implements Constants {
 	}
 	
 	
+	/**
+	 * Constructs a new Quiz object given a Map<String, Object> representation of it.
+	 */
 	@SuppressWarnings("unchecked")
-	public Quiz(Map<String, Object> quizMap) {
+	protected Quiz(Map<String, Object> quizMap) {
 		Util.validateObject(quizMap);
 		
 		// Validate Type
@@ -106,46 +109,48 @@ public class Quiz implements Constants {
 			Util.validateString(type);
 			
 			Question question = null;
-//			if (type.equals(FILL_BLANK)) {
-//				String questionPrompt = (String) questionMap.get(QUESTION);
-//				Map<String, Set<String>> blanksAndAswers = new HashMap<String, Set<String>>();
-//				Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
-//				
+			if (type.equals(FILL_BLANK)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
+				question = new FillBlank(quizName, questionPrompt, answers);
+
+			} else if (type.equals(MULTIPLE_CHOICE)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				Map<String, Boolean> answers = (Map<String, Boolean>) questionMap.get(ANSWERS);
+				question = new MultipleChoice(quizName, questionPrompt, answers);
 				
+			} else if (type.equals(PICTURE)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				String pictureUrl = (String) questionMap.get(PICTURE_URL);
+				List<String> answers = (List<String>) questionMap.get(ANSWERS);
+				question = new Picture(quizName, questionPrompt, pictureUrl, answers);
 				
+			} else if (type.equals(MULTI_RESPONSE)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				boolean isOrdered = (Boolean) questionMap.get(IS_ORDERED);
+				Map<Integer, String> answers = (Map<Integer, String>) questionMap.get(ANSWERS);
+				TreeMap<Integer, String> orderedAnswers = new TreeMap<Integer, String>();
+				for (Integer order : answers.keySet()) {
+					orderedAnswers.put(order, answers.get(order));
+				}
+				question = new MultiResponse(quizName, questionPrompt, orderedAnswers, isOrdered);
 				
+			} else if (type.equals(MATCHING)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				Map<String, String> answers = (Map<String, String>) questionMap.get(ANSWERS);
+				question = new Matching(quizName, questionPrompt, answers);
 				
-//				question = (FillBlank) question_map.get("question");
-//				Map<String, Set<String>> blanksAndAnswers = (Map<String, Set<String>>) question_map.get("answers");
-//				((FillBlank) question).setBlanksAndAnswers(blanksAndAnswers);
-//			} else if (type.equals(MULTIPLE_CHOICE)) {
-//				question = (MultipleChoice) question_map.get("question");
-//				Map<String, Boolean> options = (Map<String, Boolean>) question_map.get("answers");
-//				((MultipleChoice) question).setOptions(options);
-//			} else if (type.equals(PICTURE)) {
-//				question = (Picture) question_map.get("question");
-//				Set<String> answers = (Set<String>) question_map.get("answers");
-//				((Picture) question).setAnswers(answers);
-//			} else if (type.equals(MULTI_RESPONSE)) {
-//				question = (MultiResponse) question_map.get("question");
-//				TreeMap<Integer, String> answers = (TreeMap<Integer, String>) question_map.get("answers");
-//				((MultiResponse) question).setAnswers(answers);
-//			} else if (type.equals(MATCHING)) {
-//				question = (Matching) question_map.get("question");
-//				Map<String, String> matches = (Map<String, String>) question_map.get("answers");
-//				((Matching) question).setMatches(matches);
-//			} else if (type.equals(RESPONSE)) {
-//				question = (Response) question_map.get("question");
-//				Set<String> answers = ((Response) question).getAnswers();
-//				((Response) question).setAnswers(answers);
-//			}		
-//			quiz.addQuestion(question);
+			} else if (type.equals(RESPONSE)) {
+				String questionPrompt = (String) questionMap.get(QUESTION);
+				List<String> answers = (List<String>) questionMap.get(ANSWERS);
+				question = new Response(quizName, questionPrompt, answers);
+				
+			} else {
+				throw new IllegalArgumentException("Cannot recognize question type " + type);
+			}
+			quiz.addQuestion(question);
 		}
-		
 	}
-	
-	
-	
 	
 	
 	/**
