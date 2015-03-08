@@ -42,6 +42,7 @@ public class RemoveQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 //TODO:Find a way to test this
 		 response.setContentType("application/json");
 		 PrintWriter out = response.getWriter();
 		 Map<String, Object> response_map = new HashMap<String, Object>();
