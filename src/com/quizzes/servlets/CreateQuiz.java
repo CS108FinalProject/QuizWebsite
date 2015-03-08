@@ -61,51 +61,49 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 		
 		// create quiz
 		Map<String, Object> quizMetadata  =  (Map<String, Object>)dataMap.get("quizMetaData");
-
-		String name = (String) quizMetadata.get("name");
-		Account creator = null;
-		if (AccountManager.accountExists((String) quizMetadata.get("creator"))) {
-			creator = AccountManager.getAccount((String) quizMetadata.get("creator")); 
-			Util.addStatus(true,"", dataMap);
-		} else {
-			Util.addStatus(false,"There was no account found named, " + name, dataMap);
-		}
-		String description =  (String) quizMetadata.get("description"); 
-		String date = (String) quizMetadata.get("date");
-		boolean isRandom = (Boolean) quizMetadata.get("isRandom");
-		boolean isOnePage = (Boolean) quizMetadata.get("isOnePage");
-		boolean isImmediate = (Boolean) quizMetadata.get("isImmediate");	
-		Quiz quiz = QuizManager.createQuiz(name,creator,description,date,isRandom,isOnePage,isImmediate);
+		Quiz quiz = QuizManager.createQuiz(quizMetadata);
+//		String name = (String) quizMetadata.get("name");
+//		Account creator = null;
+//		if (AccountManager.accountExists((String) quizMetadata.get("creator"))) {
+//			creator = AccountManager.getAccount((String) quizMetadata.get("creator")); 
+//			Util.addStatus(true,"", dataMap);
+//		} else {
+//			Util.addStatus(false,"There was no account found named, " + name, dataMap);
+//		}
+//		String description =  (String) quizMetadata.get("description"); 
+//		String date = (String) quizMetadata.get("date");
+//		boolean isRandom = (Boolean) quizMetadata.get("isRandom");
+//		boolean isOnePage = (Boolean) quizMetadata.get("isOnePage");
+//		boolean isImmediate = (Boolean) quizMetadata.get("isImmediate");	
+//		Quiz quiz = QuizManager.createQuiz(name,creator,description,date,isRandom,isOnePage,isImmediate);
 		
 		// add questions
 		List<Map<String, Object>> questions = (List<Map<String, Object>>) dataMap.get("questions");
+		String quizName = (String) quizMetadata.get("name");
 		for (Map<String, Object> question_map : questions) {
 			String type = (String) question_map.get("type");
+			String question_content = (String) question_map.get("question");
 			Question question = null;
 			if (type.equals(FILL_BLANK)) {
-				question = (FillBlank) question_map.get("question");
 				Map<String, List<String>> blanksAndAnswers = (Map<String, List<String>>) question_map.get("answers");
-				((FillBlank) question).setBlanksAndAnswers(blanksAndAnswers);
+				question = new FillBlank(quizName, question_content, blanksAndAnswers);
 			} else if (type.equals(MULTIPLE_CHOICE)) {
-				question = (MultipleChoice) question_map.get("question");
 				Map<String, Boolean> options = (Map<String, Boolean>) question_map.get("answers");
-				((MultipleChoice) question).setOptions(options);
+				question = new MultipleChoice(quizName, question_content, options);				
 			} else if (type.equals(PICTURE)) {
-				question = (Picture) question_map.get("question");
 				List<String> answers = (List<String>) question_map.get("answers");
-				((Picture) question).setAnswers(answers);
+				String pictureUrl = (String) question_map.get("pictureUrl");
+				question = new Picture(quizName, question_content, pictureUrl, answers);
 			} else if (type.equals(MULTI_RESPONSE)) {
-				question = (MultiResponse) question_map.get("question");
 				TreeMap<Integer, String> answers = (TreeMap<Integer, String>) question_map.get("answers");
-				((MultiResponse) question).setAnswers(answers);
+				boolean isOrdered = (Boolean) question_map.get("isOrdered");
+				question = new MultiResponse(quizName, question_content, answers, isOrdered);
 			} else if (type.equals(MATCHING)) {
-				question = (Matching) question_map.get("question");
 				Map<String, String> matches = (Map<String, String>) question_map.get("answers");
-				((Matching) question).setMatches(matches);
+				question = new Matching(quizName, question_content, matches);
 			} else if (type.equals(RESPONSE)) {
-				question = (Response) question_map.get("question");
-				List<String> answers = ((Response) question).getAnswers();
-				((Response) question).setAnswers(answers);
+				List<String> answers = (List<String>)question_map.get("answers");
+				question = new Response(quizName, question_content, answers);
 			}		
 			quiz.addQuestion(question);
 		}
