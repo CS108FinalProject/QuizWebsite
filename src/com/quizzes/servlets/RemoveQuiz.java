@@ -16,6 +16,7 @@ import com.util.*;
 
 /**
  * Servlet implementation class RemoveQuiz
+ *   Author: Kelsey Young Stanford University '15
  */
 @WebServlet("/RemoveQuiz")
 public class RemoveQuiz extends HttpServlet {
@@ -23,6 +24,7 @@ public class RemoveQuiz extends HttpServlet {
        
     /**
      * @see HttpServlet#HttpServlet()
+     * 
      */
     public RemoveQuiz() {
         super();
@@ -40,6 +42,7 @@ public class RemoveQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 //TODO:Find a way to test this
 		 response.setContentType("application/json");
 		 PrintWriter out = response.getWriter();
 		 Map<String, Object> response_map = new HashMap<String, Object>();
@@ -47,13 +50,13 @@ public class RemoveQuiz extends HttpServlet {
 		 //Will receive the quizName as an input
 		String quizName = (String)request.getParameter("quizName");
 		
-		//Only proceed to remove who's name exists 
+		//Only proceed to remove a quiz who's name exists 
 		if (QuizManager.quizNameInUse(quizName)) {
 			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
 			QuizManager.removeQuiz(qz_to_remove);
 			Util.addStatus(true, "", response_map);
-			} else {
-				Util.addStatus(false, "The quiz name does not exist.", response_map);		
+		} else {
+			Util.addStatus(false, "The quiz name does not exist.", response_map);		
 		}
 		
 		//Turn the response_map into a "json" string

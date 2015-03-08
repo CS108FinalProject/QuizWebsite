@@ -110,28 +110,141 @@
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
             var isRandom = $('#quiz_random').is(':checked');
-            var isSinglePage = $('#quiz_single_page').is(':checked');
+            var isOnePage = $('#quiz_single_page').is(':checked');
 
-            if ( (quizName === null || quizName === "")) {
-                alert("You must enter a quiz name");
-            } else if ( (description === null || description == "") ) {
-                alert("You must enter a password");
-            } else {
+            // if ( (quizName === null || quizName === "")) {
+            //     alert("You must enter a quiz name");
+            // } else if ( (description === null || description == "") ) {
+            //     alert("You must enter a password");
+            // } else {
 
                 // adds user information
-                quizMetaData = { name: quizName, description: description, isImmediate: isImmediate, 
-                    isRandom: isRandom, isSinglePage: isSinglePage}
+                quizMetaData = { name: quizName, creator: "Eliezer", date: "sllss", description: description, isImmediate: isImmediate, 
+                    isRandom: isRandom, isOnePage: isOnePage}
 
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
                 
                 updatePendingQuiz(newQuiz);  
+
+                        // // TEST AJAX
+
+                        // var URL = "/QuizWebsite/CreateQuiz";
+                        // var createdQuiz = getPendingQuiz();
+                        // console.log( createdQuiz );
+                        // $.ajax({
+                        //     url: URL,
+                        //     type: 'POST',
+                        //     async: true,
+                        //     dataType: 'json',
+                        //     data: { json: JSON.stringify(newQuiz)},
+                        //     contentType: 'application/x-www-form-urlencoded',
+
+                        //     success: function(data, textStatus, jqXHR) {
+                        //         console.log( data );
+                        //     }
+                        // }); 
                 
                 // this will take the user to the question types page
                 $('#right-pane').html( templates.renderQuestionType() );
-            }
+            //}
 
         });
+
+        // Listen to FILL IN THE BLANK QUESTION
+        $('#right-pane').on('click', '#add_blank_answer', function(event) {
+            event.preventDefault();
+            var type = "Fill In The Blank";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+                // a question, answer and a blank obtained from the client interface
+            var question = $('#fill_in_the_blank_question').val();
+            var answer = $('#enter_answer').val();
+            var blank = $('#enter_blank').val();
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeQuestionInfo(type, question, answer, blank);
+            } else {
+                addAnotherFandBAnswer(question, answer, blank);
+            }
+
+            // console.log( questionInfo.question );
+            // console.log( questionInfo.question == null );
+            // if ( questionInfo.question == null ) {
+            //     // we need to parametrize question info
+            //     var answers = new Array();
+            //     var blanksAndAnswers = {};
+            //     blanksAndAnswers.blank = blank;
+
+            //     answers.push(answer);
+            //     blanksAndAnswers.answers = answers;
+            //     // place first answer into array
+            //     // make sure the answer is not a duplicate
+            //     questionInfo.question = question;
+            //     questionInfo["blanksAndAnswers"] = blanksAndAnswers;
+            //     questions.push( questionInfo );
+            //     quiz.questions = questions;
+            //     updatePendingQuiz(quiz);
+            //     console.log( getPendingQuiz() );
+            
+            // "Map" that contains a blank and set of answers
+        });
     });
+    
+    // If we enter the question form for the first time
+    // we want to initialize our questions array
+    function initializeQuestionInfo(type, question, answer, blank) {
+
+        // record main question information such as type and question string
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+        
+        // object for blank and set of answers
+        var blanksAndAnswers = {};
+        blanksAndAnswers[blank] = new Array(answer);
+        questionInfo.blanksAndAnswers = blanksAndAnswers;
+
+        // finally store information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.push( questionInfo );
+        quiz.questions = questions;
+
+        console.log( quiz );
+        updatePendingQuiz(quiz);
+        $('#enter_answer').val('');
+    }
+
+    function addAnotherFandBAnswer(question, answer, blank ) {
+        
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions[questions.length - 1];
+        questionInfo.question = question;
+
+        var blanksAndAnswers = questionInfo.blanksAndAnswers;
+        if ( blank in blanksAndAnswers ) {
+            var answers = blanksAndAnswers[blank];
+            answers.push( answer );
+            blanksAndAnswers[blank] = answers;
+            questionInfo.blanksAndAnswers = blanksAndAnswers;
+
+            // clear input
+            $('#enter_answer').val('');
+        } else {
+            var bAndA = questionInfo.blanksAndAnswers;
+            bAndA[blank] = new Array(answer);
+            questionInfo.blanksAndAnswers = bAndA;
+            $('#enter_answer').val('');
+        }
+
+        console.log( questionInfo.blanksAndAnswers );
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        updatePendingQuiz(quiz);
+    }
     
 
     // Helper which will add the questions type 
@@ -174,26 +287,31 @@
             var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
-                    addQuestionInfo("Fill In The Blank");
+                    console.log( getPendingQuiz() );
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
+                    console.log( getPendingQuiz() );
                     addQuestionInfo("Multiple Choice");
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
+                    console.log( getPendingQuiz() );
                     addQuestionInfo("Picture");
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
+                    console.log( getPendingQuiz() );
                     addQuestionInfo("Multi-Response");
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
+                    console.log( getPendingQuiz() );
                     addQuestionInfo("Matching");
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
+                    console.log( getPendingQuiz() );
                     addQuestionInfo("Response");
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
@@ -205,35 +323,21 @@
             === "btn submission") {
             switch( event.target.value ) {
                 case "Return to Question Type":
-                        // Indicates user changed mind on question type 
-                        clearLastSelectedQuestionType();
-                        console.log( getPendingQuiz() );
-                        rightPane.innerHTML = templates.renderQuestionType();
-                        break;
+                    // Indicates user changed mind on question type 
+                    clearLastSelectedQuestionType();
+                    console.log( getPendingQuiz() );
+                    rightPane.innerHTML = templates.renderQuestionType();
+                    break;
                 case "Create Question":
-
-                        rightPane.innerHTML = templates.renderSubmissionForm();
-                        break;
+                    // need to add question to questions array 
+                    rightPane.innerHTML = templates.renderSubmissionForm();
+                    break;
                 case "Add Another Quesiton":
-                        rightPane.innerHTML = templates.renderQuestionType();
-                        break;
-                case "Finish and Create Quiz":
-                        var URL = "/QuizWebsite/CreateQuiz";
-                        var createdQuiz = getPendingQuiz();
-                        // $.ajax({
-                        //     url: URL,
-                        //     type: 'POST',
-                        //     async: true,
-                        //     dataType: 'json',
-                        //     data: { json: JSON.stringify(newQuiz)},
-                        //     contentType: 'application/x-www-form-urlencoded',
-
-                        //     success: function(data, textStatus, jqXHR) {
-                        //         console.log( data );
-                        //     }
-                        // });       
-                        // $('#right-pane').html( templates.renderQuestionType() );
-                        break;
+                    rightPane.innerHTML = templates.renderQuestionType();
+                    break;
+                case "Finish and Create Quiz":      
+                    // $('#right-pane').html( templates.renderQuestionType() );
+                    break;
                 default:
                         // do nothing
             }
@@ -249,9 +353,7 @@
      * in the blank question form.
      *
      */
-     // rightPane.addEventListener("click", function(event) {
-     //    event.preventDefault();
-     // })  
+       
 
 
     

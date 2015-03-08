@@ -185,6 +185,9 @@ header h1 a {
 /*==============================*
          BUTTONS
  *==============================*/
+#submission #cancel_quiz {
+    background-color: #E7294D;
+}
 
 #question-types h2 {
     margin-top: 5px;
