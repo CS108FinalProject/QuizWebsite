@@ -111,12 +111,11 @@
             var isRandom = $('#quiz_random').is(':checked');
             var isOnePage = $('#quiz_single_page').is(':checked');
 
-            // UNCOMMENT AFTER FINISHED
-            // if ( (quizName === null || quizName === "")) {
-            //     alert("You must enter a quiz name");
-            // } else if ( (description === null || description == "") ) {
-            //     alert("You must enter a password");
-            // } else {
+            if ( (quizName === null || quizName === "")) {
+                alert("You must enter a quiz name");
+            } else if ( (description === null || description == "") ) {
+                alert("You must enter a password");
+            } else {
 
                 // adds user information
                 quizMetaData = { name: quizName, creator: "Eliezer", date: "sllss", description: description, isImmediate: isImmediate, 
@@ -125,28 +124,10 @@
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
                 
                 updatePendingQuiz(newQuiz);  
-
-                        // // TEST AJAX
-
-                        // var URL = "/QuizWebsite/CreateQuiz";
-                        // var createdQuiz = getPendingQuiz();
-                        // console.log( createdQuiz );
-                        // $.ajax({
-                        //     url: URL,
-                        //     type: 'POST',
-                        //     async: true,
-                        //     dataType: 'json',
-                        //     data: { json: JSON.stringify(newQuiz)},
-                        //     contentType: 'application/x-www-form-urlencoded',
-
-                        //     success: function(data, textStatus, jqXHR) {
-                        //         console.log( data );
-                        //     }
-                        // }); 
                 
                 // this will take the user to the question types page
                 $('#right-pane').html( templates.renderQuestionType() );
-            //}
+            }
 
         });
 
@@ -698,7 +679,23 @@
                     quizMetaData.date = date;
                     quiz.quizMetaData = quizMetaData;
                     updatePendingQuiz(quiz);    
-                    console.log( quiz );
+
+                    var URL = "/QuizWebsite/CreateQuiz";
+                    var createdQuiz = getPendingQuiz();
+                    console.log( createdQuiz );
+                    $.ajax({
+                        url: URL,
+                        type: 'POST',
+                        async: true,
+                        dataType: 'json',
+                        data: { json: JSON.stringify(newQuiz)},
+                        contentType: 'application/x-www-form-urlencoded',
+
+                        success: function(data, textStatus, jqXHR) {
+                            console.log( data );
+                        }
+                    }); 
+
                     break;
                 default:
                         // do nothing
