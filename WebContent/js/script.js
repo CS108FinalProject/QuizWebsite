@@ -213,7 +213,81 @@
             }
         });
 
+        // Listen to RESPONSE QUESTION
+        $('#right-pane').on('click', '#add_res_answer', function(event) {
+            event.preventDefault();
+            var type = "Response";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#res_question').val();
+            var answer = $('#res_answer').val();
+
+            console.log( question + " " + answer  );
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeResQuestionInfo(type, question, answer);
+            } else {
+                addAnotherResAnswer(type, question, answer);
+            }
+        });
+
     });
+
+    /******************RESPONSE HELPERS******************************/
+    function initializeResQuestionInfo(type, question, answer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#res_answer').val('');
+        $('#add_res_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherResAnswer(type, question, answer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question ) {
+            questionInfo.question = question;
+        
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#res_answer').val('');
+                $('#add_res_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#res_answer').val('');
+                $('#add_res_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeResQuestionInfo(type, question, answer);
+        }
+    }
     
     /******************PICTURE QUESTION HELPERS******************************/
     function initializePicQuestionInfo(type, question, answer, pictureURL) {
