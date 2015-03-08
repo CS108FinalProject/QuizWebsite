@@ -234,8 +234,81 @@
             }
         });
 
-    });
+        // Listen to MULTI RESPONSE QUESTION
+        $('#right-pane').on('click', '#add_mr_answer', function(event) {
+            event.preventDefault();
+            var type = "Multi Response";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#mr_question').val();
+            var answer = $('#mr_answer').val();
+            var isOrdered = $('#mr_in_order').is(':checked');
 
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMRQuestionInfo(type, question, answer, isOrdered);
+            } else {
+                addAnotherMRAnswer(type, question, answer, isOrdered);
+            }
+        });
+
+    });
+    
+    /******************MULTI RESPONSE HELPERS******************************/
+    function initializeMRQuestionInfo(type, question, answer, isOrdered) {
+                // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+        questionInfo.isOrdered = isOrdered;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#mr_answer').val('');
+        $('#add_mr_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherMRAnswer(type, question, answer, isOrdered) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question && (questionInfo.isOrdered === isOrdered) ) {
+            questionInfo.question = question;
+            console.log("hello");
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#mr_answer').val('');
+                $('#add_mr_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#mr_answer').val('');
+                $('#add_mr_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeMRQuestionInfo(type, question, answer, isOrdered);
+        }
+    }
     /******************RESPONSE HELPERS******************************/
     function initializeResQuestionInfo(type, question, answer) {
         // record the questions main information because it's the first time
