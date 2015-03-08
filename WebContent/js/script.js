@@ -191,8 +191,83 @@
             }
         });
 
-    });
+        // Listen to PICTURE QUESTION
+        $('#right-pane').on('click', '#add_p_answer', function(event) {
+            event.preventDefault();
+            var type = "Picture";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#pic_question').val();
+            var answer = $('#pic_answer').val();
+            var pictureURL = $('#pic_url').val();
 
+            console.log( question + " " + answer + " " + pictureURL );
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializePicQuestionInfo(type, question, answer, pictureURL);
+            } else {
+                addAnotherPicAnswer(type, question, answer, pictureURL);
+            }
+        });
+
+    });
+    
+    /******************PICTURE QUESTION HELPERS******************************/
+    function initializePicQuestionInfo(type, question, answer, pictureURL) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+        questionInfo.pictureURL = pictureURL;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#pic_answer').val('');
+        $('#add_p_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherPicAnswer(type, question, answer, pictureURL) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question && (questionInfo.pictureURL === pictureURL) ) {
+            questionInfo.question = question;
+        
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#pic_answer').val('');
+                $('#add_p_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#pic_answer').val('');
+                $('#add_p_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializePicQuestionInfo(type, question, answer, pictureURL);
+        }
+    }
     /******************MULTIPLE CHOICE HELPERS******************************/
     function initializeMCQuestionInfo(type, question, option, isAnswer) {
         // record the questions main information because it's the first time
@@ -275,6 +350,7 @@
         console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#enter_answer').val('');
+        $('#add_fandb_blank_answer').prop('value', 'Add Another Answer');
     }
 
     function addAnotherFandBAnswer(type, question, answer, blank ) {
@@ -298,11 +374,13 @@
 
                 // clear input
                 $('#enter_answer').val('');
+                $('#add_fandb_blank_answer').prop('value', 'Add Another Answer')
             } else {
                 var bAndA = questionInfo.blanksAndAnswers;
                 bAndA[blank] = new Array(answer);
                 questionInfo.blanksAndAnswers = bAndA;
                 $('#enter_answer').val('');
+                $('#add_fandb_blank_answer').prop('value', 'Add Another Answer')
             }
 
             questions.push( questionInfo );
@@ -314,6 +392,8 @@
         }
     }
     
+
+
 
     // Helper which will add the questions type 
     // based on a click on the question types page
