@@ -1,5 +1,7 @@
 package com.quizzes;
 
+import java.util.Map;
+
 import com.util.Util;
 
 /**
@@ -57,4 +59,11 @@ public abstract class Question {
 		Util.validateString(question);
 		this.question = question;
 	}
+	
+	
+	/**
+	 * @return a representation of the object as a Map<String, Object>
+	 */
+	 public abstract Map<String, Object> toMap();
+	 
 }

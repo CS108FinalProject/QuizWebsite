@@ -2,6 +2,7 @@ package com.quizzes;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
-import com.util.Json;
 import com.util.Util;
 
 /**
@@ -360,7 +360,7 @@ public class Quiz implements Constants {
 	 * @param numRecords number of top scorers to return. (all if numRecords = 0)
 	 * @return a list of top scorers as Record Objects.
 	 */
-	public List<Record> getTopScorers(int numRecords) {
+	public List<Record> getTopPerformers(int numRecords) {
 		if (numRecords < 0) {
 			throw new IllegalArgumentException(numRecords + " cannot be less than 0");
 		}
@@ -369,7 +369,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, 
 				name, SCORE, true, ELAPSED_TIME, false);
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {
@@ -414,7 +414,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name, 
 				USERNAME, user.getUserName());
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {
@@ -436,8 +436,6 @@ public class Quiz implements Constants {
 						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
-		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	
@@ -758,7 +756,10 @@ public class Quiz implements Constants {
 	}
 	
 	
-	public String toJson() {
+	/**
+	 * @return a JSON representation of the Quiz.
+	 */
+	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put(QUIZ_NAME, name);
 		result.put(CREATOR, getCreator().getUserName());
@@ -767,20 +768,18 @@ public class Quiz implements Constants {
 		result.put(IS_RANDOM, isRandom());
 		result.put(IS_ONE_PAGE, isOnePage());
 		result.put(IS_IMMEDIATE, isImmediate());
-		List<Object> questionList = new ArrayList<Object>();
+		List<Map<String, Object>> questionList = new ArrayList<Map<String, Object>>();
 		
 		List<Question> questions = getQuestions();
 		for (Question question : questions) {
-			
+			questionList.add(question.toMap());
 		}
 		
 		if (isRandom()) {
-			// randomize quesionList
+			Collections.shuffle(questionList);
 		}
 		result.put(QUESTIONS, questionList);
-		
-		
-		return Json.getJsonString(result);
+		return result;
 	}
 	
 }

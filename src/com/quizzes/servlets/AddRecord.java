@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class EditQuiz
+ * Servlet implementation class AddRecord
  */
-@WebServlet("/EditQuiz")
-public class EditQuiz extends HttpServlet {
+@WebServlet("/AddRecord")
+public class AddRecord extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditQuiz() {
+    public AddRecord() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,8 +33,7 @@ public class EditQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
+		// TODO Auto-generated method stub
 	}
 
 }

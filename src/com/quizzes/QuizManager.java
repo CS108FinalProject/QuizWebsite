@@ -156,7 +156,7 @@ public class QuizManager implements Constants {
 	/**
 	 * Returns all quizzes in the database or null if none exist.
 	 */
-	public static List<Quiz> qetAllQuizzes() {
+	public static List<Quiz> getAllQuizzes() {
 		List<Map<String, Object>> table = Database.getTable(QUIZZES);
 		if (table == null || table.size() == 0) return null;
 		

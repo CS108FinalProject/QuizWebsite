@@ -1,10 +1,13 @@
 package com.quizzes;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import com.util.Constants;
 import com.util.Util;
 
-public class Picture extends Question {
+public class Picture extends Question implements Constants {
 	
 	private String pictureUrl;
 	private Set<String> answers;
@@ -92,6 +95,16 @@ public class Picture extends Question {
 	
 		if (answers.contains(answer)) return true;
 		return false;
+	}
+	
+	
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(PICTURE_URL, pictureUrl);
+		result.put(ANSWERS, answers);
+		return result;
 	}
 
 }
