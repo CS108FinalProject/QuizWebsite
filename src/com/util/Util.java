@@ -110,7 +110,7 @@ public class Util implements Constants {
 	 */
 	public static void addStatus(boolean success, String errorMessage, Map<String, Object> map) {
 		if (errorMessage == null) {
-			throw new IllegalArgumentException("errorMsg cannot be null.");
+			throw new IllegalArgumentException("errorMessage cannot be null.");
 		}
 		validateObject(map);
 		
