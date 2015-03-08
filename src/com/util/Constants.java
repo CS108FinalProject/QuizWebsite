@@ -58,7 +58,7 @@ public interface Constants {
 	
 	// Multiple_Choice table
 	public static final String MULTIPLE_CHOICE = "Multiple_Choice";
-	public static final String OPTION = "option";
+	public static final String OPTION = "option_db";
 	public static final String IS_ANSWER = "is_answer";
 	
 	// Picture table
@@ -68,12 +68,12 @@ public interface Constants {
 	// Multi_Response table
 	public static final String MULTI_RESPONSE = "Multi_Response";
 	public static final String IS_ORDERED = "is_ordered";
-	public static final String ORDER = "order";
+	public static final String ORDER = "order_db";
 	
 	//Matching table
 	public static final String MATCHING = "Matching";
-	public static final String LEFT = "left";
-	public static final String RIGHT = "right";
+	public static final String LEFT = "left_db";
+	public static final String RIGHT = "right_db";
 	
 	// Question Types list
 	public static final List<String> QUESTION_TYPES = new ArrayList<String>(
@@ -112,4 +112,8 @@ public interface Constants {
 	public static final String DB_RAW_INT = "int(4)";
 	public static final String DB_RAW_LONG = "bigint(8)";
 	public static final String DB_RAW_BOOLEAN = "tinyint(4)";
+	
+	// Status response.
+	public static final String SUCCESS = "success";
+	public static final String ERROR_MESSAGE = "errorMessage";
 }

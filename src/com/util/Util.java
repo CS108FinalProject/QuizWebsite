@@ -1,6 +1,7 @@
 package com.util;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -98,6 +99,25 @@ public class Util implements Constants {
 		if (object instanceof Double) return DOUBLE;
 		if (object instanceof Long) return LONG;
 		throw new IllegalArgumentException("Illegal type for " + object);
+	}
+	
+	
+	/**
+	 *  Given a Map, appends a status report to it with the passed parameters.
+	 * @param success true if operation succeeded, false otherwise.
+	 * @param errorMessage 
+	 * @param map
+	 */
+	public static void addStatus(boolean success, String errorMessage, Map<String, Object> map) {
+		if (errorMessage == null) {
+			throw new IllegalArgumentException("errorMessage cannot be null.");
+		}
+		validateObject(map);
+		
+		Map<String, Object> statusMap = new HashMap<String, Object>();
+		statusMap.put(SUCCESS, success);
+		statusMap.put(ERROR_MESSAGE, errorMessage);
+		map.put(STATUS, statusMap);
 	}
 	
 	
