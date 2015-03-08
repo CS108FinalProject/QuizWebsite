@@ -16,7 +16,6 @@ import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
-import com.util.Json;
 import com.util.Util;
 
 /**
@@ -762,7 +761,7 @@ public class Quiz implements Constants {
 	/**
 	 * @return a JSON representation of the Quiz.
 	 */
-	public String toJson() {
+	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put(QUIZ_NAME, name);
 		result.put(CREATOR, getCreator().getUserName());
@@ -782,7 +781,7 @@ public class Quiz implements Constants {
 			Collections.shuffle(questionList);
 		}
 		result.put(QUESTIONS, questionList);
-		return Json.getJsonString(result);
+		return result;
 	}
 	
 }

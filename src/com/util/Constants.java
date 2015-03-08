@@ -114,10 +114,18 @@ public interface Constants {
 	public static final String DB_RAW_BOOLEAN = "tinyint(4)";
 	
 	// Json.
+	public static final String JSON = "json";
 	public static final String SUCCESS = "success";
 	public static final String ERROR_MESSAGE = "errorMessage";
 	public static final String QUESTIONS = "questions";
 	public static final String ANSWERS = "answers";
 	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
 	public static final String MATCHES = "matches";
+	
+	// Request types
+	public static final String REQUEST = "request";
+	public static final String NAME = "name";
+	public static final String QUIZ = "quiz";
+	
+	
 }
