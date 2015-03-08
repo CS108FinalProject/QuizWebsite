@@ -60,6 +60,95 @@ public class Quiz implements Constants {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	public Quiz(Map<String, Object> quizMap) {
+		Util.validateObject(quizMap);
+		
+		// Validate Type
+		if (!(quizMap.get(QUIZ_METADATA) instanceof Map<?, ?>)) {
+			throw new IllegalArgumentException("Invalid quizMap.");
+		}
+		
+		Map<String, Object> metadata = (Map<String, Object>) quizMap.get(QUIZ_METADATA);
+		
+		String quizName = (String) metadata.get(QUIZ_NAME);
+		Util.validateString(quizName);
+		
+		String creatorName = (String) metadata.get(CREATOR);
+		Util.validateString(creatorName);
+		Account creator = AccountManager.getAccount(creatorName);
+		
+		String description = (String) metadata.get(DESCRIPTION);
+		Util.validateString(description);
+		
+		String date = (String) metadata.get(DATE);
+		Util.validateString(date);
+		
+		boolean isRandom = (Boolean) metadata.get(IS_RANDOM);
+		boolean isOnePage = (Boolean) metadata.get(IS_ONE_PAGE);
+		boolean isImmediate = (Boolean) metadata.get(IS_IMMEDIATE);
+		
+		// Create Quiz.
+		Quiz quiz = new Quiz(quizName, creator, description, date, isRandom, isOnePage,
+				isImmediate);
+		
+		// Get questions.
+		// Validate Type
+		if (!(quizMap.get(QUESTIONS) instanceof List<?>)) {
+			throw new IllegalArgumentException("Invalid quizMap.");
+		}
+		
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> questions = (List<Map<String, Object>>) quizMap.get(QUESTIONS);
+		
+		for (Map<String, Object> questionMap : questions) {
+			// Get question type.
+			String type = (String) questionMap.get("type");
+			Util.validateString(type);
+			
+			Question question = null;
+//			if (type.equals(FILL_BLANK)) {
+//				String questionPrompt = (String) questionMap.get(QUESTION);
+//				Map<String, Set<String>> blanksAndAswers = new HashMap<String, Set<String>>();
+//				Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
+//				
+				
+				
+				
+				
+//				question = (FillBlank) question_map.get("question");
+//				Map<String, Set<String>> blanksAndAnswers = (Map<String, Set<String>>) question_map.get("answers");
+//				((FillBlank) question).setBlanksAndAnswers(blanksAndAnswers);
+//			} else if (type.equals(MULTIPLE_CHOICE)) {
+//				question = (MultipleChoice) question_map.get("question");
+//				Map<String, Boolean> options = (Map<String, Boolean>) question_map.get("answers");
+//				((MultipleChoice) question).setOptions(options);
+//			} else if (type.equals(PICTURE)) {
+//				question = (Picture) question_map.get("question");
+//				Set<String> answers = (Set<String>) question_map.get("answers");
+//				((Picture) question).setAnswers(answers);
+//			} else if (type.equals(MULTI_RESPONSE)) {
+//				question = (MultiResponse) question_map.get("question");
+//				TreeMap<Integer, String> answers = (TreeMap<Integer, String>) question_map.get("answers");
+//				((MultiResponse) question).setAnswers(answers);
+//			} else if (type.equals(MATCHING)) {
+//				question = (Matching) question_map.get("question");
+//				Map<String, String> matches = (Map<String, String>) question_map.get("answers");
+//				((Matching) question).setMatches(matches);
+//			} else if (type.equals(RESPONSE)) {
+//				question = (Response) question_map.get("question");
+//				Set<String> answers = ((Response) question).getAnswers();
+//				((Response) question).setAnswers(answers);
+//			}		
+//			quiz.addQuestion(question);
+		}
+		
+	}
+	
+	
+	
+	
+	
 	/**
 	 * Provides an interface to interact with the Quizzes table of the database.
 	 * Expects the passed quiz name to already exist in the database. Throws an exception

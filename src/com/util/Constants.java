@@ -117,10 +117,9 @@ public interface Constants {
 	public static final String JSON = "json";
 	public static final String SUCCESS = "success";
 	public static final String ERROR_MESSAGE = "errorMessage";
+	public static final String QUIZ_METADATA = "quizMetaData";
 	public static final String QUESTIONS = "questions";
 	public static final String ANSWERS = "answers";
-	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
-	public static final String MATCHES = "matches";
 	
 	// Request types
 	public static final String REQUEST = "request";
@@ -137,5 +136,9 @@ public interface Constants {
 	public static final String HOURS = "hours";
 	public static final String RECENT_PERFORMANCE = "recentPerformance";
 	public static final String AVG_PERFORMANCE = "avgPerformance";
+	
+	// Edit Quiz Servlet
+	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";
+	public static final String MODIFIED_QUIZ_JSON = "modifiedQuizJson";
 	
 }
