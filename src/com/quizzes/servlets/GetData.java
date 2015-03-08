@@ -83,6 +83,56 @@ public class GetData extends HttpServlet implements Constants {
 				result.put(DATA, quiz.toMap());
 				
 				
+			// All Quizzes.
+			} else if (requestType.equals(ALL_QUIZZES)) {
+				List<Quiz> allQuizzes = QuizManager.getAllQuizzes();
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : allQuizzes) {
+					resultList.add(quiz.toMap());
+				}
+				result.put(DATA, resultList);
+				
+				
+			// All Quizzes of Creator
+			} else if (requestType.equals(ALL_CREATOR_QUIZZES)) {
+				String creatorName = (String) requestMap.get(CREATOR);
+				Util.validateString(creatorName);
+				
+				Account creator = AccountManager.getAccount(creatorName);
+				List<Quiz> creatorQuizzes = QuizManager.getQuizzes(creator);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : creatorQuizzes) {
+					resultList.add(quiz.toMap());
+				}
+				result.put(DATA, resultList);
+				
+				
+			// Most popular quizzes overall
+			} else if (requestType.equals(MOST_POPULAR_QUIZZES)) {
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				List<Quiz> popular = QuizManager.getMostPopularQuizzes(numRecords);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : popular) {
+					resultList.add(quiz.toMap());
+				}
+				result.put(DATA, resultList);
+				
+				
+			// Recently created Quizzes	
+			} else if (requestType.equals(RECENTLY_CREATED_QUIZZES)) {
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				List<Quiz> recent = QuizManager.getRecentlyCreatedQuizzes(numRecords);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : recent) {
+					resultList.add(quiz.toMap());
+				}
+				result.put(DATA, resultList);
+				
+				
 			// Past User Performance
 			} else if (requestType.equals(PAST_USER_PERFORMANCE)) {
 				// Get Quiz.
