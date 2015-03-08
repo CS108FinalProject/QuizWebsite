@@ -290,7 +290,7 @@
         // store the information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
         console.log( quiz.questions );
@@ -341,7 +341,7 @@
         // store the information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
         console.log( quiz.questions );
@@ -393,7 +393,7 @@
         // store the information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
         console.log( quiz.questions );
@@ -447,7 +447,7 @@
         // store the information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
         console.log( quiz.questions );
@@ -500,7 +500,7 @@
         // store the information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        //questions.pop();
         questions.push( questionInfo );
         quiz.questions = questions;
 
@@ -537,6 +537,7 @@
             quiz.questions = questions;
             updatePendingQuiz(quiz);
         } else {
+            clearLastSelectedQuestionType();
             initializeMCQuestionInfo(type, question, option, isAnswer);
         }
     }
@@ -560,7 +561,7 @@
         // finally store information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        questions.pop();
+        //questions.pop();
         questions.push( questionInfo );
         quiz.questions = questions;
 
@@ -605,6 +606,7 @@
             console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
+            clearLastSelectedQuestionType();
             initializeFITBQuestionInfo(type, question, answer, blank);
         }
     }
@@ -683,14 +685,20 @@
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
                 case "Create Question":
-                    // need to add question to questions array 
                     rightPane.innerHTML = templates.renderSubmissionForm();
                     break;
                 case "Add Another Quesiton":
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
-                case "Finish and Create Quiz":      
-                    // $('#right-pane').html( templates.renderQuestionType() );
+                case "Finish and Create Quiz":  
+                    var date = new Date();
+                    console.log( date );
+                    var quiz = getPendingQuiz();
+                    var quizMetaData = quiz.quizMetaData;
+                    quizMetaData.date = date;
+                    quiz.quizMetaData = quizMetaData;
+                    updatePendingQuiz(quiz);    
+                    console.log( quiz );
                     break;
                 default:
                         // do nothing
