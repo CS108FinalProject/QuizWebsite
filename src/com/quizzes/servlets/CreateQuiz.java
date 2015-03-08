@@ -64,9 +64,7 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 
 		String name = (String) quizMetadata.get("name");
 		Account creator = null;
-		//TODO:Check with Guy to see if the bottom line should be "creator" not "name"
-
-		if (AccountManager.accountExists(name)) {
+		if (AccountManager.accountExists((String) quizMetadata.get("creator"))) {
 			creator = AccountManager.getAccount((String) quizMetadata.get("creator")); 
 			Util.addStatus(true,"", dataMap);
 		} else {
