@@ -103,15 +103,15 @@
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
             event.preventDefault();
-
             // clear local storage of any quizzes that might be pending
-
+            clearPendingQuiz();
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
             var isRandom = $('#quiz_random').is(':checked');
             var isOnePage = $('#quiz_single_page').is(':checked');
 
+            // UNCOMMENT AFTER FINISHED
             // if ( (quizName === null || quizName === "")) {
             //     alert("You must enter a quiz name");
             // } else if ( (description === null || description == "") ) {
@@ -151,7 +151,7 @@
         });
 
         // Listen to FILL IN THE BLANK QUESTION
-        $('#right-pane').on('click', '#add_blank_answer', function(event) {
+        $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
             event.preventDefault();
             var type = "Fill In The Blank";
             var quiz = getPendingQuiz();
@@ -163,37 +163,97 @@
             var blank = $('#enter_blank').val();
 
             if ( typeof questionInfo === 'undefined' ) {
-                initializeQuestionInfo(type, question, answer, blank);
+                initializeFITBQuestionInfo(type, question, answer, blank);
             } else {
-                addAnotherFandBAnswer(question, answer, blank);
+                addAnotherFandBAnswer(type, question, answer, blank);
             }
-
-            // console.log( questionInfo.question );
-            // console.log( questionInfo.question == null );
-            // if ( questionInfo.question == null ) {
-            //     // we need to parametrize question info
-            //     var answers = new Array();
-            //     var blanksAndAnswers = {};
-            //     blanksAndAnswers.blank = blank;
-
-            //     answers.push(answer);
-            //     blanksAndAnswers.answers = answers;
-            //     // place first answer into array
-            //     // make sure the answer is not a duplicate
-            //     questionInfo.question = question;
-            //     questionInfo["blanksAndAnswers"] = blanksAndAnswers;
-            //     questions.push( questionInfo );
-            //     quiz.questions = questions;
-            //     updatePendingQuiz(quiz);
-            //     console.log( getPendingQuiz() );
-            
-            // "Map" that contains a blank and set of answers
         });
+
+        // Listen to MULTIPLE CHOICE QUESTION
+        $('#right-pane').on('click', '#add_mc_option', function(event) {
+            event.preventDefault();
+            var type = "Multiple Choice";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#mc_question').val();
+            var option = $('#mc_option').val();
+            var isAnswer = $('#is_mc_answer').is(':checked');
+
+            console.log( question + " " + isAnswer + " " + option);
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMCQuestionInfo(type, question, option, isAnswer);
+            } else {
+                addAnotherMCOption(type, question, option, isAnswer);
+            }
+        });
+
     });
+
+    /******************MULTIPLE CHOICE HELPERS******************************/
+    function initializeMCQuestionInfo(type, question, option, isAnswer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // object for possible options
+        var options = {};
+        options[option] = isAnswer;
+        questionInfo.options = options;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+
+        updatePendingQuiz(quiz);
+        $('#mc_option').val('');
+        $('#is_mc_answer').attr('checked', false);
+    }
+
+    function addAnotherMCOption(type, question, option, isAnswer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question == question ) {
+            questionInfo.question = question;
+        
+            // if questions is changed
+
+            // listen to add more button
+            var options = questionInfo.options;
+            if ( !(option in options) ) {
+                var options = questionInfo.options;
+                options[option] = isAnswer;
+                questionInfo.options = options
+                $('#mc_option').val('');
+                $('#is_mc_answer').attr('checked', false);
+            } else {
+                $('#mc_option').val('');
+                $('#is_mc_answer').attr('checked', false);
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            updatePendingQuiz(quiz);
+        } else {
+            initializeMCQuestionInfo(type, question, option, isAnswer);
+        }
+    }
     
+    /******************FILL IN THE BLANK HELPERS****************************/
+
     // If we enter the question form for the first time
     // we want to initialize our questions array
-    function initializeQuestionInfo(type, question, answer, blank) {
+    function initializeFITBQuestionInfo(type, question, answer, blank) {
 
         // record main question information such as type and question string
         var questionInfo = {};
@@ -208,42 +268,50 @@
         // finally store information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
+        questions.pop();
         questions.push( questionInfo );
         quiz.questions = questions;
 
-        console.log( quiz );
+        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#enter_answer').val('');
     }
 
-    function addAnotherFandBAnswer(question, answer, blank ) {
+    function addAnotherFandBAnswer(type, question, answer, blank ) {
         
         // get information from interface
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        var questionInfo = questions[questions.length - 1];
-        questionInfo.question = question;
+        var questionInfo = questions.pop();
+        
+        if ( questionInfo.question == question ) {
+            questionInfo.question = question;
 
-        var blanksAndAnswers = questionInfo.blanksAndAnswers;
-        if ( blank in blanksAndAnswers ) {
-            var answers = blanksAndAnswers[blank];
-            answers.push( answer );
-            blanksAndAnswers[blank] = answers;
-            questionInfo.blanksAndAnswers = blanksAndAnswers;
+            var blanksAndAnswers = questionInfo.blanksAndAnswers;
+            if ( blank in blanksAndAnswers ) {
+                var answers = blanksAndAnswers[blank];
+                if ( answers.indexOf(answer) === -1 ) {
+                    answers.push( answer );
+                    blanksAndAnswers[blank] = answers;
+                    questionInfo.blanksAndAnswers = blanksAndAnswers;
+                }
 
-            // clear input
-            $('#enter_answer').val('');
+                // clear input
+                $('#enter_answer').val('');
+            } else {
+                var bAndA = questionInfo.blanksAndAnswers;
+                bAndA[blank] = new Array(answer);
+                questionInfo.blanksAndAnswers = bAndA;
+                $('#enter_answer').val('');
+            }
+
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
         } else {
-            var bAndA = questionInfo.blanksAndAnswers;
-            bAndA[blank] = new Array(answer);
-            questionInfo.blanksAndAnswers = bAndA;
-            $('#enter_answer').val('');
+            initializeFITBQuestionInfo(type, question, answer, blank);
         }
-
-        console.log( questionInfo.blanksAndAnswers );
-        questions.push( questionInfo );
-        quiz.questions = questions;
-        updatePendingQuiz(quiz);
     }
     
 
@@ -287,32 +355,21 @@
             var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
-                    console.log( getPendingQuiz() );
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Multiple Choice");
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Picture");
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Multi-Response");
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Matching");
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Response");
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
                 default: 
