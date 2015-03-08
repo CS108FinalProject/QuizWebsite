@@ -84,7 +84,7 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 			Question question = null;
 			if (type.equals(FILL_BLANK)) {
 				question = (FillBlank) question_map.get("question");
-				Map<String, Set<String>> blanksAndAnswers = (Map<String, Set<String>>) question_map.get("answers");
+				Map<String, List<String>> blanksAndAnswers = (Map<String, List<String>>) question_map.get("answers");
 				((FillBlank) question).setBlanksAndAnswers(blanksAndAnswers);
 			} else if (type.equals(MULTIPLE_CHOICE)) {
 				question = (MultipleChoice) question_map.get("question");
@@ -92,7 +92,7 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 				((MultipleChoice) question).setOptions(options);
 			} else if (type.equals(PICTURE)) {
 				question = (Picture) question_map.get("question");
-				Set<String> answers = (Set<String>) question_map.get("answers");
+				List<String> answers = (List<String>) question_map.get("answers");
 				((Picture) question).setAnswers(answers);
 			} else if (type.equals(MULTI_RESPONSE)) {
 				question = (MultiResponse) question_map.get("question");
@@ -104,7 +104,7 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 				((Matching) question).setMatches(matches);
 			} else if (type.equals(RESPONSE)) {
 				question = (Response) question_map.get("question");
-				Set<String> answers = ((Response) question).getAnswers();
+				List<String> answers = ((Response) question).getAnswers();
 				((Response) question).setAnswers(answers);
 			}		
 			quiz.addQuestion(question);

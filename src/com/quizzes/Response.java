@@ -1,8 +1,8 @@
 package com.quizzes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.util.Constants;
 import com.util.Util;
@@ -13,14 +13,14 @@ import com.util.Util;
  */
 public class Response extends Question implements Constants {
 
-	private Set<String> answers;
+	private List<String> answers;
 	
 	/**
 	 * @param quizName the name of the quiz
 	 * @param question the question or prompt in string form
 	 * @param answers a list of valid answers
 	 */
-	public Response(String quizName, String question, Set<String> answers) {
+	public Response(String quizName, String question, List<String> answers) {
 		super(quizName, question);
 		
 		Util.validateObject(answers);
@@ -31,7 +31,7 @@ public class Response extends Question implements Constants {
 	/**
 	 * @return the answers
 	 */
-	public Set<String> getAnswers() {
+	public List<String> getAnswers() {
 		return answers;
 	}
 
@@ -39,7 +39,7 @@ public class Response extends Question implements Constants {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(Set<String> answers) {
+	public void setAnswers(List<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}

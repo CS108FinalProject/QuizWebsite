@@ -1,9 +1,9 @@
 package com.quizzes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.util.Constants;
 import com.util.Util;
@@ -15,7 +15,7 @@ import com.util.Util;
  */
 public class FillBlank extends Question implements Constants {
 	
-	private Map<String, Set<String>> blanksAndAnswers;
+	private Map<String, List<String>> blanksAndAnswers;
 
 	/**
 	 * Constructor
@@ -25,7 +25,7 @@ public class FillBlank extends Question implements Constants {
 	 * blank Strings have to be substrings of question.
 	 */
 	public FillBlank(String quizName, String question, 
-			Map<String, Set<String>> blanksAndAnswers) {
+			Map<String, List<String>> blanksAndAnswers) {
 		
 		super(quizName, question);
 		Util.validateObject(blanksAndAnswers);
@@ -36,14 +36,14 @@ public class FillBlank extends Question implements Constants {
 	/**
 	 * @return the blanksAndAnswers
 	 */
-	public Map<String, Set<String>> getBlanksAndAnswers() {
+	public Map<String, List<String>> getBlanksAndAnswers() {
 		return blanksAndAnswers;
 	}
 
 	/**
 	 * @param blanksAndAnswers the blanksAndAnswers to set
 	 */
-	public void setBlanksAndAnswers(Map<String, Set<String>> blanksAndAnswers) {
+	public void setBlanksAndAnswers(Map<String, List<String>> blanksAndAnswers) {
 		Util.validateObject(blanksAndAnswers);
 		this.blanksAndAnswers = blanksAndAnswers;
 	}
@@ -67,7 +67,7 @@ public class FillBlank extends Question implements Constants {
 			blanksAndAnswers.get(blank).add(answer);
 			
 		} else {
-			Set<String> answers = new HashSet<String>();
+			List<String> answers = new ArrayList<String>();
 			answers.add(answer);
 			blanksAndAnswers.put(blank, answers);
 		}
@@ -106,7 +106,7 @@ public class FillBlank extends Question implements Constants {
 	
 	
 	// Ensures that every blank is a substring of the question.
-	private void validateBlanksAndAnswers(Map<String, Set<String>> blanksAndAnswers) {
+	private void validateBlanksAndAnswers(Map<String, List<String>> blanksAndAnswers) {
 		for (String blank : blanksAndAnswers.keySet()) {
 			if (!question.contains(blank)) {
 				throw new IllegalArgumentException(blank + " is not a substring of " + question);

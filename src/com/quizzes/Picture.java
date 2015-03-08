@@ -1,8 +1,8 @@
 package com.quizzes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.util.Constants;
 import com.util.Util;
@@ -10,7 +10,7 @@ import com.util.Util;
 public class Picture extends Question implements Constants {
 	
 	private String pictureUrl;
-	private Set<String> answers;
+	private List<String> answers;
 
 	/**
 	 * @param quizName
@@ -19,7 +19,7 @@ public class Picture extends Question implements Constants {
 	 * @param answers a list of possible answers to this question
 	 */
 	public Picture(String quizName, String question, String pictureUrl,
-			Set<String> answers) {
+			List<String> answers) {
 		
 		super(quizName, question);
 		
@@ -49,7 +49,7 @@ public class Picture extends Question implements Constants {
 	/**
 	 * @return the answers
 	 */
-	public Set<String> getAnswers() {
+	public List<String> getAnswers() {
 		return answers;
 	}
 
@@ -57,7 +57,7 @@ public class Picture extends Question implements Constants {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(Set<String> answers) {
+	public void setAnswers(List<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}

@@ -98,7 +98,6 @@ public class Quiz implements Constants {
 			throw new IllegalArgumentException("Invalid quizMap.");
 		}
 		
-		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> questions = (List<Map<String, Object>>) quizMap.get(QUESTIONS);
 		
 		for (Map<String, Object> questionMap : questions) {
@@ -774,14 +773,14 @@ public class Quiz implements Constants {
 		String question = (String) row.get(QUESTION);
 		
 		if (questionType.equals(RESPONSE)) {
-			Set<String> answers = new HashSet<String>();
+			List<String> answers = new ArrayList<String>();
 			answers.add((String) row.get(ANSWER));
 			return new Response(name, question, answers);
 			
 		} else if (questionType.equals(FILL_BLANK)) {
-			Set<String> answers = new HashSet<String>();
+			List<String> answers = new ArrayList<String>();
 			answers.add((String) row.get(ANSWER));
-			Map<String, Set<String>> blanksAndAnswers = new HashMap<String, Set<String>>();
+			Map<String, List<String>> blanksAndAnswers = new HashMap<String, List<String>>();
 			blanksAndAnswers.put((String) row.get(BLANK), answers);
 			return new FillBlank(name, question, blanksAndAnswers);
 			
@@ -791,7 +790,7 @@ public class Quiz implements Constants {
 			return new MultipleChoice(name, question, options);
 		
 		} else if (questionType.equals(PICTURE)) {
-			Set<String> answers = new HashSet<String>();
+			List<String> answers = new ArrayList<String>();
 			answers.add((String) row.get(ANSWER));
 			return new Picture(name, question, (String) row.get(PICTURE_URL), answers);
 			
