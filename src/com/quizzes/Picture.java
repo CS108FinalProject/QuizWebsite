@@ -1,13 +1,16 @@
 package com.quizzes;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.util.Constants;
 import com.util.Util;
 
-public class Picture extends Question {
+public class Picture extends Question implements Constants {
 	
 	private String pictureUrl;
-	private Set<String> answers;
+	private List<String> answers;
 
 	/**
 	 * @param quizName
@@ -16,7 +19,7 @@ public class Picture extends Question {
 	 * @param answers a list of possible answers to this question
 	 */
 	public Picture(String quizName, String question, String pictureUrl,
-			Set<String> answers) {
+			List<String> answers) {
 		
 		super(quizName, question);
 		
@@ -46,7 +49,7 @@ public class Picture extends Question {
 	/**
 	 * @return the answers
 	 */
-	public Set<String> getAnswers() {
+	public List<String> getAnswers() {
 		return answers;
 	}
 
@@ -54,7 +57,7 @@ public class Picture extends Question {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(Set<String> answers) {
+	public void setAnswers(List<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}
@@ -92,6 +95,16 @@ public class Picture extends Question {
 	
 		if (answers.contains(answer)) return true;
 		return false;
+	}
+	
+	
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(PICTURE_URL, pictureUrl);
+		result.put(ANSWERS, answers);
+		return result;
 	}
 
 }

@@ -46,7 +46,7 @@ public interface Constants {
 	public static final String HISTORY = "History";
 	public static final String SCORE = "score";
 	public static final String ELAPSED_TIME = "elapsed_time";
-
+	
 	// Response table
 	public static final String RESPONSE = "Response";
 	public static final String QUESTION = "question";
@@ -113,7 +113,32 @@ public interface Constants {
 	public static final String DB_RAW_LONG = "bigint(8)";
 	public static final String DB_RAW_BOOLEAN = "tinyint(4)";
 	
-	// Status response.
+	// Json.
+	public static final String JSON = "json";
 	public static final String SUCCESS = "success";
 	public static final String ERROR_MESSAGE = "errorMessage";
+	public static final String QUIZ_METADATA = "quizMetaData";
+	public static final String QUESTIONS = "questions";
+	public static final String ANSWERS = "answers";
+	
+	// Request types
+	public static final String REQUEST = "request";
+	public static final String QUIZ = "quiz";
+	public static final String ALL_QUIZZES = "allQuizzes";
+	public static final String ALL_CREATOR_QUIZZES = "allCreatorQuizzes";
+	public static final String MOST_POPULAR_QUIZZES = "mostPopularQuizzes";
+	public static final String RECENTLY_CREATED_QUIZZES = "recentlyCreatedQuizzes";
+	public static final String PAST_USER_PERFORMANCE = "pastUserPerformance";
+	public static final String NUM_RECORDS = "numRecords";
+	public static final String DATA = "data";
+	public static final String TOP_PERFORMERS = "topPerformers";
+	public static final String TOP_PERFORMERS_WITHIN_TIME_PERIOD = "topPerformersWithinTimePeriod";
+	public static final String HOURS = "hours";
+	public static final String RECENT_PERFORMANCE = "recentPerformance";
+	public static final String AVG_PERFORMANCE = "avgPerformance";
+	
+	// Edit Quiz Servlet
+	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";
+	public static final String MODIFIED_QUIZ_JSON = "modifiedQuizJson";
+	
 }

@@ -1,23 +1,26 @@
 package com.quizzes;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.util.Constants;
 import com.util.Util;
 
 /**
  * Constitutes a data structure for Response question.
  * @author Sam
  */
-public class Response extends Question {
+public class Response extends Question implements Constants {
 
-	private Set<String> answers;
+	private List<String> answers;
 	
 	/**
 	 * @param quizName the name of the quiz
 	 * @param question the question or prompt in string form
 	 * @param answers a list of valid answers
 	 */
-	public Response(String quizName, String question, Set<String> answers) {
+	public Response(String quizName, String question, List<String> answers) {
 		super(quizName, question);
 		
 		Util.validateObject(answers);
@@ -28,7 +31,7 @@ public class Response extends Question {
 	/**
 	 * @return the answers
 	 */
-	public Set<String> getAnswers() {
+	public List<String> getAnswers() {
 		return answers;
 	}
 
@@ -36,7 +39,7 @@ public class Response extends Question {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(Set<String> answers) {
+	public void setAnswers(List<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}
@@ -73,5 +76,17 @@ public class Response extends Question {
 		Util.validateString(answer);
 		if (answers.contains(answer)) return true;
 		return false;
+	}
+	
+	
+	/**
+	 * @return a representation of the object as a Map<String, Object>
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(ANSWERS, answers);
+		return result;
 	}
 }

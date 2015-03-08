@@ -16,6 +16,7 @@ import com.util.*;
 
 /**
  * Servlet implementation class RemoveQuiz
+ *   Author: Kelsey Young Stanford University '15
  */
 @WebServlet("/RemoveQuiz")
 public class RemoveQuiz extends HttpServlet {
@@ -23,6 +24,7 @@ public class RemoveQuiz extends HttpServlet {
        
     /**
      * @see HttpServlet#HttpServlet()
+     * 
      */
     public RemoveQuiz() {
         super();
@@ -40,26 +42,23 @@ public class RemoveQuiz extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 //TODO:Find a way to test this
 		 response.setContentType("application/json");
 		 PrintWriter out = response.getWriter();
 		 Map<String, Object> response_map = new HashMap<String, Object>();
 		 
-		String dataString = (String)request.getParameter("json");
-		 Map<String, Object> dataMap = Json.parseJsonObject(dataString);
-		 Map<String, Object> quizMetadata  =  (Map<String, Object>)dataMap.get("quizMetaData");
-		 String quizName = (String)quizMetadata.get("name");
+		 //Will receive the quizName as an input
+		String quizName = (String)request.getParameter("quizName");
 		
-		 
-		//Only proceed to remove who's name exists 
+		//Only proceed to remove a quiz who's name exists 
 		if (QuizManager.quizNameInUse(quizName)) {
 			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
 			QuizManager.removeQuiz(qz_to_remove);
-			response_map.put("status", true);
-			response_map.put("response", "");
-			} else {
-			response_map.put("status", false);
-			response_map.put("response","There was no quiz found named, "+quizName);
+			Util.addStatus(true, "", response_map);
+		} else {
+			Util.addStatus(false, "The quiz name does not exist.", response_map);		
 		}
+		
 		//Turn the response_map into a "json" string
 		String response_str = Json.getJsonString(response_map);
 		//Give back to method which invoked this servlet

@@ -1,10 +1,12 @@
 package com.quizzes;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.util.Constants;
 import com.util.Util;
 
-public class Matching extends Question {
+public class Matching extends Question implements Constants {
 	
 	private Map<String, String> matches;
 
@@ -79,6 +81,18 @@ public class Matching extends Question {
 		
 		if (matches.get(left).equals(right)) return true;
 		return false;
+	}
+	
+	
+	/**
+	 * @return a representation of the object as a Map<String, Object>
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(ANSWERS, matches);
+		return result;
 	}
 
 }

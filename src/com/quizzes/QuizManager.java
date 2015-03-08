@@ -121,6 +121,17 @@ public class QuizManager implements Constants {
 	
 	
 	/**
+	 * Creates a new Quiz
+	 * @param quizMap representation in the form of Map<String, Object>
+	 * @return the created Quiz object
+	 */
+	public static Quiz createQuiz(Map<String, Object> quizMap) {
+		Util.validateObject(quizMap);
+		return new Quiz(quizMap);
+	}
+	
+	
+	/**
 	 * Given a quiz name, returns its Quiz object.
 	 */
 	public static Quiz getQuiz(String quizName) {
@@ -156,7 +167,7 @@ public class QuizManager implements Constants {
 	/**
 	 * Returns all quizzes in the database or null if none exist.
 	 */
-	public static List<Quiz> qetAllQuizzes() {
+	public static List<Quiz> getAllQuizzes() {
 		List<Map<String, Object>> table = Database.getTable(QUIZZES);
 		if (table == null || table.size() == 0) return null;
 		
