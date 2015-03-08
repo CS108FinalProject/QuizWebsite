@@ -104,7 +104,8 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 			} else if (type.equals(RESPONSE)) {
 				List<String> answers = (List<String>)question_map.get("answers");
 				question = new Response(quizName, question_content, answers);
-			}		
+			}	
+			
 			quiz.addQuestion(question);
 		}
 		
