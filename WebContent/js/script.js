@@ -6,7 +6,7 @@
     // This array will include question objects
     // with a subject and a question
     var questions = new Array(); // will contain list of 'question' objects
-    var quizObject;
+    var questions = new Set();
     var newQuestion;
     var newSubject;
     var currentObjectId;
@@ -55,25 +55,25 @@
      * Arguments: 
      * pendingQuiz -- an object containing quizMetaData and questions
      */
-    function storePendingQuiz(pendingQuiz) {
-        localStorage.pendingQuiz = JSON.stringify(pendingQuiz);
+    function updatePendingQuiz(pendingQuiz) {
+        localStorage.pendingQuiz =  JSON.stringify(pendingQuiz);
     }
 
     /* clears all the quiz info in local storage */
     function clearPendingQuiz() {
-        localStorage.pendingQuiz = JSON.stringify({});
+        localStorage.removeItem( "pendingQuiz")
     }
 
 
-    /* Returns the questions stored in localStorage. */
-    function getStoredQuestions() {
-        if (!localStorage.questions) {
-            // default to empty array
-            localStorage.questions = JSON.stringify([]);
-        }
+    // /* Returns the questions stored in localStorage. */
+    // function getStoredQuestions() {
+    //     if (!localStorage.questions) {
+    //         // default to empty array
+    //         localStorage.questions = JSON.stringify([]);
+    //     }
 
-        return JSON.parse(localStorage.questions);
-    }
+    //     return JSON.parse(localStorage.questions);
+    // }
 
     /* Store the given questions array in localStorage.
      *
@@ -103,7 +103,9 @@
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
             event.preventDefault();
-            templates.renderQuestionType();
+
+            // clear local storage of any quizzes that might be pending
+
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
@@ -116,20 +118,44 @@
                 alert("You must enter a password");
             } else {
 
+                // adds user information
                 quizMetaData = { name: quizName, description: description, isImmediate: isImmediate, 
-                                isRandom: isRandom, isSinglePage: isSinglePage };
-                quizObject = { quizMetaData: quizMetaData, questions: [] };
-                storePendingQuiz( quizObject );
-                
-                console.log(quizObject);
-                
-                $('#right-pane').html( templates.renderQuestionType() );
+                    isRandom: isRandom, isSinglePage: isSinglePage}
 
+                var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
+                
+                updatePendingQuiz(newQuiz);  
+                
+                // this will take the user to the question types page
+                $('#right-pane').html( templates.renderQuestionType() );
             }
 
         });
     });
+    
 
+    // Helper which will add the questions type 
+    // based on a click on the question types page
+    function addQuestionInfo(questionType) {
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = {};
+        questionInfo["type"] = questionType;
+        questions.push( questionInfo );
+        quiz.questions = questions;;
+        updatePendingQuiz( quiz );
+    }
+
+    // If the user goes back to the question type form
+    // from a question page we clear last question 
+    // in the local storage
+    function clearLastSelectedQuestionType() {
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        quiz.questions = questions;
+        updatePendingQuiz( quiz);
+    }
 
     /*
      * This function listens to all click events on the page
@@ -143,23 +169,32 @@
 
         // Choosing Question Types
         if ( event.target.className === "btn types") {
+
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
+                    addQuestionInfo("Fill In The Blank");
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
+                    addQuestionInfo("Multiple Choice");
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
+                    addQuestionInfo("Picture");
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
+                    addQuestionInfo("Multi-Response");
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
+                    addQuestionInfo("Matching");
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
+                    addQuestionInfo("Response");
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
                 default: 
@@ -170,16 +205,34 @@
             === "btn submission") {
             switch( event.target.value ) {
                 case "Return to Question Type":
+                        // Indicates user changed mind on question type 
+                        clearLastSelectedQuestionType();
+                        console.log( getPendingQuiz() );
                         rightPane.innerHTML = templates.renderQuestionType();
                         break;
                 case "Create Question":
+
                         rightPane.innerHTML = templates.renderSubmissionForm();
                         break;
                 case "Add Another Quesiton":
                         rightPane.innerHTML = templates.renderQuestionType();
                         break;
                 case "Finish and Create Quiz":
-                        //rightPane.innerHTML = templates.renderQuizForm();
+                        var URL = "/QuizWebsite/CreateQuiz";
+                        var createdQuiz = getPendingQuiz();
+                        // $.ajax({
+                        //     url: URL,
+                        //     type: 'POST',
+                        //     async: true,
+                        //     dataType: 'json',
+                        //     data: { json: JSON.stringify(newQuiz)},
+                        //     contentType: 'application/x-www-form-urlencoded',
+
+                        //     success: function(data, textStatus, jqXHR) {
+                        //         console.log( data );
+                        //     }
+                        // });       
+                        // $('#right-pane').html( templates.renderQuestionType() );
                         break;
                 default:
                         // do nothing
