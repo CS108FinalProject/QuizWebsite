@@ -61,15 +61,16 @@ public class CreateQuiz extends HttpServlet implements com.util.Constants {
 		
 		// create quiz
 		Map<String, Object> quizMetadata  =  (Map<String, Object>)dataMap.get("quizMetaData");
-		String name = (String) quizMetadata.get("name");
-		Account creator = null;
+		String name = (String) quizMetadata.get("creator");
+		System.out.println( name );
+		Account creator = null; 
 		if (AccountManager.accountExists(name)) {
 			creator = AccountManager.getAccount((String) quizMetadata.get("creator")); 
 			Util.addStatus(true,"", dataMap);
 		} else {
 			Util.addStatus(false,"There was no account found named, " + name, dataMap);
 		}
-		String description =  (String) quizMetadata.get("description");
+		String description =  (String) quizMetadata.get("description"); 
 		String date = (String) quizMetadata.get("date");
 		boolean isRandom = (Boolean) quizMetadata.get("isRandom");
 		boolean isOnePage = (Boolean) quizMetadata.get("isOnePage");
