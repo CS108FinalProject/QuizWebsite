@@ -117,4 +117,7 @@ public interface Constants {
 	public static final String SUCCESS = "success";
 	public static final String ERROR_MESSAGE = "errorMessage";
 	public static final String QUESTIONS = "questions";
+	public static final String ANSWERS = "answers";
+	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
+	public static final String MATCHES = "matches";
 }

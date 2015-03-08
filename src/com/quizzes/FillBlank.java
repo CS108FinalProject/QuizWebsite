@@ -1,9 +1,11 @@
 package com.quizzes;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.util.Constants;
 import com.util.Util;
 
 /**
@@ -11,7 +13,7 @@ import com.util.Util;
  * @author Sam
  *
  */
-public class FillBlank extends Question {
+public class FillBlank extends Question implements Constants {
 	
 	private Map<String, Set<String>> blanksAndAnswers;
 
@@ -110,5 +112,17 @@ public class FillBlank extends Question {
 				throw new IllegalArgumentException(blank + " is not a substring of " + question);
 			}
 		}
+	}
+	
+	
+	/**
+	 * @return a representation of the object as a Map<String, Object>
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(ANSWERS, blanksAndAnswers);
+		return result;
 	}
 }

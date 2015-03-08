@@ -2,6 +2,7 @@ package com.quizzes;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -758,6 +759,9 @@ public class Quiz implements Constants {
 	}
 	
 	
+	/**
+	 * @return a JSON representation of the Quiz.
+	 */
 	public String toJson() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put(QUIZ_NAME, name);
@@ -767,19 +771,17 @@ public class Quiz implements Constants {
 		result.put(IS_RANDOM, isRandom());
 		result.put(IS_ONE_PAGE, isOnePage());
 		result.put(IS_IMMEDIATE, isImmediate());
-		List<Object> questionList = new ArrayList<Object>();
+		List<Map<String, Object>> questionList = new ArrayList<Map<String, Object>>();
 		
 		List<Question> questions = getQuestions();
 		for (Question question : questions) {
-			
+			questionList.add(question.toMap());
 		}
 		
 		if (isRandom()) {
-			// randomize quesionList
+			Collections.shuffle(questionList);
 		}
 		result.put(QUESTIONS, questionList);
-		
-		
 		return Json.getJsonString(result);
 	}
 	

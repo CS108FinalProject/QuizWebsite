@@ -1,10 +1,12 @@
 package com.quizzes;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.util.Constants;
 import com.util.Util;
 
-public class MultipleChoice extends Question {
+public class MultipleChoice extends Question implements Constants {
 	
 	Map<String, Boolean> options;
 
@@ -77,6 +79,18 @@ public class MultipleChoice extends Question {
 		}
 		
 		return options.get(option);
+	}
+	
+	
+	/**
+	 * @return a representation of the object as a Map<String, Object>
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(QUESTION, question);
+		result.put(ANSWERS, options);
+		return result;
 	}
 
 }
