@@ -105,9 +105,7 @@
             event.preventDefault();
 
             // clear local storage of any quizzes that might be pending
-            clearPendingQuiz();
 
-            templates.renderQuestionType();
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
@@ -120,16 +118,16 @@
                 alert("You must enter a password");
             } else {
 
+                // adds user information
                 quizMetaData = { name: quizName, description: description, isImmediate: isImmediate, 
-                                isRandom: isRandom, isSinglePage: isSinglePage };
-                var newQuiz = { quizMetaData: quizMetaData, questions: new Array() };
+                    isRandom: isRandom, isSinglePage: isSinglePage}
 
-                // will overwrite whatever is in pending quiz with this form
-                var pendingQuiz = getPendingQuiz();
-                pendingQuiz = newQuiz;
-                updatePendingQuiz(pendingQuiz);         
+                var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
+                
+                updatePendingQuiz(newQuiz);  
+                
+                // this will take the user to the question types page
                 $('#right-pane').html( templates.renderQuestionType() );
-
             }
 
         });
@@ -213,13 +211,28 @@
                         rightPane.innerHTML = templates.renderQuestionType();
                         break;
                 case "Create Question":
+
                         rightPane.innerHTML = templates.renderSubmissionForm();
                         break;
                 case "Add Another Quesiton":
                         rightPane.innerHTML = templates.renderQuestionType();
                         break;
                 case "Finish and Create Quiz":
-                        //rightPane.innerHTML = templates.renderQuizForm();
+                        var URL = "/QuizWebsite/CreateQuiz";
+                        var createdQuiz = getPendingQuiz();
+                        // $.ajax({
+                        //     url: URL,
+                        //     type: 'POST',
+                        //     async: true,
+                        //     dataType: 'json',
+                        //     data: { json: JSON.stringify(newQuiz)},
+                        //     contentType: 'application/x-www-form-urlencoded',
+
+                        //     success: function(data, textStatus, jqXHR) {
+                        //         console.log( data );
+                        //     }
+                        // });       
+                        // $('#right-pane').html( templates.renderQuestionType() );
                         break;
                 default:
                         // do nothing
