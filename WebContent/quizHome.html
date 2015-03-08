@@ -95,7 +95,7 @@
                     <label for="enter_answer">Enter Answer</label>
                     <input type="text" id="enter_answer">
                         
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Answer">
+                    <input type="button" id="add_fandb_blank_answer" class="btn" value="Add Answer">
                 </div>
                 <h3 id="add_answer_notifier"></h3>
                 <div class="cf" id="main_buttons">
@@ -108,12 +108,12 @@
 
         <!-- template to display MULTIPLE CHOICE QUESTION FORM in right pane -->
         <script type="text/x-handlebars-template" id="multiple-choice-template">
-            <form class="cf specifc_quiz_form" id="multi-response">
-                <h2>Create Multi-Response Question</h2>
+            <form class="cf specifc_quiz_form" id="multiple-choice">
+                <h2>Create Multiple Choice Question</h2>
 
                 <h3>Question</h3>
                 <div>
-                    <textarea rows="5" cols="40" id="question" name="description"
+                    <textarea rows="5" cols="40" id="mc_question" name="description"
                         placeholder="Enter question or statement"></textarea>
                 </div>
 
@@ -122,17 +122,17 @@
                 </div>
 
                 <div>
-                    <textarea rows="1" cols="40" id="response" name="description"
+                    <textarea rows="1" cols="40" id="mc_option" name="description"
                         placeholder="Enter Answer"></textarea>
                 </div>
 
                 <div>
-                    <label><input type="checkbox" id="multiplce_choice_answer" name="is_random" /> Is An Answer</label> 
+                    <label><input type="checkbox" id="is_mc_answer" name="is_random" /> Is An Answer</label> 
                 </div>
                 
                 <div>
 
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Option" /> 
+                    <input type="button" id="add_mc_option" class="btn" value="Add Option" /> 
                 </div>
                 
                 
