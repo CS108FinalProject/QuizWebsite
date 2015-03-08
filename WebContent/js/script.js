@@ -254,11 +254,81 @@
             }
         });
 
+        // Listen to MATCHING QUESTION
+        $('#right-pane').on('click', '#add_match_answer', function(event) {
+            event.preventDefault();
+            var type = "Matching";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question_header = $('#match_question_header').val();
+            var left_question = $('#match_question').val();
+            var right_answer = $('#match_answer').val();
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
+            } else {
+                addAnotherMatchPair(type, question_header, left_question, right_answer);
+            }
+        });
+
     });
+
+    function initializeMatchQuestionInfo(type, question_header, left_question, right_answer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question_header;
+
+        // possible answers to question
+        var matchingPairs = { };
+        matchingPairs[left_question] = right_answer;
+        questionInfo.matchingPairs = matchingPairs;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#match_question').val('');
+        $('#match_answer').val('');
+        $('#add_match_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherMatchPair(type, question_header, left_question, right_answer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+        
+        if ( questionInfo.question == question_header ) {
+            questionInfo.question = question_header;
+
+            var matchingPairs = questionInfo.matchingPairs;
+            matchingPairs[left_question] = right_answer;    // overwrite the contents
+            questionInfo.matchingPairs = matchingPairs;
+
+            // clear input
+            $('#match_question').val('');
+            $('#match_answer').val('');
+            $('#add_match_answer').prop('value', 'Add Another Pair');
+
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
+        }
+    }
     
     /******************MULTI RESPONSE HELPERS******************************/
     function initializeMRQuestionInfo(type, question, answer, isOrdered) {
-                // record the questions main information because it's the first time
+        // record the questions main information because it's the first time
         var questionInfo = {};
         questionInfo.type = type;
         questionInfo.question = question;

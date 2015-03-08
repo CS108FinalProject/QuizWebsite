@@ -218,14 +218,19 @@
             <form class="cf specifc_quiz_form" id="matching">
                 <h2>Create Matching Question</h2>
 
+                <div>
+                    <textarea rows="1" cols="40" id="match_question_header" name="description"
+                        placeholder="Enter title to identify question"></textarea>
+                </div>
+                
                 <div class="cf">
                     <textarea rows="5" cols="40" class="matching" name="description"
-                        placeholder="Enter question or Leave Empty is No Question"></textarea>
+                        id="match_question"placeholder="Enter question or Leave Empty if No Question"></textarea>
                     <textarea rows="5" cols="40" class="matching" name="description"
-                        placeholder="Enter a comma seperated list of Answers.(Ex. United States, Canada, Japan) Or leave empty if no answer"></textarea> 
+                        id="match_answer" placeholder="Enter Answer to Match"></textarea> 
                 </div>
                 <div class="cf">
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Question" />
+                    <input type="button" id="add_match_answer" class="btn" value="Add Question" />
                 </div>
                 
                 <div class"cf">
