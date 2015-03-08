@@ -46,7 +46,7 @@ public interface Constants {
 	public static final String HISTORY = "History";
 	public static final String SCORE = "score";
 	public static final String ELAPSED_TIME = "elapsed_time";
-
+	
 	// Response table
 	public static final String RESPONSE = "Response";
 	public static final String QUESTION = "question";
@@ -113,7 +113,8 @@ public interface Constants {
 	public static final String DB_RAW_LONG = "bigint(8)";
 	public static final String DB_RAW_BOOLEAN = "tinyint(4)";
 	
-	// Status response.
+	// Json.
 	public static final String SUCCESS = "success";
 	public static final String ERROR_MESSAGE = "errorMessage";
+	public static final String QUESTIONS = "questions";
 }
