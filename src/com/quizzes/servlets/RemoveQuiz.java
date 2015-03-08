@@ -47,7 +47,7 @@ public class RemoveQuiz extends HttpServlet {
 		 //Will receive the quizName as an input
 		String quizName = (String)request.getParameter("quizName");
 		
-		//Only proceed to remove who's name exists 
+		//Only proceed to remove a quiz who's name exists 
 		if (QuizManager.quizNameInUse(quizName)) {
 			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
 			QuizManager.removeQuiz(qz_to_remove);
