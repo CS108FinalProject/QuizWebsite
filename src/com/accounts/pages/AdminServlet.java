@@ -1,6 +1,7 @@
 
 package com.accounts.pages;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.accounts.AccountManager;
 
 import java.util.*;
+
 import com.accounts.*;
 /**
  * Servlet implementation class adminServlet
@@ -67,6 +69,7 @@ public class AdminServlet extends HttpServlet {
 				request.setAttribute("promote_acct", null);
 			}
 		}
+		
 		//Send back to the user homepage regardless
 		if (AccountManager.getAccount(user_id).isAdmin()) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
