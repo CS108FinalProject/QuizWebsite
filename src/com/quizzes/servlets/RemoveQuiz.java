@@ -16,6 +16,7 @@ import com.util.*;
 
 /**
  * Servlet implementation class RemoveQuiz
+ *   Author: Kelsey Young Stanford University '15
  */
 @WebServlet("/RemoveQuiz")
 public class RemoveQuiz extends HttpServlet {
@@ -23,6 +24,7 @@ public class RemoveQuiz extends HttpServlet {
        
     /**
      * @see HttpServlet#HttpServlet()
+     * 
      */
     public RemoveQuiz() {
         super();
@@ -52,8 +54,8 @@ public class RemoveQuiz extends HttpServlet {
 			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
 			QuizManager.removeQuiz(qz_to_remove);
 			Util.addStatus(true, "", response_map);
-			} else {
-				Util.addStatus(false, "The quiz name does not exist.", response_map);		
+		} else {
+			Util.addStatus(false, "The quiz name does not exist.", response_map);		
 		}
 		
 		//Turn the response_map into a "json" string

@@ -50,6 +50,8 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 response.setContentType("application/json");
+
 		//Pull old_quiz_data
 		String old_quiz_data = (String)request.getParameter("old_quiz_json");
 		Map<String, Object> map_old_quiz = Json.parseJsonObject(old_quiz_data);
