@@ -105,6 +105,7 @@
             event.preventDefault();
             // clear local storage of any quizzes that might be pending
             clearPendingQuiz();
+            var creator = getUrlVar("user");
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
@@ -118,7 +119,7 @@
             } else {
 
                 // adds user information
-                quizMetaData = { name: quizName, creator: "Eliezer", date: "sllss", description: description, isImmediate: isImmediate, 
+                quizMetaData = { name: quizName, creator: creator, date: "sllss", description: description, isImmediate: isImmediate, 
                     isRandom: isRandom, isOnePage: isOnePage}
 
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
@@ -256,6 +257,18 @@
         });
 
     });
+
+    // Utiliity Functions
+    // Given a query string "?to=email&why=because&first=John&Last=smith"
+    // getUrlVar("to")  will return "email"
+    // getUrlVar("last") will return "smith"
+     
+    // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
+    // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+    function getUrlVar(key){
+        var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+        return result && unescape(result[1]) || ""; 
+    }
 
     function initializeMatchQuestionInfo(type, question_header, left_question, right_answer) {
         // record the questions main information because it's the first time
@@ -688,7 +701,7 @@
                         type: 'POST',
                         async: true,
                         dataType: 'json',
-                        data: { json: JSON.stringify(newQuiz)},
+                        data: { json: JSON.stringify(createdQuiz) },
                         contentType: 'application/x-www-form-urlencoded',
 
                         success: function(data, textStatus, jqXHR) {
