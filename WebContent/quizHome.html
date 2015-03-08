@@ -18,7 +18,7 @@
             <div id="navigation">
                 <div id="interactors">
                     <!-- buttons and search -->
-                    <a href="#" class="btn" id="new_quiz_button">New Quiz</a>
+                    <a class="btn" id="new_quiz_button">New Quiz</a>
                     <input type="text" name="search" id="search"
                         placeholder="Search questions..." />
                 </div>
@@ -95,7 +95,7 @@
                     <label for="enter_answer">Enter Answer</label>
                     <input type="text" id="enter_answer">
                         
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Answer">
+                    <input type="button" id="add_fandb_blank_answer" class="btn" value="Add Answer">
                 </div>
                 <h3 id="add_answer_notifier"></h3>
                 <div class="cf" id="main_buttons">
@@ -108,12 +108,12 @@
 
         <!-- template to display MULTIPLE CHOICE QUESTION FORM in right pane -->
         <script type="text/x-handlebars-template" id="multiple-choice-template">
-            <form class="cf specifc_quiz_form" id="multi-response">
-                <h2>Create Multi-Response Question</h2>
+            <form class="cf specifc_quiz_form" id="multiple-choice">
+                <h2>Create Multiple Choice Question</h2>
 
                 <h3>Question</h3>
                 <div>
-                    <textarea rows="5" cols="40" id="question" name="description"
+                    <textarea rows="5" cols="40" id="mc_question" name="description"
                         placeholder="Enter question or statement"></textarea>
                 </div>
 
@@ -122,17 +122,16 @@
                 </div>
 
                 <div>
-                    <textarea rows="1" cols="40" id="response" name="description"
+                    <textarea rows="1" cols="40" id="mc_option" name="description"
                         placeholder="Enter Answer"></textarea>
                 </div>
 
                 <div>
-                    <label><input type="checkbox" id="multiplce_choice_answer" name="is_random" /> Is An Answer</label> 
+                    <label><input type="checkbox" id="is_mc_answer" name="is_random" /> Is An Answer</label> 
                 </div>
                 
                 <div>
-
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Option" /> 
+                    <input type="button" id="add_mc_option" class="btn" value="Add Option" /> 
                 </div>
                 
                 
@@ -150,22 +149,25 @@
             <form class="cf specifc_quiz_form" id="picture">
                 <h2>Create Picture Question</h2>
 
+                <h3>Picture URL</h3>
+                <div>
+                    <textarea rows="1" cols="40" name="description"
+                        id="pic_url" placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
+                </div>
+
                 <h3>Question</h3>
                 <div>
                     <textarea rows="5" cols="40" name="description"
-                        placeholder="Enter question"></textarea>
+                        id="pic_question" placeholder="Enter question"></textarea>
                 </div>
 
                 <h3>Answer</h3>
                 <div>
                     <textarea rows="5" cols="40" name="description"
-                        placeholder="Enter Answer"></textarea>
+                        id="pic_answer" placeholder="Enter Answer"></textarea>
                 </div>
-                
-                <h3>Picture URL</h3>
                 <div>
-                    <textarea rows="1" cols="40" name="description"
-                        placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
+                    <input type="button" id="add_p_answer" class="btn" value="Add Answer" /> 
                 </div>
                 
                 <div class="cf" id="main_buttons">
@@ -183,22 +185,22 @@
 
                 <h3>Question</h3>
                 <div>
-                    <textarea rows="5" cols="40" id="question" name="description"
-                        placeholder="Enter question or statement"></textarea>
+                    <textarea rows="5" cols="40" id="mr_question" name="description"
+                         placeholder="Enter question or statement"></textarea>
                 </div>
 
                 <div>
                 <h3>Answer</h3>
-                <input type="checkbox" name="is_random" />  Keep Answers in Order<br/>
+                <input type="checkbox" name="ordered" id="mr_in_order" />  Keep Answers in Order<br/>
                 </div>
 
                 <div>
-                    <textarea rows="1" cols="40" id="response" name="description"
+                    <textarea rows="1" cols="40" id="mr_answer" name="description"
                         placeholder="Enter Answer"></textarea>
                 </div>
 
                 <div>
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Answer" /> 
+                    <input type="button" id="add_mr_answer" class="btn" value="Add Answer" /> 
                 </div>
                 
                 
@@ -216,14 +218,19 @@
             <form class="cf specifc_quiz_form" id="matching">
                 <h2>Create Matching Question</h2>
 
+                <div>
+                    <textarea rows="1" cols="40" id="match_question_header" name="description"
+                        placeholder="Enter title to identify question"></textarea>
+                </div>
+
                 <div class="cf">
                     <textarea rows="5" cols="40" class="matching" name="description"
-                        placeholder="Enter question or Leave Empty is No Question"></textarea>
+                        id="match_question"placeholder="Enter question or Leave Empty if No Question"></textarea>
                     <textarea rows="5" cols="40" class="matching" name="description"
-                        placeholder="Enter a comma seperated list of Answers.(Ex. United States, Canada, Japan) Or leave empty if no answer"></textarea> 
+                        id="match_answer" placeholder="Enter Answer to Match"></textarea> 
                 </div>
                 <div class="cf">
-                    <input type="button" id="add_blank_answer" class="btn" value="Add Question" />
+                    <input type="button" id="add_match_answer" class="btn" value="Add Question" />
                 </div>
                 
                 <div class"cf">
@@ -241,15 +248,19 @@
 
                 <h3>Question</h3>
                 <div>
-                    <textarea rows="5" cols="40" id="question" name="description"
-                        placeholder="Enter question or statement"></textarea>
+                    <textarea rows="5" cols="40"  name="description"
+                        id="res_question" placeholder="Enter question or statement"></textarea>
                 </div>
 
                 <h3>Answer</h3>
                 
                 <div>
-                    <textarea rows="5" cols="40" id="response" name="description"
-                        placeholder="Enter Answer"></textarea>
+                    <textarea rows="3" cols="40"  name="description"
+                        id="res_answer" placeholder="Enter Answer"></textarea>
+                </div>
+
+                <div>
+                    <input type="button" id="add_res_answer" class="btn" value="Add Answer" /> 
                 </div>
 
                 <div class="cf" id="main_buttons">

@@ -11,25 +11,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.accounts.Account;
-import com.accounts.AccountManager;
-import com.quizzes.History;
-import com.quizzes.Record;
+import com.quizzes.Quiz;
+import com.quizzes.QuizManager;
 import com.util.Constants;
 import com.util.Json;
 import com.util.Util;
 
 /**
- * Servlet implementation class AddRecord
+ * Servlet implementation class EditQuizStub
  */
-@WebServlet("/AddRecord")
-public class AddRecord extends HttpServlet implements Constants {
+@WebServlet("/EditQuizStub")
+public class EditQuizStub extends HttpServlet implements Constants {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddRecord() {
+    public EditQuizStub() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,34 +42,40 @@ public class AddRecord extends HttpServlet implements Constants {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean success = true;
 		String errorMessage = "";
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
-			// Get JSON string and build a Map from it.
-			String jsonString = (String)request.getParameter(JSON);
-			Util.validateString(jsonString);
+			// Get original quiz name.
+			String originalQuizName = (String)request.getParameter(ORIGINAL_QUIZ_NAME);
+			Util.validateString(originalQuizName);
 			
-			Map<String, Object> jsonObject = Json.parseJsonObject(jsonString);
+			// Get original Quiz (makes sure the quiz exists).
+			Quiz original = QuizManager.getQuiz(originalQuizName);
+			
+			// Get quiz json and build map.
+			String modifiedQuizJson = (String)request.getParameter(MODIFIED_QUIZ_JSON);
+			Map<String, Object> jsonObject = Json.parseJsonObject(modifiedQuizJson);
 			Util.validateObject(jsonObject);
 			
-			String quizName = (String) jsonObject.get(QUIZ_NAME);
-			Util.validateString(quizName);
+			// Get modified quiz name.
+			Map<String, Object> modifiedQuiz = (Map<String, Object>)jsonObject.get(QUIZ_METADATA);
+			String modifiedQuizName = (String) modifiedQuiz.get(QUIZ_NAME);
 			
-			String username = (String) jsonObject.get(USERNAME);
-			Util.validateString(username);
-			Account userName = AccountManager.getAccount(username);
+			// Ensure modified name not already in use.
+			if (!originalQuizName.equals(modifiedQuizName) 
+					&& QuizManager.quizNameInUse(modifiedQuizName)) {
+				
+				throw new IllegalArgumentException(modifiedQuizName + " is already in use.");
+			}
 			
-			double score = (Double) jsonObject.get(SCORE);
-			String date = (String) jsonObject.get(DATE);
-			Util.validateString(date);
+			// Remove original quiz and create modified one.
+			original.removeQuiz();
+			QuizManager.createQuiz(jsonObject);
 			
-			double elapsedTime = (Double) jsonObject.get(ELAPSED_TIME);
-			
-			Record record = new Record(quizName, userName, score, date, elapsedTime);
-			History.addRecord(record);
 			
 		} catch (Exception e) {
 			success = false;
@@ -85,5 +89,4 @@ public class AddRecord extends HttpServlet implements Constants {
 		PrintWriter out = response.getWriter();
 		out.write(Json.getJsonString(result));
 	}
-
 }

@@ -103,55 +103,37 @@
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
             event.preventDefault();
-
             // clear local storage of any quizzes that might be pending
-
+            clearPendingQuiz();
+            var creator = getUrlVar("user");
             var quizName = $('#quiz_name').val();
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
             var isRandom = $('#quiz_random').is(':checked');
             var isOnePage = $('#quiz_single_page').is(':checked');
 
-            // if ( (quizName === null || quizName === "")) {
-            //     alert("You must enter a quiz name");
-            // } else if ( (description === null || description == "") ) {
-            //     alert("You must enter a password");
-            // } else {
+            if ( (quizName === null || quizName === "")) {
+                alert("You must enter a quiz name");
+            } else if ( (description === null || description == "") ) {
+                alert("You must enter a password");
+            } else {
 
                 // adds user information
-                quizMetaData = { name: quizName, creator: "Eliezer", date: "sllss", description: description, isImmediate: isImmediate, 
+                quizMetaData = { name: quizName, creator: creator, date: "sllss", description: description, isImmediate: isImmediate, 
                     isRandom: isRandom, isOnePage: isOnePage}
 
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
                 
                 updatePendingQuiz(newQuiz);  
-
-                        // // TEST AJAX
-
-                        // var URL = "/QuizWebsite/CreateQuiz";
-                        // var createdQuiz = getPendingQuiz();
-                        // console.log( createdQuiz );
-                        // $.ajax({
-                        //     url: URL,
-                        //     type: 'POST',
-                        //     async: true,
-                        //     dataType: 'json',
-                        //     data: { json: JSON.stringify(newQuiz)},
-                        //     contentType: 'application/x-www-form-urlencoded',
-
-                        //     success: function(data, textStatus, jqXHR) {
-                        //         console.log( data );
-                        //     }
-                        // }); 
                 
                 // this will take the user to the question types page
                 $('#right-pane').html( templates.renderQuestionType() );
-            //}
+            }
 
         });
 
         // Listen to FILL IN THE BLANK QUESTION
-        $('#right-pane').on('click', '#add_blank_answer', function(event) {
+        $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
             event.preventDefault();
             var type = "Fill In The Blank";
             var quiz = getPendingQuiz();
@@ -163,37 +145,402 @@
             var blank = $('#enter_blank').val();
 
             if ( typeof questionInfo === 'undefined' ) {
-                initializeQuestionInfo(type, question, answer, blank);
+                initializeFITBQuestionInfo(type, question, answer, blank);
             } else {
-                addAnotherFandBAnswer(question, answer, blank);
+                addAnotherFandBAnswer(type, question, answer, blank);
             }
-
-            // console.log( questionInfo.question );
-            // console.log( questionInfo.question == null );
-            // if ( questionInfo.question == null ) {
-            //     // we need to parametrize question info
-            //     var answers = new Array();
-            //     var blanksAndAnswers = {};
-            //     blanksAndAnswers.blank = blank;
-
-            //     answers.push(answer);
-            //     blanksAndAnswers.answers = answers;
-            //     // place first answer into array
-            //     // make sure the answer is not a duplicate
-            //     questionInfo.question = question;
-            //     questionInfo["blanksAndAnswers"] = blanksAndAnswers;
-            //     questions.push( questionInfo );
-            //     quiz.questions = questions;
-            //     updatePendingQuiz(quiz);
-            //     console.log( getPendingQuiz() );
-            
-            // "Map" that contains a blank and set of answers
         });
+
+        // Listen to MULTIPLE CHOICE QUESTION
+        $('#right-pane').on('click', '#add_mc_option', function(event) {
+            event.preventDefault();
+            var type = "Multiple Choice";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#mc_question').val();
+            var option = $('#mc_option').val();
+            var isAnswer = $('#is_mc_answer').is(':checked');
+
+            console.log( question + " " + isAnswer + " " + option);
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMCQuestionInfo(type, question, option, isAnswer);
+            } else {
+                addAnotherMCOption(type, question, option, isAnswer);
+            }
+        });
+
+        // Listen to PICTURE QUESTION
+        $('#right-pane').on('click', '#add_p_answer', function(event) {
+            event.preventDefault();
+            var type = "Picture";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#pic_question').val();
+            var answer = $('#pic_answer').val();
+            var pictureURL = $('#pic_url').val();
+
+            console.log( question + " " + answer + " " + pictureURL );
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializePicQuestionInfo(type, question, answer, pictureURL);
+            } else {
+                addAnotherPicAnswer(type, question, answer, pictureURL);
+            }
+        });
+
+        // Listen to RESPONSE QUESTION
+        $('#right-pane').on('click', '#add_res_answer', function(event) {
+            event.preventDefault();
+            var type = "Response";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#res_question').val();
+            var answer = $('#res_answer').val();
+
+            console.log( question + " " + answer  );
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeResQuestionInfo(type, question, answer);
+            } else {
+                addAnotherResAnswer(type, question, answer);
+            }
+        });
+
+        // Listen to MULTI RESPONSE QUESTION
+        $('#right-pane').on('click', '#add_mr_answer', function(event) {
+            event.preventDefault();
+            var type = "Multi Response";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question = $('#mr_question').val();
+            var answer = $('#mr_answer').val();
+            var isOrdered = $('#mr_in_order').is(':checked');
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMRQuestionInfo(type, question, answer, isOrdered);
+            } else {
+                addAnotherMRAnswer(type, question, answer, isOrdered);
+            }
+        });
+
+        // Listen to MATCHING QUESTION
+        $('#right-pane').on('click', '#add_match_answer', function(event) {
+            event.preventDefault();
+            var type = "Matching";
+            var quiz = getPendingQuiz();
+            var questions = quiz.questions;
+            var questionInfo = questions[questions.length - 1];
+            // a question, answer and a blank obtained from the client interface
+            
+            var question_header = $('#match_question_header').val();
+            var left_question = $('#match_question').val();
+            var right_answer = $('#match_answer').val();
+
+            if ( typeof questionInfo === 'undefined' ) {
+                initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
+            } else {
+                addAnotherMatchPair(type, question_header, left_question, right_answer);
+            }
+        });
+
     });
+
+    // Utiliity Functions
+    // Given a query string "?to=email&why=because&first=John&Last=smith"
+    // getUrlVar("to")  will return "email"
+    // getUrlVar("last") will return "smith"
+     
+    // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
+    // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+    function getUrlVar(key){
+        var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+        return result && unescape(result[1]) || ""; 
+    }
+
+    function initializeMatchQuestionInfo(type, question_header, left_question, right_answer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question_header;
+
+        // possible answers to question
+        var matchingPairs = { };
+        matchingPairs[left_question] = right_answer;
+        questionInfo.matchingPairs = matchingPairs;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        clearLastSelectedQuestionType();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#match_question').val('');
+        $('#match_answer').val('');
+        $('#add_match_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherMatchPair(type, question_header, left_question, right_answer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+        
+        if ( questionInfo.question == question_header ) {
+            questionInfo.question = question_header;
+
+            var matchingPairs = questionInfo.matchingPairs;
+            matchingPairs[left_question] = right_answer;    // overwrite the contents
+            questionInfo.matchingPairs = matchingPairs;
+
+            // clear input
+            $('#match_question').val('');
+            $('#match_answer').val('');
+            $('#add_match_answer').prop('value', 'Add Another Pair');
+
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
+        }
+    }
     
+    /******************MULTI RESPONSE HELPERS******************************/
+    function initializeMRQuestionInfo(type, question, answer, isOrdered) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+        questionInfo.isOrdered = isOrdered;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        clearLastSelectedQuestionType();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#mr_answer').val('');
+        $('#add_mr_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherMRAnswer(type, question, answer, isOrdered) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question && (questionInfo.isOrdered === isOrdered) ) {
+            questionInfo.question = question;
+            console.log("hello");
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#mr_answer').val('');
+                $('#add_mr_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#mr_answer').val('');
+                $('#add_mr_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeMRQuestionInfo(type, question, answer, isOrdered);
+        }
+    }
+    /******************RESPONSE HELPERS******************************/
+    function initializeResQuestionInfo(type, question, answer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        clearLastSelectedQuestionType();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#res_answer').val('');
+        $('#add_res_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherResAnswer(type, question, answer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question ) {
+            questionInfo.question = question;
+        
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#res_answer').val('');
+                $('#add_res_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#res_answer').val('');
+                $('#add_res_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializeResQuestionInfo(type, question, answer);
+        }
+    }
+    
+    /******************PICTURE QUESTION HELPERS******************************/
+    function initializePicQuestionInfo(type, question, answer, pictureURL) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // possible answers to question
+        var answers = new Array(answer);
+        questionInfo.answers = answers
+        questionInfo.pictureURL = pictureURL;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        clearLastSelectedQuestionType();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+        console.log( quiz.questions );
+        updatePendingQuiz(quiz);
+        $('#pic_answer').val('');
+        $('#add_p_answer').prop('value', 'Add Another Answer');
+    }
+    function addAnotherPicAnswer(type, question, answer, pictureURL) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question === question && (questionInfo.pictureURL === pictureURL) ) {
+            questionInfo.question = question;
+        
+            // listen to add more button
+            var answers = questionInfo.answers;
+            if ( answers.indexOf(answer) === -1 ) {
+                var answers = questionInfo.answers;
+                answers.push(answer);
+                questionInfo.answers = answers;
+                $('#pic_answer').val('');
+                $('#add_p_answer').prop('value', 'Add Another Answer');
+            } else {
+                $('#pic_answer').val('');
+                $('#add_p_answer').prop('value', 'Add Another Answer');
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
+        } else {
+            initializePicQuestionInfo(type, question, answer, pictureURL);
+        }
+    }
+    /******************MULTIPLE CHOICE HELPERS******************************/
+    function initializeMCQuestionInfo(type, question, option, isAnswer) {
+        // record the questions main information because it's the first time
+        var questionInfo = {};
+        questionInfo.type = type;
+        questionInfo.question = question;
+
+        // object for possible options
+        var options = {};
+        options[option] = isAnswer;
+        questionInfo.options = options;
+
+        // store the information in local storage
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        //questions.pop();
+        questions.push( questionInfo );
+        quiz.questions = questions;
+
+        updatePendingQuiz(quiz);
+        $('#mc_option').val('');
+        $('#is_mc_answer').attr('checked', false);
+    }
+
+    function addAnotherMCOption(type, question, option, isAnswer) {
+        // get information from interface
+        var quiz = getPendingQuiz();
+        var questions = quiz.questions;
+        var questionInfo = questions.pop();
+
+        if ( questionInfo.question == question ) {
+            questionInfo.question = question;
+        
+            // if questions is changed
+
+            // listen to add more button
+            var options = questionInfo.options;
+            if ( !(option in options) ) {
+                var options = questionInfo.options;
+                options[option] = isAnswer;
+                questionInfo.options = options
+                $('#mc_option').val('');
+                $('#is_mc_answer').attr('checked', false);
+            } else {
+                $('#mc_option').val('');
+                $('#is_mc_answer').attr('checked', false);
+            }
+            
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            updatePendingQuiz(quiz);
+        } else {
+            clearLastSelectedQuestionType();
+            initializeMCQuestionInfo(type, question, option, isAnswer);
+        }
+    }
+    
+    /******************FILL IN THE BLANK HELPERS****************************/
+
     // If we enter the question form for the first time
     // we want to initialize our questions array
-    function initializeQuestionInfo(type, question, answer, blank) {
+    function initializeFITBQuestionInfo(type, question, answer, blank) {
 
         // record main question information such as type and question string
         var questionInfo = {};
@@ -208,44 +555,58 @@
         // finally store information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
+        //questions.pop();
         questions.push( questionInfo );
         quiz.questions = questions;
 
-        console.log( quiz );
+        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#enter_answer').val('');
+        $('#add_fandb_blank_answer').prop('value', 'Add Another Answer');
     }
 
-    function addAnotherFandBAnswer(question, answer, blank ) {
+    function addAnotherFandBAnswer(type, question, answer, blank ) {
         
         // get information from interface
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        var questionInfo = questions[questions.length - 1];
-        questionInfo.question = question;
+        var questionInfo = questions.pop();
+        
+        if ( questionInfo.question == question ) {
+            questionInfo.question = question;
 
-        var blanksAndAnswers = questionInfo.blanksAndAnswers;
-        if ( blank in blanksAndAnswers ) {
-            var answers = blanksAndAnswers[blank];
-            answers.push( answer );
-            blanksAndAnswers[blank] = answers;
-            questionInfo.blanksAndAnswers = blanksAndAnswers;
+            var blanksAndAnswers = questionInfo.blanksAndAnswers;
+            if ( blank in blanksAndAnswers ) {
+                var answers = blanksAndAnswers[blank];
+                if ( answers.indexOf(answer) === -1 ) {
+                    answers.push( answer );
+                    blanksAndAnswers[blank] = answers;
+                    questionInfo.blanksAndAnswers = blanksAndAnswers;
+                }
 
-            // clear input
-            $('#enter_answer').val('');
+                // clear input
+                $('#enter_answer').val('');
+                $('#add_fandb_blank_answer').prop('value', 'Add Another Answer')
+            } else {
+                var bAndA = questionInfo.blanksAndAnswers;
+                bAndA[blank] = new Array(answer);
+                questionInfo.blanksAndAnswers = bAndA;
+                $('#enter_answer').val('');
+                $('#add_fandb_blank_answer').prop('value', 'Add Another Answer')
+            }
+
+            questions.push( questionInfo );
+            quiz.questions = questions;
+            console.log( quiz.questions );
+            updatePendingQuiz(quiz);
         } else {
-            var bAndA = questionInfo.blanksAndAnswers;
-            bAndA[blank] = new Array(answer);
-            questionInfo.blanksAndAnswers = bAndA;
-            $('#enter_answer').val('');
+            clearLastSelectedQuestionType();
+            initializeFITBQuestionInfo(type, question, answer, blank);
         }
-
-        console.log( questionInfo.blanksAndAnswers );
-        questions.push( questionInfo );
-        quiz.questions = questions;
-        updatePendingQuiz(quiz);
     }
     
+
+
 
     // Helper which will add the questions type 
     // based on a click on the question types page
@@ -287,32 +648,21 @@
             var questions = quiz.questions;
             switch ( event.target.value ) {
                 case "Fill In The Blank":
-                    console.log( getPendingQuiz() );
                     rightPane.innerHTML = templates.renderFillInTheBlankQuestion();
                     break;
                 case "Multiple Choice":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Multiple Choice");
                     rightPane.innerHTML = templates.renderMultipleChoiceQuestion();
                     break;
                 case "Picture":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Picture");
                     rightPane.innerHTML = templates.renderPictureQuestion();
                     break;
                 case "Multi-Response":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Multi-Response");
                     rightPane.innerHTML = templates.renderMultiResponseQuestion();
                     break;
                 case "Matching":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Matching");
                     rightPane.innerHTML = templates.renderMatchingQuestion();
                     break;
                 case "Response":
-                    console.log( getPendingQuiz() );
-                    addQuestionInfo("Response");
                     rightPane.innerHTML = templates.renderResponseQuestion();
                     break;
                 default: 
@@ -329,14 +679,36 @@
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
                 case "Create Question":
-                    // need to add question to questions array 
                     rightPane.innerHTML = templates.renderSubmissionForm();
                     break;
                 case "Add Another Quesiton":
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
-                case "Finish and Create Quiz":      
-                    // $('#right-pane').html( templates.renderQuestionType() );
+                case "Finish and Create Quiz":  
+                    var date = new Date();
+                    console.log( date );
+                    var quiz = getPendingQuiz();
+                    var quizMetaData = quiz.quizMetaData;
+                    quizMetaData.date = date;
+                    quiz.quizMetaData = quizMetaData;
+                    updatePendingQuiz(quiz);    
+
+                    var URL = "/QuizWebsite/CreateQuiz";
+                    var createdQuiz = getPendingQuiz();
+                    console.log( createdQuiz );
+                    $.ajax({
+                        url: URL,
+                        type: 'POST',
+                        async: true,
+                        dataType: 'json',
+                        data: { json: JSON.stringify(createdQuiz) },
+                        contentType: 'application/x-www-form-urlencoded',
+
+                        success: function(data, textStatus, jqXHR) {
+                            console.log( data );
+                        }
+                    }); 
+
                     break;
                 default:
                         // do nothing

@@ -55,7 +55,7 @@ String sel_type = (String)request.getParameter("choice");
 
       </li>
       <li><a href = <%="\"searchFriends.jsp?id="+name+"\""%>>Lookup Users</a></li>
-      <li><a href = "#">Quizzes</a></li> 
+      <li><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></li> 
       <li><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></li>
     </ul>
   </nav>
