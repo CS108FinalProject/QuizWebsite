@@ -1,5 +1,8 @@
 package com.quizzes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.accounts.Account;
 import com.util.Constants;
 import com.util.Util;
@@ -80,5 +83,19 @@ public class Record implements Constants {
 	 */
 	public double getElapsedTime() {
 		return elapsedTime;
+	}
+	
+	
+	/**
+	 * @return a Map<String, Object> representation of the Record.
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, quizName);
+		result.put(USERNAME, user.getUserName());
+		result.put(SCORE, score);
+		result.put(DATE, date);
+		result.put(ELAPSED_TIME, elapsedTime);
+		return result;
 	}
 }

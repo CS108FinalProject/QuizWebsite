@@ -360,7 +360,7 @@ public class Quiz implements Constants {
 	 * @param numRecords number of top scorers to return. (all if numRecords = 0)
 	 * @return a list of top scorers as Record Objects.
 	 */
-	public List<Record> getTopScorers(int numRecords) {
+	public List<Record> getTopPerformers(int numRecords) {
 		if (numRecords < 0) {
 			throw new IllegalArgumentException(numRecords + " cannot be less than 0");
 		}
@@ -369,7 +369,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getSortedRows(HISTORY, QUIZ_NAME, 
 				name, SCORE, true, ELAPSED_TIME, false);
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {
@@ -414,7 +414,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name, 
 				USERNAME, user.getUserName());
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {
@@ -436,8 +436,6 @@ public class Quiz implements Constants {
 						(Double) row.get(ELAPSED_TIME)));
 			}
 		}
-		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	

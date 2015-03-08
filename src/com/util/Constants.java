@@ -124,8 +124,14 @@ public interface Constants {
 	
 	// Request types
 	public static final String REQUEST = "request";
-	public static final String NAME = "name";
 	public static final String QUIZ = "quiz";
-	
+	public static final String PAST_USER_PERFORMANCE = "pastUserPerformance";
+	public static final String NUM_RECORDS = "numRecords";
+	public static final String DATA = "data";
+	public static final String TOP_PERFORMERS = "topPerformers";
+	public static final String TOP_PERFORMERS_WITHIN_TIME_PERIOD = "topPerformersWithinTimePeriod";
+	public static final String HOURS = "hours";
+	public static final String RECENT_PERFORMANCE = "recentPerformance";
+	public static final String AVG_PERFORMANCE = "avgPerformance";
 	
 }

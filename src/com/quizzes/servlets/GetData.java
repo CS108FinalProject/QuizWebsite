@@ -2,7 +2,9 @@ package com.quizzes.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,8 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accounts.Account;
+import com.accounts.AccountManager;
 import com.quizzes.Quiz;
 import com.quizzes.QuizManager;
+import com.quizzes.Record;
 import com.util.Constants;
 import com.util.Json;
 import com.util.Util;
@@ -43,7 +48,7 @@ public class GetData extends HttpServlet implements Constants {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean success = true;
 		String errorMessage = "";
-		Map<String, Object> result = null;
+		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
 			// Get JSON string and build a Map from it.
@@ -53,27 +58,123 @@ public class GetData extends HttpServlet implements Constants {
 			Map<String, Object> jsonObject = Json.parseJsonObject(jsonString);
 			Util.validateObject(jsonObject);
 			
-			// Get request type and name.
+			// Get and validate type for requestMap
+			if (!(jsonObject.get(REQUEST) instanceof Map<?, ?>)) {
+				throw new RuntimeException("Expecting type Map but got " 
+						+ jsonObject.get(REQUEST).getClass());
+			}
+			
 			Map<String, Object> requestMap = (Map<String, Object>) jsonObject.get(REQUEST);
 			Util.validateObject(requestMap);
 			
-			// Validate type for requestMap
-			if (!(requestMap instanceof Map<?, ?>)) {
-				throw new RuntimeException("For " + requestMap + " expecting type Map but got " 
-						+ requestMap.getClass());
-			}
-			
+			// Get request type
 			String requestType = (String) requestMap.get(TYPE);
 			Util.validateString(requestType);
-			String objectName = (String) requestMap.get(NAME);
-			Util.validateString(objectName);
 			
 			// Determine request type.
 			
+			
 			// Quiz.
 			if (requestType.equals(QUIZ)) {
-				Quiz quiz = QuizManager.getQuiz(objectName);
-				result = quiz.toMap();
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				result.put(DATA, quiz.toMap());
+				
+				
+			// Past User Performance
+			} else if (requestType.equals(PAST_USER_PERFORMANCE)) {
+				// Get Quiz.
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				
+				//Get User.
+				String userName = (String) requestMap.get(USERNAME);
+				Util.validateString(userName);
+				Account user = AccountManager.getAccount(userName);
+				
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				List<Record> records = quiz.getPastUserPerformance(user, numRecords);
+				List<Object> recordResultList = new ArrayList<Object>();
+				
+				// Get result.
+				for (Record record : records) {
+					recordResultList.add(record.toMap());
+				}
+				result.put(DATA, recordResultList);
+				
+				
+			// Top performers of all time
+			} else if (requestType.equals(TOP_PERFORMERS)) {
+				// Get Quiz.
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				List<Record> highest = quiz.getTopPerformers(numRecords);
+				List<Object> recordResultList = new ArrayList<Object>();
+				for (Record record : highest) {
+					recordResultList.add(record.toMap());
+				}
+				result.put(DATA, recordResultList);
+				
+				
+			// Top performers within time period	
+			} else if (requestType.equals(TOP_PERFORMERS_WITHIN_TIME_PERIOD)) {
+				// Get Quiz.
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				
+				// Get number of records requested.
+				Double hours = (Double) requestMap.get(HOURS);
+				
+				List<Record> highest = quiz.topScorersWithinTimePeriod(hours);
+				List<Object> recordResultList = new ArrayList<Object>();
+				for (Record record : highest) {
+					recordResultList.add(record.toMap());
+				}
+				result.put(DATA, recordResultList);
+				
+			
+			// Recent test takers
+			} else if (requestType.equals(RECENT_PERFORMANCE)) {
+				// Get Quiz.
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				List<Record> recent = quiz.getRecentPerformance(numRecords);
+				List<Object> recordResultList = new ArrayList<Object>();
+				for (Record record : recent) {
+					recordResultList.add(record.toMap());
+				}
+				result.put(DATA, recordResultList);
+				
+				
+			// Summary statistics
+			} else if (requestType.equals(AVG_PERFORMANCE)) {
+				// Get Quiz.
+				String quizName = (String) requestMap.get(QUIZ_NAME);
+				Util.validateString(quizName);
+				Quiz quiz = QuizManager.getQuiz(quizName);
+				
+				Map<String, Double> avgPerformance = quiz.getAveragePerformance();
+				result.put(DATA, avgPerformance);
+			
+				
+			} else {
+				throw new IllegalArgumentException("Cannot recognize request " + requestType);
 			}
 			
 		
@@ -83,10 +184,8 @@ public class GetData extends HttpServlet implements Constants {
 			if (errorMessage == null) errorMessage = "No message provided";
 		}
 		
-		if (result == null) result = new HashMap<String, Object>();
-		Util.addStatus(success, errorMessage, result);
-		
 		// Setup and send response to client.
+		Util.addStatus(success, errorMessage, result);
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		out.write(Json.getJsonString(result));
