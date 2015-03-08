@@ -84,7 +84,7 @@
                 <h2>Create Fill in the Blank Question</h2>
 
                 <div>
-                    <textarea rows="5" cols="40" name="description"
+                    <textarea rows="5" cols="40" id="fill_in_the_blank_question" name="description"
                         placeholder="Enter question or statement"></textarea>
                 </div>
                 
@@ -97,7 +97,7 @@
                         
                     <input type="button" id="add_blank_answer" class="btn" value="Add Answer">
                 </div>
-
+                <h3 id="add_answer_notifier"></h3>
                 <div class="cf" id="main_buttons">
                         <input type="button" class="btn question_staging" value="Return to Question Type"/>
                         <input type="button" class="btn question_staging" value="Create Question" /> 
@@ -270,12 +270,14 @@
                 </div>
 
                 <div class="cf">
-                    <input type="button" id="cancel_quiz" class="btn submission" value="Cancel Quiz" /> 
+                    <input type="button" class="btn submission" value="Add Another Quesiton" /> 
                 </div>
 
                 <div class="cf">
-                    <input type="button" class="btn submission" value="Add Another Quesiton" /> 
+                    <input type="button" id="cancel_quiz" class="btn submission" value="Cancel Quiz" /> 
                 </div>
+
+                
 
             </form>
         
