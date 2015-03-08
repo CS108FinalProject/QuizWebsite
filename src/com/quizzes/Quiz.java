@@ -15,6 +15,7 @@ import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
+import com.util.Json;
 import com.util.Util;
 
 /**
@@ -754,6 +755,32 @@ public class Quiz implements Constants {
 		} else {
 			throw new IllegalArgumentException("Invalid question object.");
 		}
+	}
+	
+	
+	public String toJson() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(QUIZ_NAME, name);
+		result.put(CREATOR, getCreator().getUserName());
+		result.put(DESCRIPTION, getDescription());
+		result.put(DATE, getCreationDate());
+		result.put(IS_RANDOM, isRandom());
+		result.put(IS_ONE_PAGE, isOnePage());
+		result.put(IS_IMMEDIATE, isImmediate());
+		List<Object> questionList = new ArrayList<Object>();
+		
+		List<Question> questions = getQuestions();
+		for (Question question : questions) {
+			
+		}
+		
+		if (isRandom()) {
+			// randomize quesionList
+		}
+		result.put(QUESTIONS, questionList);
+		
+		
+		return Json.getJsonString(result);
 	}
 	
 }
