@@ -67,7 +67,6 @@ public class CreateQuiz extends HttpServlet {
 			quiz.addQuestion(question);
 		}
 		
-		
 		// forward request
 		request.setAttribute("quiz", quiz);
 		//RequestDispatcher dispatch = request.getRequestDispatcher("");
