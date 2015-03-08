@@ -45,7 +45,13 @@
 			</tr>
 	</table>
 
-<h2> Message from <%=sender%></h2>
+	<%
+		if (sender.equals(name)) {
+			out.println("<h2> Here is your message</h2>");
+		} else {
+			out.println("<h2> Message from " + sender + "</h2>");
+		}
+	%>
 <br> <br>
 <p> <%=content%> </p>
 

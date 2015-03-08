@@ -5,6 +5,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import com.dbinterface.Database;
+import com.quizzes.QuizManager;
 
 /**
  * Application Lifecycle Listener implementation class MainListener
@@ -26,7 +27,8 @@ public class MainListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0)  { 
         // Initiate db and Account tables. 
        new Database();
-       AccountManager.initTables();       
+       AccountManager.initTables();     
+       QuizManager.initTables();
     }
 
 	/**
