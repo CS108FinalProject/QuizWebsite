@@ -240,6 +240,11 @@ header a.btn {
     border: none;
 }
 
+#new_quiz_button {
+    float: right;
+    cursor: pointer;
+}
+
 .btn:hover {
     background-color: #48a2de;
 }
@@ -257,6 +262,43 @@ header a.btn {
     display: inline;
 }
 
+/*==============================*
+         QUIZ NAVIGATION
+ *==============================*/
+#quiz-nav {
+    display: block;
+    height: 95%;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.nav_btns {
+    float: left;
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 7px 20px 8px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    border: none;
+}
+
+#my-quizzes {
+    margin-right: 15px;
+    margin-left: 20px;
+}
+
+#quiz-create-container {
+    position: absolute;
+    left: 2%;
+    top: 30%;
+    height: 95%;
+    width: 95%;
+}
 /*==============================*
          MATCHING QUESTION
  *==============================*/

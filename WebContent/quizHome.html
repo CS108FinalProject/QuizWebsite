@@ -17,11 +17,15 @@
 
         <div id="wrapper">
             <div id="navigation">
-                <div id="interactors">
+                <div class ="cf" id="interactors">
                     <!-- buttons and search -->
-                    <a class="btn" id="new_quiz_button">New Quiz</a>
-                    <input type="text" name="search" id="search"
-                        placeholder="Search questions..." />
+                    <div class="cf quiz-nav" id="quiz-nav">
+                        <div class="cf" id="quiz-create-container">
+                            <input type="button" id="my-quizzes" class="nav_btns" value="My Quizzes" />
+                            <input type="button" id="new-quiz-button" class="nav_btns" value="Create New Quiz" />
+                        </div>
+                    </div>
+
                 </div>
 
                 <div id="left-pane">
