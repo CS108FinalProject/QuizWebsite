@@ -141,4 +141,7 @@ public interface Constants {
 	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";
 	public static final String MODIFIED_QUIZ_JSON = "modifiedQuizJson";
 	
+	// Quiz
+	public static final String NAME = "name";
+	
 }

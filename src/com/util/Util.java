@@ -112,7 +112,10 @@ public class Util implements Constants {
 		if (errorMessage == null) {
 			throw new IllegalArgumentException("errorMessage cannot be null.");
 		}
-		validateObject(map);
+		
+		if (map == null) {
+			throw new NullPointerException("Map cannot be null.");
+		}
 		
 		Map<String, Object> statusMap = new HashMap<String, Object>();
 		statusMap.put(SUCCESS, success);

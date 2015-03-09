@@ -74,7 +74,7 @@ public class Quiz implements Constants {
 		
 		Map<String, Object> metadata = (Map<String, Object>) quizMap.get(QUIZ_METADATA);
 		
-		String quizName = (String) metadata.get(QUIZ_NAME);
+		String quizName = (String) metadata.get(NAME);
 		Util.validateString(quizName);
 		
 		String creatorName = (String) metadata.get(CREATOR);
