@@ -4,11 +4,11 @@
  *  
  */
 (function(window, document, undefined) {
-	var indexDiv document.greElementById('index_box');
+	var indexDiv = document.getElementById('index_box');
 	
 // script elements that correspond to Handlebars templates
-var loginFormTemplate = document.getElementById('login-form-template');
-var registrationFormTemplate = document.getElementById('registration-form-template');
+	var loginFormTemplate = document.getElementById('login-form-template');
+	var registrationFormTemplate = document.getElementById('registration-form-template');
 
 	var templates = {
 			renderLoginForm: Handlebars.compile(loginFormTemplate.innerHTML),
