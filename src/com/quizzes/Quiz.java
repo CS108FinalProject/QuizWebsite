@@ -854,15 +854,20 @@ public class Quiz implements Constants {
 	 */
 	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put(QUIZ_NAME, name);
-		result.put(CREATOR, getCreator().getUserName());
-		result.put(DESCRIPTION, getDescription());
-		result.put(DATE, getCreationDate());
-		result.put(IS_RANDOM, isRandom());
-		result.put(IS_ONE_PAGE, isOnePage());
-		result.put(IS_IMMEDIATE, isImmediate());
-		List<Map<String, Object>> questionList = new ArrayList<Map<String, Object>>();
 		
+		// Quiz Meta-data
+		Map<String, Object> quizMetadata = new HashMap<String, Object>();
+		quizMetadata.put(QUIZ_NAME, name);
+		quizMetadata.put(CREATOR, getCreator().getUserName());
+		quizMetadata.put(DESCRIPTION, getDescription());
+		quizMetadata.put(DATE, getCreationDate());
+		quizMetadata.put(IS_RANDOM, isRandom());
+		quizMetadata.put(IS_ONE_PAGE, isOnePage());
+		quizMetadata.put(IS_IMMEDIATE, isImmediate());
+		result.put(QUIZ_METADATA, quizMetadata);
+		
+		// Questions
+		List<Map<String, Object>> questionList = new ArrayList<Map<String, Object>>();
 		List<Question> questions = getQuestions();
 		for (Question question : questions) {
 			questionList.add(question.toMap());
