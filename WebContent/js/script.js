@@ -685,12 +685,13 @@
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
                 case "Finish and Create Quiz":  
-                    var date = new Date();
+                    var date = moment().format('YYYY/MM/DD HH:mm');
                     console.log( date );
                     var quiz = getPendingQuiz();
                     var quizMetaData = quiz.quizMetaData;
-                    quizMetaData.date = date;
+                    quizMetaData.date = date
                     quiz.quizMetaData = quizMetaData;
+                    console.log( quiz );
                     updatePendingQuiz(quiz);    
 
                     var URL = "/QuizWebsite/CreateQuiz";
