@@ -119,8 +119,8 @@
             } else {
 
                 // adds user information
-                quizMetaData = { name: quizName, creator: creator, date: "sllss", description: description, isImmediate: isImmediate, 
-                    isRandom: isRandom, isOnePage: isOnePage}
+                quizMetaData = { quiz_name: quizName, creator: creator, date_created: "", description: description, is_immediate: isImmediate, 
+                    is_random: isRandom, is_one_page: isOnePage}
 
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
                 
@@ -689,7 +689,7 @@
                     console.log( date );
                     var quiz = getPendingQuiz();
                     var quizMetaData = quiz.quizMetaData;
-                    quizMetaData.date = date
+                    quizMetaData.date_created = date;
                     quiz.quizMetaData = quizMetaData;
                     console.log( quiz );
                     updatePendingQuiz(quiz);    

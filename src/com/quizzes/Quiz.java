@@ -68,7 +68,7 @@ public class Quiz implements Constants {
 		Util.validateObject(quizMap);
 		
 		// Validate Type
-		if (!(quizMap.get(QUIZ_METADATA) instanceof Map<?, ?>)) {
+		if (!(quizMap.get(QUIZ_METADATA) instanceof Map<?, ?>)) { 
 			throw new IllegalArgumentException("Invalid quizMap.");
 		}
 		
