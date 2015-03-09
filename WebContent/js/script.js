@@ -151,6 +151,7 @@
             }
         });
 
+        //TODO: Ask Eliezer what does .pop() removes an item from.
         // Listen to MULTIPLE CHOICE QUESTION
         $('#right-pane').on('click', '#add_mc_option', function(event) {
             event.preventDefault();
@@ -485,7 +486,7 @@
         var questionInfo = {};
         questionInfo.type = type;
         questionInfo.question = question;
-
+        //TODO: Do we need to handle the case that A question is entered without an option?
         // object for possible options
         var options = {};
         options[option] = isAnswer;

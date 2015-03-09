@@ -1,0 +1,68 @@
+<!-- Author: Kelsey Young Stanford University '15 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ExQuizit!</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+        <header>
+            <h1><a href="/">Welcome To ExQuizit!</a></h1>
+            <!--  Float Right -->
+            <a class="btn" id="registration_button">Create An Account</a>
+            <a class="btn" id="login_button">Login</a>  
+        </header>
+        
+        <div id = "index_box">		
+        </div>
+        
+        		        <!-- Template for Login -->
+	<script type="text/x-handlebars-template" id = "login-form-template">
+		<form class = "cf" id = "login-form">
+			<div id = "login">
+				<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
+				<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+				<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
+				<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>
+			</div> 
+		</form>
+		<div>
+			New User? <a href="index.html">Register Here</a>
+		</div>
+	</script>
+	
+	
+	
+	
+	
+	
+	
+		        <!-- Template for Registration -->
+	<script type="text/x-handlebars-template" id = "registration-form-template">
+		<form class = "cf" id = "registration-form">
+			<div id = "registration" >
+				<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
+				<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+				<input type = "button" class = "btn-submit" id = "registration-submit" value = "Register!"/>
+			</div> 
+		</form>
+		<div>
+			Already have an account? <a href="index.html">Login Here</a>
+		</div>
+	</script>
+	
+	
+	
+	
+	
+	
+	        <!-- Libraries: JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <!-- JavaScript -->
+        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="js/scriptForIndex.js"></script>
+</body>
+</html>
