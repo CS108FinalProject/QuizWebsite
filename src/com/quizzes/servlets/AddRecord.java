@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.accounts.Account;
 import com.accounts.AccountManager;
+import com.quizzes.Achievement;
 import com.quizzes.History;
+import com.quizzes.Quiz;
+import com.quizzes.QuizManager;
 import com.quizzes.Record;
 import com.util.Constants;
 import com.util.Json;
@@ -71,6 +74,13 @@ public class AddRecord extends HttpServlet implements Constants {
 			double elapsedTime = (Double) jsonObject.get(ELAPSED_TIME);
 			
 			Record record = new Record(quizName, userName, score, date, elapsedTime);
+			
+			// update achievements table
+			Quiz quiz = QuizManager.getQuiz(quizName);
+			if (score > quiz.getTopPerformers(1).get(0).getScore()) {
+				Achievement.add(jsonObject,I_AM_THE_GREATEST);
+			}
+			
 			History.addRecord(record);
 			
 		} catch (Exception e) {
