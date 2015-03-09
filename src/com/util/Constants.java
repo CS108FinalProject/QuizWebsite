@@ -141,4 +141,12 @@ public interface Constants {
 	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";
 	public static final String MODIFIED_QUIZ_JSON = "modifiedQuizJson";
 	
+	// Quiz
+	public static final String NAME = "name";
+	
+	// Answer Types
+	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
+	public static final String OPTIONS = "options";
+	public static final String MATCHES = "matches";
+	
 }

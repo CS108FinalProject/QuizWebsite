@@ -286,10 +286,7 @@ public class Json {
 		
 		end = Math.min(endComma, Math.min(endBrace, endBracket));
 		
-		System.out.println("source: " + source + "index: " + index + "\nend:" + end);
 		String substring = source.substring(index, end); 
-		System.out.println( "Length of Source:" + source.length() );
-		System.out.println( "substring: " + substring );
 		index = end;
 		
 		if (substring.contains("true")) return true;

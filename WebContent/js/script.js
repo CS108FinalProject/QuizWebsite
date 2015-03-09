@@ -119,8 +119,8 @@
             } else {
 
                 // adds user information
-                quizMetaData = { name: quizName, creator: creator, date: "sllss", description: description, isImmediate: isImmediate, 
-                    isRandom: isRandom, isOnePage: isOnePage}
+                quizMetaData = { quiz_name: quizName, creator: creator, date_created: "", description: description, is_immediate: isImmediate, 
+                    is_random: isRandom, is_one_page: isOnePage}
 
                 var newQuiz = { quizMetaData: quizMetaData, questions: new Array()}
                 
@@ -135,7 +135,7 @@
         // Listen to FILL IN THE BLANK QUESTION
         $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
             event.preventDefault();
-            var type = "Fill In The Blank";
+            var type = "Fill_Blank";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -155,7 +155,7 @@
         // Listen to MULTIPLE CHOICE QUESTION
         $('#right-pane').on('click', '#add_mc_option', function(event) {
             event.preventDefault();
-            var type = "Multiple Choice";
+            var type = "Multiple_Choice";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -220,7 +220,7 @@
         // Listen to MULTI RESPONSE QUESTION
         $('#right-pane').on('click', '#add_mr_answer', function(event) {
             event.preventDefault();
-            var type = "Multi Response";
+            var type = "Multi_Response";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -271,6 +271,7 @@
         return result && unescape(result[1]) || ""; 
     }
 
+    /******************************MATCHING QUESTION*****************************/
     function initializeMatchQuestionInfo(type, question_header, left_question, right_answer) {
         // record the questions main information because it's the first time
         var questionInfo = {};
@@ -686,12 +687,13 @@
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
                 case "Finish and Create Quiz":  
-                    var date = new Date();
+                    var date = moment().format('YYYY/MM/DD HH:mm');
                     console.log( date );
                     var quiz = getPendingQuiz();
                     var quizMetaData = quiz.quizMetaData;
-                    quizMetaData.date = date;
+                    quizMetaData.date_created = date;
                     quiz.quizMetaData = quizMetaData;
+                    console.log( quiz );
                     updatePendingQuiz(quiz);    
 
                     var URL = "/QuizWebsite/CreateQuiz";
