@@ -74,7 +74,7 @@ public class Quiz implements Constants {
 		
 		Map<String, Object> metadata = (Map<String, Object>) quizMap.get(QUIZ_METADATA);
 		
-		String quizName = (String) metadata.get(NAME);
+		String quizName = (String) metadata.get(QUIZ_NAME);
 		Util.validateString(quizName);
 		
 		String creatorName = (String) metadata.get(CREATOR);
@@ -84,7 +84,7 @@ public class Quiz implements Constants {
 		String description = (String) metadata.get(DESCRIPTION);
 		Util.validateString(description);
 		
-		String date = (String) metadata.get(DATE);
+		String date = (String) metadata.get(DATE_CREATED);
 		Util.validateString(date);
 		
 		boolean isRandom = (Boolean) metadata.get(IS_RANDOM);
@@ -95,60 +95,68 @@ public class Quiz implements Constants {
 		Quiz quiz = new Quiz(quizName, creator, description, date, isRandom, isOnePage,
 				isImmediate);
 		
-		// Get questions.
-		// Validate Type
-		if (!(quizMap.get(QUESTIONS) instanceof List<?>)) {
-			throw new IllegalArgumentException("Invalid quizMap.");
-		}
 		
-		List<Map<String, Object>> questions = (List<Map<String, Object>>) quizMap.get(QUESTIONS);
-		
-		for (Map<String, Object> questionMap : questions) {
-			// Get question type.
-			String type = (String) questionMap.get("type");
-			Util.validateString(type);
-			
-			Question question = null;
-			if (type.equals(FILL_BLANK)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
-				question = new FillBlank(quizName, questionPrompt, answers);
-
-			} else if (type.equals(MULTIPLE_CHOICE)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				Map<String, Boolean> answers = (Map<String, Boolean>) questionMap.get(ANSWERS);
-				question = new MultipleChoice(quizName, questionPrompt, answers);
-				
-			} else if (type.equals(PICTURE)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				String pictureUrl = (String) questionMap.get(PICTURE_URL);
-				List<String> answers = (List<String>) questionMap.get(ANSWERS);
-				question = new Picture(quizName, questionPrompt, pictureUrl, answers);
-				
-			} else if (type.equals(MULTI_RESPONSE)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				boolean isOrdered = (Boolean) questionMap.get(IS_ORDERED);
-				Map<Integer, String> answers = (Map<Integer, String>) questionMap.get(ANSWERS);
-				TreeMap<Integer, String> orderedAnswers = new TreeMap<Integer, String>();
-				for (Integer order : answers.keySet()) {
-					orderedAnswers.put(order, answers.get(order));
-				}
-				question = new MultiResponse(quizName, questionPrompt, orderedAnswers, isOrdered);
-				
-			} else if (type.equals(MATCHING)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				Map<String, String> answers = (Map<String, String>) questionMap.get(ANSWERS);
-				question = new Matching(quizName, questionPrompt, answers);
-				
-			} else if (type.equals(RESPONSE)) {
-				String questionPrompt = (String) questionMap.get(QUESTION);
-				List<String> answers = (List<String>) questionMap.get(ANSWERS);
-				question = new Response(quizName, questionPrompt, answers);
-				
-			} else {
-				throw new IllegalArgumentException("Cannot recognize question type " + type);
+		// If adding questions fails, remove the created quiz.
+		try {
+			// Get questions.
+			// Validate Type
+			if (!(quizMap.get(QUESTIONS) instanceof List<?>)) {
+				throw new IllegalArgumentException("Invalid quizMap.");
 			}
-			quiz.addQuestion(question);
+			
+			List<Map<String, Object>> questions = (List<Map<String, Object>>) quizMap.get(QUESTIONS);
+			
+			for (Map<String, Object> questionMap : questions) {
+				// Get question type.
+				String type = (String) questionMap.get("type");
+				Util.validateString(type);
+				
+				Question question = null;
+				if (type.equals(FILL_BLANK)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
+					question = new FillBlank(quizName, questionPrompt, answers);
+	
+				} else if (type.equals(MULTIPLE_CHOICE)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					Map<String, Boolean> answers = (Map<String, Boolean>) questionMap.get(ANSWERS);
+					question = new MultipleChoice(quizName, questionPrompt, answers);
+					
+				} else if (type.equals(PICTURE)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					String pictureUrl = (String) questionMap.get(PICTURE_URL);
+					List<String> answers = (List<String>) questionMap.get(ANSWERS);
+					question = new Picture(quizName, questionPrompt, pictureUrl, answers);
+					
+				} else if (type.equals(MULTI_RESPONSE)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					boolean isOrdered = (Boolean) questionMap.get(IS_ORDERED);
+					Map<Integer, String> answers = (Map<Integer, String>) questionMap.get(ANSWERS);
+					TreeMap<Integer, String> orderedAnswers = new TreeMap<Integer, String>();
+					for (Integer order : answers.keySet()) {
+						orderedAnswers.put(order, answers.get(order));
+					}
+					question = new MultiResponse(quizName, questionPrompt, orderedAnswers, isOrdered);
+					
+				} else if (type.equals(MATCHING)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					Map<String, String> answers = (Map<String, String>) questionMap.get(ANSWERS);
+					question = new Matching(quizName, questionPrompt, answers);
+					
+				} else if (type.equals(RESPONSE)) {
+					String questionPrompt = (String) questionMap.get(QUESTION);
+					List<String> answers = (List<String>) questionMap.get(ANSWERS);
+					question = new Response(quizName, questionPrompt, answers);
+					
+				} else {
+					throw new IllegalArgumentException("Cannot recognize question type " + type);
+				}
+				quiz.addQuestion(question);
+			}
+		
+		} catch (Exception e) {
+			quiz.removeQuiz();
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 	
@@ -364,6 +372,7 @@ public class Quiz implements Constants {
 		
 		for (String tableName : QUESTION_TYPES) {
 			List<Object> questions = Database.getValues(tableName, QUIZ_NAME, name, QUESTION);
+			if (questions == null) continue;
 			for (Object question : questions) {
 				String cur = (String) question;
 				result.add(cur);
@@ -378,21 +387,27 @@ public class Quiz implements Constants {
 	 * @param question
 	 */
 	public void addQuestion(Question question) {
-		Util.validateObject(question);
+		try {
+			Util.validateObject(question);
+			
+			// No duplicate questions.
+			if (getQuestionsAsStrings().contains(question.getQuestion())) {
+				throw new IllegalArgumentException(question.getQuestion() + " already exists in " + name);
+			}
+			
+			if (question instanceof Response) addResponse((Response) question);
+			else if (question instanceof FillBlank) addFillBlank((FillBlank) question);
+			else if (question instanceof MultipleChoice) addMultipleChoice((MultipleChoice) question);
+			else if (question instanceof Picture) addPicture((Picture) question);
+			else if (question instanceof MultiResponse) addMultiResponse((MultiResponse) question);
+			else if (question instanceof Matching) addMatching((Matching) question);
+			else {
+				throw new IllegalArgumentException("Passed question is invalid");
+			}
 		
-		// No duplicate questions.
-		if (getQuestionsAsStrings().contains(question.getQuestion())) {
-			throw new IllegalArgumentException(question.getQuestion() + " already exists in " + name);
-		}
-		
-		if (question instanceof Response) addResponse((Response) question);
-		else if (question instanceof FillBlank) addFillBlank((FillBlank) question);
-		else if (question instanceof MultipleChoice) addMultipleChoice((MultipleChoice) question);
-		else if (question instanceof Picture) addPicture((Picture) question);
-		else if (question instanceof MultiResponse) addMultiResponse((MultiResponse) question);
-		else if (question instanceof Matching) addMatching((Matching) question);
-		else {
-			throw new IllegalArgumentException("Passed question is invalid");
+		} catch (Exception e) {
+			this.removeQuiz();
+			throw new RuntimeException("Unable to create quiz: " + e.getMessage());
 		}
 	}
 	
@@ -860,7 +875,7 @@ public class Quiz implements Constants {
 		quizMetadata.put(QUIZ_NAME, name);
 		quizMetadata.put(CREATOR, getCreator().getUserName());
 		quizMetadata.put(DESCRIPTION, getDescription());
-		quizMetadata.put(DATE, getCreationDate());
+		quizMetadata.put(DATE_CREATED, getCreationDate());
 		quizMetadata.put(IS_RANDOM, isRandom());
 		quizMetadata.put(IS_ONE_PAGE, isOnePage());
 		quizMetadata.put(IS_IMMEDIATE, isImmediate());

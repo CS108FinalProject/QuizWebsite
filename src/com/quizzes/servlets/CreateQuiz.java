@@ -58,6 +58,7 @@ public class CreateQuiz extends HttpServlet implements Constants {
 			success = false;
 			errorMessage = e.getMessage();
 			if (errorMessage == null) errorMessage = "No message provided";
+			System.out.println(errorMessage);
 		}
 		
 		// Setup and send response to client.
