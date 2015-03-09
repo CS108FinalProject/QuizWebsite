@@ -44,7 +44,9 @@ public class CreateQuiz extends HttpServlet implements Constants {
 		String errorMessage = "";
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		try {
+		// TODO: uncomment try catch block.
+		
+	//	try {
 			// get quiz Json
 			String dataString = (String)request.getParameter(JSON);
 			System.out.println(dataString);
@@ -54,12 +56,12 @@ public class CreateQuiz extends HttpServlet implements Constants {
 			QuizManager.createQuiz(dataMap);
 			
 		// Catch all possible errors.
-		} catch (Exception e) {
-			success = false;
-			errorMessage = e.getMessage();
-			if (errorMessage == null) errorMessage = "No message provided";
-			System.out.println(errorMessage);
-		}
+//		} catch (Exception e) {
+//			success = false;
+//			errorMessage = e.getMessage();
+//			if (errorMessage == null) errorMessage = "No message provided";
+//			System.out.println(errorMessage);
+//		}
 		
 		// Setup and send response to client.
 		Util.addStatus(success, errorMessage, result);

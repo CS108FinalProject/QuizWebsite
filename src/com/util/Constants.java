@@ -144,4 +144,9 @@ public interface Constants {
 	// Quiz
 	public static final String NAME = "name";
 	
+	// Answer Types
+	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
+	public static final String OPTIONS = "options";
+	public static final String MATCHES = "matches";
+	
 }

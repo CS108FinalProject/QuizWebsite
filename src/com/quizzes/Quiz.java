@@ -45,7 +45,7 @@ public class Quiz implements Constants {
 		
 		// Ensure quiz doesn't already exists.
 		if (Database.getValues(QUIZZES, QUIZ_NAME, name, QUIZ_NAME) != null) {
-			throw new IllegalArgumentException("Quiz " + name + "already exists");
+			throw new IllegalArgumentException("Quiz " + name + " already exists");
 		}
 		
 		Map<String, Object> row = new HashMap<String, Object>();
@@ -105,6 +105,9 @@ public class Quiz implements Constants {
 			}
 			
 			List<Map<String, Object>> questions = (List<Map<String, Object>>) quizMap.get(QUESTIONS);
+			if (questions.size() == 0) {
+				throw new IllegalArgumentException("The quiz must have at least 1 question");
+			}
 			
 			for (Map<String, Object> questionMap : questions) {
 				// Get question type.
@@ -114,12 +117,12 @@ public class Quiz implements Constants {
 				Question question = null;
 				if (type.equals(FILL_BLANK)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
-					Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(ANSWERS);
+					Map<String, List<String>> answers = (Map<String, List<String>>) questionMap.get(BLANKS_AND_ANSWERS);
 					question = new FillBlank(quizName, questionPrompt, answers);
 	
 				} else if (type.equals(MULTIPLE_CHOICE)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
-					Map<String, Boolean> answers = (Map<String, Boolean>) questionMap.get(ANSWERS);
+					Map<String, Boolean> answers = (Map<String, Boolean>) questionMap.get(OPTIONS);
 					question = new MultipleChoice(quizName, questionPrompt, answers);
 					
 				} else if (type.equals(PICTURE)) {
@@ -145,7 +148,7 @@ public class Quiz implements Constants {
 					
 				} else if (type.equals(RESPONSE)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
-					List<String> answers = (List<String>) questionMap.get(ANSWERS);
+					List<String> answers = (List<String>) questionMap.get(MATCHES);
 					question = new Response(quizName, questionPrompt, answers);
 					
 				} else {
