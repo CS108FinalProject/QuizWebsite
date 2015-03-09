@@ -135,7 +135,7 @@
         // Listen to FILL IN THE BLANK QUESTION
         $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
             event.preventDefault();
-            var type = "Fill In The Blank";
+            var type = "Fill_Blank";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -154,7 +154,7 @@
         // Listen to MULTIPLE CHOICE QUESTION
         $('#right-pane').on('click', '#add_mc_option', function(event) {
             event.preventDefault();
-            var type = "Multiple Choice";
+            var type = "Multiple_Choice";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -219,7 +219,7 @@
         // Listen to MULTI RESPONSE QUESTION
         $('#right-pane').on('click', '#add_mr_answer', function(event) {
             event.preventDefault();
-            var type = "Multi Response";
+            var type = "Multi_Response";
             var quiz = getPendingQuiz();
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
@@ -270,6 +270,7 @@
         return result && unescape(result[1]) || ""; 
     }
 
+    /******************************MATCHING QUESTION*****************************/
     function initializeMatchQuestionInfo(type, question_header, left_question, right_answer) {
         // record the questions main information because it's the first time
         var questionInfo = {};
