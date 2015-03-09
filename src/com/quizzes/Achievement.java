@@ -8,25 +8,24 @@ import com.util.Util;
 
 public class Achievement implements com.util.Constants{
 	
-	public static void add(Map<String, Object> quizMap, String type) {
-		Util.validateObject(quizMap);
+	/**
+	 * Add the passed record and achievement type to the Achievements table.
+	 * @param record
+	 * @param type of Achievement.
+	 */
+	public static void add(Record record, String type) {
+		Util.validateObject(record);
+		Util.validateString(type);
 		
-		// Validate Type
-		if (!(quizMap.get(QUIZ_METADATA) instanceof Map<?, ?>)) { 
-			throw new IllegalArgumentException("Invalid quizMap.");
-		}
-		
-		@SuppressWarnings("unchecked")
-		Map<String, Object> metadata = (Map<String, Object>) quizMap.get(QUIZ_METADATA);
 		
 		// Add row to achievements table
 		Map<String, Object> row = new HashMap<String, Object>();
-		row.put(QUIZ_NAME, (String) metadata.get(QUIZ_NAME));
-		row.put(CREATOR, (String) metadata.get(CREATOR));
-		row.put(SCORE, (Double) metadata.get(CREATOR));
-		row.put(DATE, (String) metadata.get(DATE));
-		row.put(ELAPSED_TIME, (Double) metadata.get(ELAPSED_TIME));
-		row.put(ACHIEVEMENT, (String) metadata.get(ACHIEVEMENT));		
+		row.put(QUIZ_NAME, record.getQuizName());
+		row.put(USERNAME, record.getUser().getUserName());
+		row.put(SCORE, record.getScore());
+		row.put(DATE, record.getDate());
+		row.put(ELAPSED_TIME, record.getElapsedTime());
+		row.put(ACHIEVEMENT, type);		
 		Database.addRow(ACHIEVEMENTS, row);
 	}
 }

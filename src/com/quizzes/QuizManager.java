@@ -103,7 +103,7 @@ public class QuizManager implements Constants {
 		if (!Database.tableExists(ACHIEVEMENTS)) {
 			Map<String, String> columns = new LinkedHashMap<String, String>();
 			columns.put(QUIZ_NAME, STRING);
-			columns.put(CREATOR, STRING);
+			columns.put(USERNAME, STRING);
 			columns.put(SCORE, DOUBLE);
 			columns.put(DATE, STRING); 
 			columns.put(ELAPSED_TIME, DOUBLE);
