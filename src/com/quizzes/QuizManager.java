@@ -99,6 +99,17 @@ public class QuizManager implements Constants {
 			columns.put(RIGHT, STRING);
 			Database.createTable(MATCHING, columns);
 		}
+		
+		if (!Database.tableExists(ACHIEVEMENTS)) {
+			Map<String, String> columns = new LinkedHashMap<String, String>();
+			columns.put(QUIZ_NAME, STRING);
+			columns.put(USERNAME, STRING);
+			columns.put(SCORE, DOUBLE);
+			columns.put(DATE, STRING); 
+			columns.put(ELAPSED_TIME, DOUBLE);
+			columns.put(ACHIEVEMENT, STRING);
+			Database.createTable(ACHIEVEMENTS, columns);
+		}
 	}
 	
 	
@@ -185,7 +196,7 @@ public class QuizManager implements Constants {
 	 */
 	public static List<Quiz> getQuizzes(Account creator) {
 		Util.validateObject(creator);
-		List<Map<String, Object>> table = Database.getRows(QUIZZES, CREATOR, creator);
+		List<Map<String, Object>> table = Database.getRows(QUIZZES, CREATOR, creator.getUserName());
 		if (table == null || table.size() == 0) return null;
 		
 		List<Quiz> result = new ArrayList<Quiz>();

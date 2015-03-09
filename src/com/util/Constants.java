@@ -67,13 +67,23 @@ public interface Constants {
 	
 	// Multi_Response table
 	public static final String MULTI_RESPONSE = "Multi_Response";
-	public static final String IS_ORDERED = "is_ordered";
+	public static final String IS_ORDERED = "isOrdered";
 	public static final String ORDER = "order_db";
 	
-	//Matching table
+	// Matching table
 	public static final String MATCHING = "Matching";
 	public static final String LEFT = "left_db";
 	public static final String RIGHT = "right_db";
+	
+	// Achievements table
+	public static final String ACHIEVEMENTS = "Achievements";
+	public static final String ACHIEVEMENT = "achievement";
+	public static final String AMATEUR_AUTHOR = "Amateur Author";
+	public static final String PROLIFIC_AUTHOR = "Prolific Author";
+	public static final String PRODIGIOUS_AUTHOR = "Prodigious Author";
+	public static final String QUIZ_MACHINE = "Quiz Machine";
+	public static final String I_AM_THE_GREATEST = "I am the Greatest";
+	public static final String PRACTICE_MAKES_PERFECT = "Practice Makes Perfect";
 	
 	// Question Types list
 	public static final List<String> QUESTION_TYPES = new ArrayList<String>(
@@ -147,6 +157,6 @@ public interface Constants {
 	// Answer Types
 	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
 	public static final String OPTIONS = "options";
-	public static final String MATCHES = "matches";
+	public static final String MATCHING_PAIRS = "matchingPairs";
 	
 }
