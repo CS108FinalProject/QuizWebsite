@@ -63,7 +63,7 @@ public interface Constants {
 	
 	// Picture table
 	public static final String PICTURE = "Picture";
-	public static final String PICTURE_URL = "picture_url";
+	public static final String PICTURE_URL = "pictureURL";
 	
 	// Multi_Response table
 	public static final String MULTI_RESPONSE = "Multi_Response";
