@@ -67,7 +67,7 @@ public interface Constants {
 	
 	// Multi_Response table
 	public static final String MULTI_RESPONSE = "Multi_Response";
-	public static final String IS_ORDERED = "is_ordered";
+	public static final String IS_ORDERED = "isOrdered";
 	public static final String ORDER = "order_db";
 	
 	//Matching table
@@ -147,6 +147,6 @@ public interface Constants {
 	// Answer Types
 	public static final String BLANKS_AND_ANSWERS = "blanksAndAnswers";
 	public static final String OPTIONS = "options";
-	public static final String MATCHES = "matches";
+	public static final String MATCHING_PAIRS = "matchingPairs";
 	
 }

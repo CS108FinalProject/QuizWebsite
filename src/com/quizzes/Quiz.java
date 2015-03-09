@@ -134,21 +134,23 @@ public class Quiz implements Constants {
 				} else if (type.equals(MULTI_RESPONSE)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
 					boolean isOrdered = (Boolean) questionMap.get(IS_ORDERED);
-					Map<Integer, String> answers = (Map<Integer, String>) questionMap.get(ANSWERS);
+					List<String> answers = (List<String>) questionMap.get(ANSWERS);
 					TreeMap<Integer, String> orderedAnswers = new TreeMap<Integer, String>();
-					for (Integer order : answers.keySet()) {
-						orderedAnswers.put(order, answers.get(order));
+					int counter = 0;
+					for (String answer : answers) {
+						orderedAnswers.put(counter, answer);
+						counter++;
 					}
 					question = new MultiResponse(quizName, questionPrompt, orderedAnswers, isOrdered);
 					
 				} else if (type.equals(MATCHING)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
-					Map<String, String> answers = (Map<String, String>) questionMap.get(ANSWERS);
+					Map<String, String> answers = (Map<String, String>) questionMap.get(MATCHING_PAIRS);
 					question = new Matching(quizName, questionPrompt, answers);
 					
 				} else if (type.equals(RESPONSE)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
-					List<String> answers = (List<String>) questionMap.get(MATCHES);
+					List<String> answers = (List<String>) questionMap.get(ANSWERS);
 					question = new Response(quizName, questionPrompt, answers);
 					
 				} else {
