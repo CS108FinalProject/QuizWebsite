@@ -94,6 +94,11 @@ header h1 a {
     color: #fff;
     padding-left: 25px;
 }
+
+/*==============================*
+         WELCOME PAGE STYLING
+ *==============================*/
+ 
 header a.btn {
 	float: right;
 	font-size:75%;
@@ -102,6 +107,26 @@ header a.btn {
 	background-color: #34495E;
 	color: fff;
 }
+
+#index_box {
+	margin: 10% 40%;
+	background-color: #34495E;
+}
+#login-fields {
+	padding: 10px;
+}
+
+#login-fields input {
+	width: 100%;
+	padding: 0px;
+	background-color:rgb(225, 225, 44);
+	color: black;
+}
+
+
+
+/* END WELCOME PAGE STYLING */
+
 #wrapper {
     width: 1200px;
     height: 100%;

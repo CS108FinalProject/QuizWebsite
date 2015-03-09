@@ -16,6 +16,10 @@
 	
 	};
 	
+	// Initial render
+	$('#index_box').html( templates.renderLoginForm() );
+	console.log( templates.renderLoginForm() );
+	
     /* Returns the pendingUsername stored in localStorage from either registration or login. */
     function getPendingUsername() {
         if (!localStorage.username) {

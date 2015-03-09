@@ -23,14 +23,18 @@
         
         		        <!-- Template for Login -->
 	<script type="text/x-handlebars-template" id = "login-form-template">
+		<div id= "login-wrapper">
 		<form class = "cf" id = "login-form">
-			<div id = "login">
-				<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
-				<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+			<div id = "login-fields-container">
+				<div id = "login-fields">
+					<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
+					<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+				</div>
 				<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
-				<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>
+				<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>		
 			</div> 
 		</form>
+		</div>
 		<div>
 			New User? <a href="index.html">Register Here</a>
 		</div>
