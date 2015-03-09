@@ -95,6 +95,8 @@ public class Quiz implements Constants {
 		Quiz quiz = new Quiz(quizName, creator, description, date, isRandom, isOnePage,
 				isImmediate);
 		
+		this.name = quizName;
+		
 		
 		// If adding questions fails, remove the created quiz.
 		try {
