@@ -158,7 +158,7 @@ public class Quiz implements Constants {
 			}
 		
 		} catch (Exception e) {
-			quiz.removeQuiz();
+			if (quiz.getName() != null) quiz.removeQuiz();
 			throw new RuntimeException(e.getMessage());
 		}
 	}

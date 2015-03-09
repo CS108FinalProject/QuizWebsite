@@ -587,6 +587,8 @@ public class Database implements Constants {
 			throw new RuntimeException("Problem executing query: " + query);
 		}
 		
+		// Interface boolean on original map.
+		normalizeObjectMap(tableName, row);
 		if (list.size() == 0) return null;
 		return list;
 	}
