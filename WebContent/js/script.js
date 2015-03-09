@@ -68,12 +68,34 @@
         localStorage.questions = JSON.stringify(questions);
     }
 
+    function getQuizzes() {
+
+    }
+
     // LISTENERS
      $(document).ready(function() {
+        
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
             console.log("hello world");
             $('#right-pane').html( templates.renderQuizForm() );
+        });
+
+        $('#my-quizzes').click( function() {
+            var URL = "/QuizWebsite/GetData";
+            var myRequest = { request: { type: "allQuizzes" } };
+            $.ajax({
+                url: URL,
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    data: { json: JSON.stringify(myRequest) },
+                    contentType: 'application/x-www-form-urlencoded',
+
+                    success: function(data, textStatus, jqXHR) {
+                        console.log( data );
+                    }
+            }); 
         });
 
         // Listen to Quiz Creation Form
