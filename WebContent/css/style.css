@@ -24,6 +24,8 @@ h1 {
     font-size: 200%;
 }
 
+
+
 h2 {
     font-size: 170%;
 }
@@ -85,13 +87,21 @@ header {
     height: 50px;
     background-color: #34495E; 
     padding-top: 10px;
+    
 }
 
 header h1 a {
     color: #fff;
     padding-left: 25px;
 }
-
+header a.btn {
+	float: right;
+	font-size:75%;
+	margin: 5px;
+	padding-bottom: 1px;
+	background-color: #34495E;
+	color: fff;
+}
 #wrapper {
     width: 1200px;
     height: 100%;

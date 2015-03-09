@@ -485,6 +485,11 @@ public class Account implements Constants {
 	}
 	
 	
+	public int getNumQuizzesTaken() {
+		return 0;
+	}
+	
+	
 	
 	//----------------------------Helper Methods-------------------------------//
 	
