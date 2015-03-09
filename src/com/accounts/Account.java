@@ -485,9 +485,21 @@ public class Account implements Constants {
 	}
 	
 	
+	/**
+	 * Returns the number of quizzes that the user has taken.
+	 */
 	public int getNumQuizzesTaken() {
-		return 0;
+		return getPastPerformance(0).size();
 	}
+	
+	
+	/**
+	 * Returns the number of quizzes that the user has created. 
+	 */
+	public int getNumQuizzesCreated() {
+		return QuizManager.getQuizzes(this).size();
+	}
+	
 	
 	
 	
