@@ -81,7 +81,7 @@ public class AddRecord extends HttpServlet implements Constants {
 				Achievement.add(jsonObject,I_AM_THE_GREATEST);
 			}
 			if (userName.getNumQuizzesTaken() == 10) {
-				Achievement.add(jsonObject,I_AM_THE_GREATEST);
+				Achievement.add(jsonObject,QUIZ_MACHINE);
 			}
 			
 			History.addRecord(record);
