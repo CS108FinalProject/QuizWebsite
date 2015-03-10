@@ -47,7 +47,7 @@ public class GetData extends HttpServlet implements Constants {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean success = true;
-		String errorMessage = "";
+		String errorMessage = "success";
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {

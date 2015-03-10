@@ -64,40 +64,38 @@
         localStorage.removeItem( "pendingQuiz")
     }
 
-
-    // /* Returns the questions stored in localStorage. */
-    // function getStoredQuestions() {
-    //     if (!localStorage.questions) {
-    //         // default to empty array
-    //         localStorage.questions = JSON.stringify([]);
-    //     }
-
-    //     return JSON.parse(localStorage.questions);
-    // }
-
-    /* Store the given questions array in localStorage.
-     *
-     * Arguments:
-     * questions -- the questions array to store in localStorage
-     */
     function storeQuestions(questions) {
         localStorage.questions = JSON.stringify(questions);
     }
 
+    function getQuizzes() {
 
-    // we want to render this HTML only once
-    //rightPane.innerHTML = templates.renderQuizForm();
-     var newQuestionForm = document.querySelector('#interactors .btn');
-        newQuestionForm.addEventListener("click", function(event) {
-                event.preventDefault();
-                rightPane.innerHTML = templates.renderQuizForm();
-    });
+    }
 
     // LISTENERS
      $(document).ready(function() {
+        
         // Create new Quiz Form on click
-        $('#new_quiz_button').click(function() {
-            templates.renderQuizForm();
+        $('#new-quiz-button').click(function() {
+            console.log("hello world");
+            $('#right-pane').html( templates.renderQuizForm() );
+        });
+
+        $('#my-quizzes').click( function() {
+            var URL = "/QuizWebsite/GetData";
+            var myRequest = { request: { type: "allQuizzes" } };
+            $.ajax({
+                url: URL,
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    data: { json: JSON.stringify(myRequest) },
+                    contentType: 'application/x-www-form-urlencoded',
+
+                    success: function(data, textStatus, jqXHR) {
+                        console.log( data );
+                    }
+            }); 
         });
 
         // Listen to Quiz Creation Form

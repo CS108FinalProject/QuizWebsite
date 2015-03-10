@@ -89,6 +89,7 @@ public class Matching extends Question implements Constants {
 	 */
 	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(TYPE, MATCHING);
 		result.put(QUIZ_NAME, quizName);
 		result.put(QUESTION, question);
 		result.put(ANSWERS, matches);

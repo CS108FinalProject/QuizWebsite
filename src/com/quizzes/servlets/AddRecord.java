@@ -15,8 +15,6 @@ import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.quizzes.Achievement;
 import com.quizzes.History;
-import com.quizzes.Quiz;
-import com.quizzes.QuizManager;
 import com.quizzes.Record;
 import com.util.Constants;
 import com.util.Json;
@@ -34,15 +32,12 @@ public class AddRecord extends HttpServlet implements Constants {
      */
     public AddRecord() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -76,13 +71,7 @@ public class AddRecord extends HttpServlet implements Constants {
 			Record record = new Record(quizName, userName, score, date, elapsedTime);
 			
 			// update achievements table
-			Quiz quiz = QuizManager.getQuiz(quizName);
-			if (score > quiz.getTopPerformers(1).get(0).getScore()) {
-				Achievement.add(record,I_AM_THE_GREATEST);
-			}
-			if (userName.getNumQuizzesTaken() == 10) {
-				Achievement.add(record,QUIZ_MACHINE);
-			}
+			Achievement.checkQuizTakingGoals(userName, record, quizName, score);
 			
 			History.addRecord(record);
 			
