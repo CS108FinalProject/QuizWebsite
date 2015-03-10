@@ -115,61 +115,18 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 	
 			
 
-			
-		//Make sure new quiz name is not already taken.
-		if (!QuizManager.quizNameInUse(new_quiz_name)) {
-			try {
-				String description =  (String) new_quiz_metadata.get("description");
-				String date = (String) new_quiz_metadata.get("date");
-				boolean isRandom = (Boolean) new_quiz_metadata.get("isRandom");
-				boolean isOnePage = (Boolean) new_quiz_metadata.get("isOnePage");
-				boolean isImmediate = (Boolean) new_quiz_metadata.get("isImmediate");		
-				Quiz quiz = QuizManager.createQuiz(new_quiz_name,account_of_creator,description,date,isRandom,isOnePage,isImmediate);
-				
-				
-				// add questions
-				//Influenced by Guy Ambdur CreateQuiz.java
-				List<Map<String, Object>> questions = (List<Map<String, Object>>)map_new_quiz.get("questions");
-				for (Map<String, Object> question_map : questions) {
-					String type = (String) question_map.get("type");
-					Question question = null;
-					if (type.equals(FILL_BLANK)) {
-						question = (FillBlank) question_map.get("question");
-						Map<String, List<String>> blanksAndAnswers = (Map<String, List<String>>) question_map.get("answers");
-						((FillBlank) question).setBlanksAndAnswers(blanksAndAnswers);
-					} else if (type.equals(MULTIPLE_CHOICE)) {
-						question = (MultipleChoice) question_map.get("question");
-						Map<String, Boolean> options = (Map<String, Boolean>) question_map.get("answers");
-						((MultipleChoice) question).setOptions(options);
-					} else if (type.equals(PICTURE)) {
-						question = (Picture) question_map.get("question");
-						List<String> answers = (List<String>) question_map.get("answers");
-						((Picture) question).setAnswers(answers);
-					} else if (type.equals(MULTI_RESPONSE)) {
-						question = (MultiResponse) question_map.get("question");
-						List<String> answers = (List<String>) question_map.get("answers");
-						((MultiResponse) question).setAnswers(answers);
-					} else if (type.equals(MATCHING)) {
-						question = (Matching) question_map.get("question");
-						Map<String, String> matches = (Map<String, String>) question_map.get("answers");
-						((Matching) question).setMatches(matches);
-					} else if (type.equals(RESPONSE)) {
-						question = (Response) question_map.get("question");
-						List<String> answers = ((Response) question).getAnswers();
-						((Response) question).setAnswers(answers);
-					}		
-					quiz.addQuestion(question);
-				}
-				//Case that quiz or question could not be stored because of malformed input
-			} catch(Exception e) {
-					Util.addStatus(false, e.getMessage(), response_map);
-					response_str = Json.getJsonString(response_map);
-					out.print(response_str);
-					return;
-			}
-		}	
-		Util.addStatus(true, "", response_map);
-		response_str = Json.getJsonString(response_map);
-		out.print(response_str);
+			//Only create quiz if we get to this check point
+		try{
+			QuizManager.createQuiz(map_new_quiz);
+			Util.addStatus(true, "", response_map);
+			response_str = Json.getJsonString(response_map);
+			out.print(response_str);
+		} catch (Exception e ) {
+			// Display error and include Exception type on a failure.
+			Util.addStatus(false, e.getMessage(), response_map);
+			response_str = Json.getJsonString(response_map);
+			out.print(response_str);
+			return;
+		}
 	}
 }
