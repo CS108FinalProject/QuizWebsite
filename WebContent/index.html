@@ -15,49 +15,72 @@
 	            <!--  Float Right -->
 		            <a class="btn" id="registration_button">Create An Account</a>
 		            <a class="btn" id="login_button">Login</a>
+		            
             </h1>
         </header>
         
-        <div id = "index_box">		
+        <div id = "index_box">
+        	<div class= "index-wrapper">
+				<h2> Enter Login Info Below!</h2>
+				<form class = "cf" id = "login-form">
+					<div id = "login-fields-container">
+						<div id = "login-fields">
+							<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
+							<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+						</div>
+						<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>		
+					</div> 
+				</form>
+				New User? <a class = "btn" id = "login-field-register" >Register Here</a>
+			</div>
         </div>
-        
+                
         		        <!-- Template for Login -->
 	<script type="text/x-handlebars-template" id = "login-form-template">
-		<div id= "login-wrapper">
-		<form class = "cf" id = "login-form">
-			<div id = "login-fields-container">
-				<div id = "login-fields">
-					<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
-					<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
-				</div>
-				<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
-				<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>		
-			</div> 
-		</form>
-		</div>
-		<div>
-			New User? <a href="index.html">Register Here</a>
+		<div class= "index-wrapper">
+			<h2> Enter Login Info Below!</h2>
+			<form class = "cf" id = "login-form">
+				<div id = "login-fields-container">
+					<div id = "login-fields">
+						<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
+						<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
+					</div>
+					<input type = "button" class = "btn-submit" id = "login-submit" value = "Login!"/>		
+				</div> 
+			</form>
+			New User? <a class = "btn" id = "login-field-register" >Register Here</a>
 		</div>
 	</script>
-	
-	
-	
+		
+
 	
 	
 	
 	
 		        <!-- Template for Registration -->
 	<script type="text/x-handlebars-template" id = "registration-form-template">
-		<form class = "cf" id = "registration-form">
-			<div id = "registration" >
-				<input type = "text" name = "username" id = "username" placeholder = "Enter Username"/>
-				<input type = "password" name = "password" id = "password" placeholder = "Enter Password"/>
-				<input type = "button" class = "btn-submit" id = "registration-submit" value = "Register!"/>
-			</div> 
-		</form>
-		<div>
-			Already have an account? <a href="index.html">Login Here</a>
+		<div class = "index-wrapper" >
+			<h2> Enter Register Info Below!</h2>
+			<form  id = "registration-form" class = "cf">
+				<div id = "registration-fields-container" >
+					<div id = "registration-fields">
+					<input type = "text" name = "username" id = "reg-username" placeholder = "Enter Username"/>
+					<input type = "password" name = "password" id = "reg-password" placeholder = "Enter Password"/>
+					</div>
+					<div id = "admin-checkbox">
+						Administator?	
+						<input type="checkbox" name="isAdministrator" value="Administrator"/> 			
+					</div>
+					<br>			
+					<input type = "button" class = "btn-submit" id = "registration-submit" value = "Register!"/>
+				</div> 
+			</form>
+			<div id = "index-redirect" class = "cf">
+				<p>Already have an account?</p>
+				<div class = "btn" id = "login-field-login" >Login Here</div>	
+			</div>				
 		</div>
+
 	</script>
 	
 	
@@ -70,5 +93,6 @@
         <!-- JavaScript -->
         <script type="text/javascript" src="js/handlebars.js"></script>
         <script type="text/javascript" src="js/scriptForIndex.js"></script>
+        
 </body>
 </html>
