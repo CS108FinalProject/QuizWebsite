@@ -141,11 +141,13 @@
             var question = $('#fill_in_the_blank_question').val();
             var answer = $('#enter_answer').val();
             var blank = $('#enter_blank').val();
-
-            if ( typeof questionInfo === 'undefined' ) {
-                initializeFITBQuestionInfo(type, question, answer, blank);
-            } else {
-                addAnotherFandBAnswer(type, question, answer, blank);
+            
+            if ( validateForm(type, question, answer, blank) ) {
+                if ( typeof questionInfo === 'undefined' ) {
+                    initializeFITBQuestionInfo(type, question, answer, blank);
+                } else {
+                    addAnotherFandBAnswer(type, question, answer, blank);
+                }
             }
         });
 
@@ -264,6 +266,22 @@
      
     // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
     // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+
+    function validateForm(questionType, question, answer, blank) {
+        if ( question === "" ) {
+            alert("You Must Enter A Question.");
+            return false;
+        } else if ( blank === "" ) {
+            alert("You Must Enter A Blank");
+            return false;
+        } else if ( answer === "" ) {
+            alert("You Must Enter A Value For The Answer");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function getUrlVar(key){
         var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
         return result && unescape(result[1]) || ""; 
