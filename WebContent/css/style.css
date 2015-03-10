@@ -94,14 +94,94 @@ header h1 a {
     color: #fff;
     padding-left: 25px;
 }
+
+/*==============================*
+         WELCOME PAGE STYLING
+ *==============================*/
+ 
 header a.btn {
 	float: right;
 	font-size:75%;
 	margin: 5px;
 	padding-bottom: 1px;
-	background-color: #34495E;
+	background-color: black;
 	color: fff;
 }
+
+#index_box {
+	margin: 10% 40%;
+	background-color: #34495E;
+	border: 5px solid black;
+	border-radius: 5px;
+	padding: 5px 15px;
+	color: black;	
+}
+
+#index_box a {
+	color: white;
+}
+
+#index_box h2 {
+	color: white;
+	text-align: center;
+	font-size: 14px;
+}
+
+#login-fields {
+	padding: 10px;
+}
+
+#login-fields input {
+	width: 100%;
+	padding: 0px;
+	background-color:#ECF0F1;
+	color: black;
+}
+
+#registration-fields {
+	padding: 10px;
+}
+
+#registration-fields input {
+	width: 100%;
+	padding: 0px;
+	background-color:#ECF0F1;
+	color: black;
+}
+
+#registration-fields #admin-checkbox {
+	margin:2px auto;
+	padding-right: 2px;
+}
+
+.index-wrapper {
+	position:relative;
+}
+
+
+#index_box a.btn {
+	position: absolute;
+	bottom: 1px;
+	padding: 5px;
+	float: left;
+	white-space: nowrap;
+}
+
+#index-redirect {
+		white-space: nowrap;
+	
+	padding: 1px;
+	horizontal-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+}
+
+
+
+
+/* END WELCOME PAGE STYLING */
+
 #wrapper {
     width: 1200px;
     height: 100%;

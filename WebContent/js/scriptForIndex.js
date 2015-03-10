@@ -16,6 +16,11 @@
 	
 	};
 	
+	
+	/*Initial table to display*/
+
+	
+	
     /* Returns the pendingUsername stored in localStorage from either registration or login. */
     function getPendingUsername() {
         if (!localStorage.username) {
@@ -40,18 +45,47 @@
         }
         return  localStorage.pendingAdmin;
     };
+    
+    
+
 	
+	/*Listeners*/
 	$(document).ready(function() {
+		console.log("Got to listeners");
 		$('#registration_button').click(function() {
-			templates.renderRegistrationForm();
+            event.preventDefault();
+
+			console.log("Got to listenefssfafrs")
+
+			$('#index_box').html( templates.renderRegistrationForm() );
+
 		});
 		
 		$('#login_button').click(function() {
-			
-			templates.renderLoginForm();
+            event.preventDefault();
+
+			$('#index_box').html( templates.renderLoginForm() );
 		});
 		
 		
+		$('#index_box').on('click','#login-field-register', function(event) {
+            event.preventDefault();
+			console.log('Got here to register')
+			$('#index_box').html( templates.renderRegistrationForm() );
+
+		});
+		
+
+		$('#index_box').on('click','#login-field-login', function(event) {
+            event.preventDefault();
+			console.log('Got here to login');
+			$('#index_box').html( templates.renderLoginForm() );
+
+		});
+
+		
+
+		/*
 		//listen to the registration submit
 		$('#index_box').on('click','#registration-submit', function(event) {
 			event.preventDefault();
@@ -74,9 +108,11 @@
 			localStorage.username = username;
 			localStorage.password = password;
 		});
+		*/
 		
-		
+		/*
 		indexDiv.addEventListener('click',function(event) {
+
 			if (event.target.className === "btn-submit")  {
                 var URL = "";
 				switch(event.target.value) {
@@ -100,7 +136,7 @@
 				});				
 			}
 			
-		});		
+		});	*/	
 	});
 	
 	

@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jasper.tagplugins.jstl.core.Out;
-
 import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.accounts.Message;
@@ -29,15 +27,12 @@ public class MessageServlet extends HttpServlet {
      */
     public MessageServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,9 +43,6 @@ public class MessageServlet extends HttpServlet {
 		request.setAttribute("username", request.getParameter("recipient"));
 		String recipient = request.getParameter("recipient");
 		String sender = request.getParameter("sender");
-		
-		System.out.println("recipient: " + recipient);
-		System.out.println("sender: " + sender);
 		
 		Account receiver_account = AccountManager.getAccount(recipient);
 		Account sender_account = AccountManager.getAccount(sender);
@@ -70,21 +62,14 @@ public class MessageServlet extends HttpServlet {
 			//request.setAttribute("message_read", "yes");
 			try {
 				receiver_account.addFriend(sender_account);
-				System.out.println("approved friend");
 				//request.setAttribute("friendship_status", "Friend Added!");
 			} catch (RuntimeException e) {
 				//request.setAttribute("friendship_error", e.getMessage());
-				System.out.println("<script>");
-				System.out.println("alert(\"This user is already your friend\")");
-				System.out.println("</script>");
-				
 				return;
 				//System.out.println("Exception thrown");
 			}
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
-			System.out.println("dispatch: " + dispatch);
 			dispatch.forward(request, response);
-			System.out.println("dispatch: after");
 			
 		// case of friend request decline
 		} else if (msg_type.equals("Decline")) {
