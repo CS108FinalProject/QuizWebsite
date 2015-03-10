@@ -41,6 +41,27 @@
 
         <!-- Handlebars Templates to Render various views -->
         <!-- template to display QUIZ CREATION FORM in #main-panel tag -->
+
+        <!-- template to display all quizzes in #left-pane tag. -->
+        <script type="text/x-handlebars-template" id="left-pane-quizzes-template">
+            {{#if success }}
+                {{#each quizzes}}
+                {{! this.date_created represents this quizzes date_created object in
+                    localStorage. }}
+                <div class="list-question question-info" id="{{ this.date_created }}">
+                    <h3>{{ this.quizMetaData.quiz_name }}</h3>
+                    <p>{{ this.quizMetaData.description }}</p>
+                </div>
+                {{/each}}
+            {{else}}
+                {{! no quizzes exist; display appropriate message }}
+                <div class="list-question">
+                    <p>No quizzes could be found.</p>
+                </div>
+            {{/if}}
+        </script>
+
+
         <script type="text/x-handlebars-template" id="quiz-form-template">
             <form class="cf" id="quiz-form">
                 <h2>Create a <span>quiz</span></h2>

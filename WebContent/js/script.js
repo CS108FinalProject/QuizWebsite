@@ -23,6 +23,7 @@
     var matchingTemplate = document.getElementById('matching-template');
     var responseTemplate = document.getElementById('response-template');
     var submissionForm = document.getElementById('submission-template');
+    var leftPaneQuizzesTemplate = document.getElementById('left-pane-quizzes-template');
     
 
 
@@ -36,7 +37,8 @@
         renderMultiResponseQuestion: Handlebars.compile(multiResponseTemplate.innerHTML),
         renderMatchingQuestion: Handlebars.compile(matchingTemplate.innerHTML),
         renderResponseQuestion: Handlebars.compile(responseTemplate.innerHTML),
-        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML)
+        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML),
+        renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML )
     };
 
     // HELPER FUNCTIONS 
@@ -82,8 +84,10 @@
         });
 
         $('#my-quizzes').click( function() {
+            var creator = getUrlVar("user");
+            $('#my-quizzes').prop("disabled",true);
             var URL = "/QuizWebsite/GetData";
-            var myRequest = { request: { type: "allQuizzes" } };
+            var myRequest = { request: { type: "allCreatorQuizzes", creator: creator } };
             $.ajax({
                 url: URL,
                     type: 'POST',
@@ -93,7 +97,8 @@
                     contentType: 'application/x-www-form-urlencoded',
 
                     success: function(data, textStatus, jqXHR) {
-                        console.log( data );
+                        $('#my-quizzes').prop("disabled",false);
+                        displayOnLeftPane(data);
                     }
             }); 
         });
@@ -266,6 +271,14 @@
      
     // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
     // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+
+    function displayOnLeftPane(quizzes) {
+        console.log( quizzes );
+        console.log( quizzes.status.success );
+        var arg = { success: quizzes.status.success, quizzes: quizzes.data };
+        $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: arg.success, quizzes: arg.quizzes} ) );
+        $('left-pane').html("Hello");
+    }
 
     function validateForm(questionType, question, answer, blank) {
         if ( question === "" ) {
