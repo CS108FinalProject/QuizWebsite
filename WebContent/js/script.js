@@ -1,4 +1,6 @@
 (function(window, document, undefined) {
+    
+    
     // pane elementss
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
@@ -24,7 +26,7 @@
     var responseTemplate = document.getElementById('response-template');
     var submissionForm = document.getElementById('submission-template');
     var leftPaneQuizzesTemplate = document.getElementById('left-pane-quizzes-template');
-    
+    var editQuizOptionsTemplate = document.getElementById('edit-quiz-options-template');
 
 
     // compiled Handlebars templates
@@ -38,7 +40,8 @@
         renderMatchingQuestion: Handlebars.compile(matchingTemplate.innerHTML),
         renderResponseQuestion: Handlebars.compile(responseTemplate.innerHTML),
         renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML),
-        renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML )
+        renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML ),
+        renderEditQuizOptions: Handlebars.compile( editQuizOptionsTemplate.innerHTML )
     };
 
     // HELPER FUNCTIONS 
@@ -52,6 +55,20 @@
         return JSON.parse(localStorage.pendingQuiz);
     }
 
+    function storeMyQuizzes(myQuizzes) {
+        localStorage.myQuizzes = JSON.stringify( myQuizzes );
+    }
+
+    function getMyQuizzes() {
+        if (!localStorage.pendingQuiz) {
+            localStorage.myQuizzes = JSON.stringify({});
+        }
+        return JSON.parse( localStorage.myQuizzes );
+    }
+
+    function clearMyQuizzes() {
+        localStorage.removeItem("myQuizzes");
+    }
     /* updates the pending quiz in localStorage. 
      *
      * Arguments: 
@@ -74,8 +91,76 @@
 
     }
 
+    // tested -> works
+    function storeQuizToTake( quizToTake ) {
+        localStorage.quizToTake = JSON.stringify( quizToTake );
+    }
+
+    // tested -> works
+    function getQuizToTake() {
+        if (!localStorage.pendingQuiz) {
+            localStorage.quizToTake = JSON.stringify({});
+        }
+        return JSON.parse( localStorage.quizToTake );
+    }
+
+    // TO DO
+    function generateOnePageQuiz() {
+        var template = document.getElementById('single-response-test');
+        console.log( template );
+        var obj = Handlebars.compile( template.innerHTML );
+        console.log( obj );
+        var questions = [{question: "Who is the first President"}, {question: "Who is the second President"}];
+        $('#right-pane').html( obj( {questions: questions}) );
+    }
+
+    generateOnePageQuiz();
+
+    // TO DO
+    function generateMultiplePageQuiz(isImmediate) {
+        if ( isImmediate ) {
+            generateMultiplePageQuizWithFeedBack();
+        } else {
+            generateMultiplePageQuizWithNoFeedBack();
+        }
+    }
+
+    // TO DO
+    function generateMultiplePageQuizWithFeedBack() {
+
+    }
+
+    // TO DO
+    function generateMultiplePageQuizWithNoFeedBack() {
+
+    }
+
     // LISTENERS
      $(document).ready(function() {
+
+        /*************************LEFT PANE EVENT LISTENERS**************************/
+
+        $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
+            event.preventDefault();
+            console.log( "I am checked");
+            $('#lp-quiz-edit').prop("disabled",true);
+            var quizName = $('#lp-quiz-name').text();
+            var myQuizzes = getMyQuizzes();
+            var quizzes = myQuizzes.data; // array of quiz objects
+            var questionsArr;
+            var success = myQuizzes.status.success;
+            for(var i = 0; i < quizzes.length; i++ ) {
+                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+                    questionsArr = quizzes[i].questions
+                }
+            }
+            console.log( questionsArr );
+            $('#lp-quiz-edit').prop("disabled",false);
+            $('#right-pane').html( templates.renderEditQuizOptions( 
+                            {questions: questionsArr, success: success}) );
+ 
+
+        });
         
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
@@ -98,10 +183,13 @@
 
                     success: function(data, textStatus, jqXHR) {
                         $('#my-quizzes').prop("disabled",false);
+                        storeMyQuizzes(data);
                         displayOnLeftPane(data);
                     }
             }); 
         });
+
+        /*************************RIGHT PANE EVENT LISTENERS**************************/
 
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
@@ -757,6 +845,38 @@
      * in the blank question form.
      *
      */
+
+     /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
+
+     // request database for the quiz
+    var quizName = getUrlVar("quiz"); // tested and works
+    var URL = "/QuizWebsite/GetData";
+    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
+        $.ajax({
+            url: URL,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            data: { json: JSON.stringify(request) },
+            contentType: 'application/x-www-form-urlencoded',
+
+            success: function(response, textStatus, jqXHR) {
+                if ( response.status.success ) {
+                    storeQuizToTake( response.data )
+                }
+
+                // tested -> works proper way to obtain booleans
+                var onePage = getQuizToTake().quizMetaData.is_one_page;
+                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
+                if ( onePage ) {           // checked works
+                    generateOnePageQuiz();
+                } else {
+                    // test all values
+                    generateMultiplePageQuiz(isImmediate);
+                }
+
+            }
+    }); 
        
 
 
