@@ -100,6 +100,7 @@ public class Picture extends Question implements Constants {
 	
 	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(TYPE, PICTURE);
 		result.put(QUIZ_NAME, quizName);
 		result.put(QUESTION, question);
 		result.put(PICTURE_URL, pictureUrl);

@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import com.accounts.Account;
 import com.accounts.AccountManager;
@@ -113,7 +112,7 @@ public class Quiz implements Constants {
 			
 			for (Map<String, Object> questionMap : questions) {
 				// Get question type.
-				String type = (String) questionMap.get("type");
+				String type = (String) questionMap.get(TYPE);
 				Util.validateString(type);
 				
 				Question question = null;
@@ -137,13 +136,7 @@ public class Quiz implements Constants {
 					String questionPrompt = (String) questionMap.get(QUESTION);
 					boolean isOrdered = (Boolean) questionMap.get(IS_ORDERED);
 					List<String> answers = (List<String>) questionMap.get(ANSWERS);
-					TreeMap<Integer, String> orderedAnswers = new TreeMap<Integer, String>();
-					int counter = 0;
-					for (String answer : answers) {
-						orderedAnswers.put(counter, answer);
-						counter++;
-					}
-					question = new MultiResponse(quizName, questionPrompt, orderedAnswers, isOrdered);
+					question = new MultiResponse(quizName, questionPrompt, answers, isOrdered);
 					
 				} else if (type.equals(MATCHING)) {
 					String questionPrompt = (String) questionMap.get(QUESTION);
@@ -822,8 +815,8 @@ public class Quiz implements Constants {
 			return new Picture(name, question, (String) row.get(PICTURE_URL), answers);
 			
 		} else if (questionType.equals(MULTI_RESPONSE)) {
-			TreeMap<Integer, String> answers = new TreeMap<Integer, String>();
-			answers.put((Integer) row.get(ORDER), (String) row.get(ANSWER));
+			List<String> answers = new ArrayList<String>();
+			answers.add((String) row.get(ANSWER));
 			boolean isOrdered = (Boolean) row.get(IS_ORDERED);
 			return new MultiResponse(name, question, answers, isOrdered);
 			
@@ -859,7 +852,7 @@ public class Quiz implements Constants {
 			
 		} else if (question instanceof MultiResponse) {
 			MultiResponse multResponse = (MultiResponse) question;
-			multResponse.addAnswer((Integer) row.get(ORDER), (String) row.get(ANSWER));
+			multResponse.addAnswer((String) row.get(ANSWER));
 			
 		} else if (question instanceof Matching) {
 			Matching matching = (Matching) question;
