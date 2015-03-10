@@ -179,14 +179,76 @@ header a.btn {
 
 
 
+/*********** HOMEPAGE STYLING******************/
+#header  {
+    margin-bottom: 10px;
+    font-weight: bold;  
 
-/* END WELCOME PAGE STYLING */
+}
+#header tr {
+}
+
+#header th.btn {
+	border: 2px solid black;
+	color: white;
+	float: left;
+	
+}
+#header th.btn a {
+	text-decoration: none;
+	color: white;
+}
+
+ #homepage-wrapper div {
+ 	border: 2px solid #34495E;
+ }
+ 
+ #addAnnouncement div {
+	position: absolute;
+}
+
+#addAnnouncement textarea {
+	padding:0px;	
+	rows: 5px;
+	cols: 20px;
+}
+ /*For styling the generic user content*/
+
+#div-account-content  {
+	position: relative;
+/* 	margin-right: 500px;
+	margin-left: 500px; */
+/* 	border: 2px solid #34495E;
+ */}
+ 
+ div.divs-to-float{
+ 	float: left;	
+ }
+ 
+ 
+ /***For styling the administration content specifically***/
+ 
+
+#div-admin-content  {
+	position: relative;
+/* 	margin-right: 500px;
+	margin-left: 500px; */
+	/*border: 2px solid #34495E;*/
+}
+
+
+#div-quiz-content {
+	/*float: right;*/
+	text-align: center;
+}
+
+/******************		END 	************/
+
 
 #wrapper {
     width: 1200px;
     height: 100%;
 }
-
 #navigation {
     float: left;
     width: 450px;
