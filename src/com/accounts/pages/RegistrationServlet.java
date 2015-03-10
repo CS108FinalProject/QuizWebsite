@@ -1,4 +1,4 @@
-package com.accounts.pages;
+		package com.accounts.pages;
 import com.accounts.*;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class RegistrationServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");	
+		response.setContentType("application/json");	
 		
 		String username = request.getParameter("user");
 		String password = request.getParameter("password");
