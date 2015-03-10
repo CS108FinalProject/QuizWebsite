@@ -28,9 +28,7 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -38,14 +36,13 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");	
 
-		AccountManager accounts = (AccountManager)getServletContext().getAttribute("accounts");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
 		if (AccountManager.accountExists(username)) {
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
-					Account acct = accounts.getAccount(username);
+					Account acct = AccountManager.getAccount(username);
 					getServletContext().setAttribute("session_user",username);
 					if (acct.isAdmin()) {
 						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
