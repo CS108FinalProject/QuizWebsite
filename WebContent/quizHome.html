@@ -41,6 +41,27 @@
 
         <!-- Handlebars Templates to Render various views -->
         <!-- template to display QUIZ CREATION FORM in #main-panel tag -->
+
+        <!-- template to display all quizzes in #left-pane tag. -->
+        <script type="text/x-handlebars-template" id="left-pane-quizzes-template">
+            {{#if success }}
+                {{#each quizzes}}
+                {{! this.date_created represents this quizzes date_created object in
+                    localStorage. }}
+                <div class="list-question question-info" id="{{ this.date_created }}">
+                    <h3>{{ this.quizMetaData.quiz_name }}</h3>
+                    <p>{{ this.quizMetaData.description }}</p>
+                </div>
+                {{/each}}
+            {{else}}
+                {{! no quizzes exist; display appropriate message }}
+                <div class="list-question">
+                    <p>No quizzes could be found.</p>
+                </div>
+            {{/if}}
+        </script>
+
+
         <script type="text/x-handlebars-template" id="quiz-form-template">
             <form class="cf" id="quiz-form">
                 <h2>Create a <span>quiz</span></h2>
@@ -222,12 +243,12 @@
         <script type="text/x-handlebars-template" id="matching-template">
             <form class="cf specifc_quiz_form" id="matching">
                 <h2>Create Matching Question</h2>
-
+                <h3>Title</h3>
                 <div>
                     <textarea rows="1" cols="40" id="match_question_header" name="description"
                         placeholder="Enter title to identify question"></textarea>
                 </div>
-
+                <h3>Matching</h3>
                 <div class="cf">
                     <textarea rows="5" cols="40" class="matching" name="description"
                         id="match_question"placeholder="Enter question or Leave Empty if No Question"></textarea>

@@ -56,7 +56,7 @@ public class GetData extends HttpServlet implements Constants {
 			Util.validateString(jsonString);
 			
 			Map<String, Object> jsonObject = Json.parseJsonObject(jsonString);
-			Util.validateObject(jsonObject);
+			Util.validateObject(jsonObject); 
 			
 			// Get and validate type for requestMap
 			if (!(jsonObject.get(REQUEST) instanceof Map<?, ?>)) {
@@ -66,6 +66,7 @@ public class GetData extends HttpServlet implements Constants {
 			
 			Map<String, Object> requestMap = (Map<String, Object>) jsonObject.get(REQUEST);
 			Util.validateObject(requestMap);
+			
 			
 			// Get request type
 			String requestType = (String) requestMap.get(TYPE);
@@ -92,7 +93,7 @@ public class GetData extends HttpServlet implements Constants {
 				}
 				result.put(DATA, resultList);
 				
-				
+				//
 			// All Quizzes of Creator
 			} else if (requestType.equals(ALL_CREATOR_QUIZZES)) {
 				String creatorName = (String) requestMap.get(CREATOR);

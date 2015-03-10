@@ -23,6 +23,7 @@
     var matchingTemplate = document.getElementById('matching-template');
     var responseTemplate = document.getElementById('response-template');
     var submissionForm = document.getElementById('submission-template');
+    var leftPaneQuizzesTemplate = document.getElementById('left-pane-quizzes-template');
     
 
 
@@ -36,7 +37,8 @@
         renderMultiResponseQuestion: Handlebars.compile(multiResponseTemplate.innerHTML),
         renderMatchingQuestion: Handlebars.compile(matchingTemplate.innerHTML),
         renderResponseQuestion: Handlebars.compile(responseTemplate.innerHTML),
-        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML)
+        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML),
+        renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML )
     };
 
     // HELPER FUNCTIONS 
@@ -82,8 +84,10 @@
         });
 
         $('#my-quizzes').click( function() {
+            var creator = getUrlVar("user");
+            $('#my-quizzes').prop("disabled",true);
             var URL = "/QuizWebsite/GetData";
-            var myRequest = { request: { type: "allQuizzes" } };
+            var myRequest = { request: { type: "allCreatorQuizzes", creator: creator } };
             $.ajax({
                 url: URL,
                     type: 'POST',
@@ -93,7 +97,8 @@
                     contentType: 'application/x-www-form-urlencoded',
 
                     success: function(data, textStatus, jqXHR) {
-                        console.log( data );
+                        $('#my-quizzes').prop("disabled",false);
+                        displayOnLeftPane(data);
                     }
             }); 
         });
@@ -141,11 +146,13 @@
             var question = $('#fill_in_the_blank_question').val();
             var answer = $('#enter_answer').val();
             var blank = $('#enter_blank').val();
-
-            if ( typeof questionInfo === 'undefined' ) {
-                initializeFITBQuestionInfo(type, question, answer, blank);
-            } else {
-                addAnotherFandBAnswer(type, question, answer, blank);
+            
+            if ( validateForm(type, question, answer, blank) ) {
+                if ( typeof questionInfo === 'undefined' ) {
+                    initializeFITBQuestionInfo(type, question, answer, blank);
+                } else {
+                    addAnotherFandBAnswer(type, question, answer, blank);
+                }
             }
         });
 
@@ -264,6 +271,30 @@
      
     // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
     // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+
+    function displayOnLeftPane(quizzes) {
+        console.log( quizzes );
+        console.log( quizzes.status.success );
+        var arg = { success: quizzes.status.success, quizzes: quizzes.data };
+        $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: arg.success, quizzes: arg.quizzes} ) );
+        $('left-pane').html("Hello");
+    }
+
+    function validateForm(questionType, question, answer, blank) {
+        if ( question === "" ) {
+            alert("You Must Enter A Question.");
+            return false;
+        } else if ( blank === "" ) {
+            alert("You Must Enter A Blank");
+            return false;
+        } else if ( answer === "" ) {
+            alert("You Must Enter A Value For The Answer");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function getUrlVar(key){
         var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
         return result && unescape(result[1]) || ""; 
