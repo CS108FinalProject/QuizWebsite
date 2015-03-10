@@ -410,12 +410,33 @@
             </form>
         </script>
 
+        <!-- template to display SUBMISSION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="one-page-display-template">
+            <form class="cf" id="edit-quiz-options">
+                {{#if onepage }}
+                    {{#each questions}}
+                            <div id="response_single_page">
+                                <h2>Question {{@index}} </h2>
+                                <p id="response_question">{{this.question}}</p>
+                                <input type="text" placeholder="Enter your answer">
+                            </div>
+                    {{/each}}
+                {{else}}
+
+                    {{! no quizzes exist; display appropriate message }}
+                    <div class="list-question">
+                        <p>No questions could be found.</p>
+                    </div>
+                {{/if}}
+            </form>
+        </script>
+
         <!--TEST CODE FOR SINGLE RESPONSE RENDERING TEMPLATE -->
         <script type="text/x-handlebars-template" id="single-response-test">
             <form class="cf" id="edit-quiz-options">
                 {{#each questions}}
                     <div id="response_single_page">
-                        <h2>Question {{inc @index} </h2>
+                        <h2>Question {{@index}} </h2>
                         <p id="response_question">{{this.question}}</p>
                         <input type="text" placeholder="Enter your answer">
                     </div>

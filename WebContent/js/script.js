@@ -1,6 +1,6 @@
 (function(window, document, undefined) {
     
-    
+
     // pane elementss
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
@@ -106,12 +106,12 @@
 
     // TO DO
     function generateOnePageQuiz() {
-        var template = document.getElementById('single-response-test');
-        console.log( template );
-        var obj = Handlebars.compile( template.innerHTML );
-        console.log( obj );
-        var questions = [{question: "Who is the first President"}, {question: "Who is the second President"}];
-        $('#right-pane').html( obj( {questions: questions}) );
+        var template = document.getElementById('one-page-display-template');
+        var render = Handlebars.compile( template.innerHTML );
+        console.log( getQuizToTake() );
+        var questions = getQuizToTake().questions;
+        var onepage = getQuizToTake().quizMetaData.is_one_page;
+        $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
     }
 
     generateOnePageQuiz();
@@ -133,6 +133,37 @@
     // TO DO
     function generateMultiplePageQuizWithNoFeedBack() {
 
+    }
+
+    function storeBooleanTypeForQuestion( response ) { 
+        // store boolean types of question types
+        var questions = response.data.questions;
+        for(var i = 0; i < questions.length; i++) {
+            switch( questions[i].type ) {
+                case "Response":
+                    questions[i].isResponse = true;
+                    break;
+                case "Fill_Blank":
+                    questions[i].isFillInTheBlank = true;
+                    break;
+                case "Multiple_Choice":
+                    questions[i].isMultipleChoice = true;
+                    break;
+                case "Picture":
+                    questions[i].isPicture = true;
+                    break;
+                case "MultiResponse":
+                    questions[i].isMultiResponse = true;
+                    break;
+                case "Matching":
+                    questions[i].isMatching = true;
+                    break;
+                default:
+                    // don't add any booleans
+            }
+        }
+        response.data.questions = questions;
+        storeQuizToTake( response.data )
     }
 
     // LISTENERS
@@ -862,9 +893,9 @@
 
             success: function(response, textStatus, jqXHR) {
                 if ( response.status.success ) {
-                    storeQuizToTake( response.data )
+                    storeBooleanTypeForQuestion( response )
+                    console.log( getQuizToTake())
                 }
-
                 // tested -> works proper way to obtain booleans
                 var onePage = getQuizToTake().quizMetaData.is_one_page;
                 var isImmediate = getQuizToTake().quizMetaData.is_immediate;
