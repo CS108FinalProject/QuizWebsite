@@ -147,7 +147,7 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 						((Picture) question).setAnswers(answers);
 					} else if (type.equals(MULTI_RESPONSE)) {
 						question = (MultiResponse) question_map.get("question");
-						TreeMap<Integer, String> answers = (TreeMap<Integer, String>) question_map.get("answers");
+						List<String> answers = (List<String>) question_map.get("answers");
 						((MultiResponse) question).setAnswers(answers);
 					} else if (type.equals(MATCHING)) {
 						question = (Matching) question_map.get("question");
