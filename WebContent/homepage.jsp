@@ -129,7 +129,6 @@ List<Object> content_to_display = (List<Object>)request.getAttribute("content_to
 		<%}%>
 		
 
-<<<<<<< HEAD
 			<div class = "divs-to-float"  id = "div-account-content">
 				<table id = "table-account-content">
 					<tr>
