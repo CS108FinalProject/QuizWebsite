@@ -85,6 +85,9 @@ public interface Constants {
 	public static final String I_AM_THE_GREATEST = "I am the Greatest";
 	public static final String PRACTICE_MAKES_PERFECT = "Practice Makes Perfect";
 	
+	// Announcements table
+	public static final String ANNOUNCEMENTS = "Announcements";
+	
 	// Question Types list
 	public static final List<String> QUESTION_TYPES = new ArrayList<String>(
 			Arrays.asList(RESPONSE, FILL_BLANK, MULTIPLE_CHOICE, PICTURE, 
