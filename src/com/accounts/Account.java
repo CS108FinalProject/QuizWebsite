@@ -503,7 +503,7 @@ public class Account implements Constants {
 	}
 	
 	/**
-	 * create a new announcement in the announcements table.
+	 * create a new announcement in the announcements table. 
 	 * @param content
 	 */
 	public void createAnnouncement(String content) {
