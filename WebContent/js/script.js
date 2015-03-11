@@ -108,7 +108,6 @@
     function generateOnePageQuiz() {
         var template = document.getElementById('one-page-display-template');
         var render = Handlebars.compile( template.innerHTML );
-        console.log( getQuizToTake() );
         var questions = getQuizToTake().questions;
         var onepage = getQuizToTake().quizMetaData.is_one_page;
         $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
@@ -171,6 +170,28 @@
 
         /*************************LEFT PANE EVENT LISTENERS**************************/
 
+        $('#left-pane').on('click', '#lp-quiz-name', function(event) {
+            event.preventDefault();
+            console.log( "I am checked");
+            $('#lp-quiz-edit').prop("disabled",true);
+            var quizName = $('#lp-quiz-name').text();
+            var myQuizzes = getMyQuizzes();
+            var quizzes = myQuizzes.data; // array of quiz objects
+            var questionsArr;
+            var success = myQuizzes.status.success;
+            for(var i = 0; i < quizzes.length; i++ ) {
+                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+                    questionsArr = quizzes[i].questions
+                }
+            }
+            console.log( questionsArr );
+            $('#lp-quiz-edit').prop("disabled",false);
+            $('#right-pane').html( templates.renderEditQuizOptions( 
+                            {questions: questionsArr, success: success}) );
+ 
+
+        });
+        
         $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
             event.preventDefault();
             console.log( "I am checked");
@@ -893,8 +914,7 @@
 
             success: function(response, textStatus, jqXHR) {
                 if ( response.status.success ) {
-                    storeBooleanTypeForQuestion( response )
-                    console.log( getQuizToTake())
+                    storeBooleanTypeForQuestion( response );
                 }
                 // tested -> works proper way to obtain booleans
                 var onePage = getQuizToTake().quizMetaData.is_one_page;
