@@ -45,10 +45,10 @@ public class LoginServlet extends HttpServlet {
 					Account acct = AccountManager.getAccount(username);
 					getServletContext().setAttribute("session_user",username);
 					if (acct.isAdmin()) {
-						RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
+						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
 						dispatch.forward(request, response);
 					} else {
-						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+ username); 
+						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
 						dispatch.forward(request, response);
 					}
 				} else {

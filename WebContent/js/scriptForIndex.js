@@ -85,30 +85,55 @@
 
 		
 
-		/*
-		//listen to the registration submit
-		$('#index_box').on('click','#registration-submit', function(event) {
+		
+		//listen to the login submit
+		$('#index_box').on('click','#login-submit', function(event) {
 			event.preventDefault();
 			var username = $('#username').val();
 			var password = $('#password').val();
-			var isAdmin = $('#isAdministrator').val().is(':checked');
-			localStorage.username = username;
-			localStorage.password = password;
-			localStorage.admin = isAdmin;
+
 			
 			
 		});
 		
+		var obj = {name: "Hello", isSafe: true}
 		
 		// Listen to the login submit
 		$('#index_box').on('click','#registration-submit', function(event) {
 			event.preventDefault();
+            var URL = "/QuizWebsite/RegistrationServlet";
 			var username = $('#username').val();
+			
+			if (username === undefined) {
+				username = null
+			}
+			
 			var password = $('#password').val();
-			localStorage.username = username;
-			localStorage.password = password;
+			
+			if (password === undefined) {
+				password = null
+			}
+			var isAdmin = $('#isAdministrator').val().is(':checked');
+			if (isAdmin === undefined) {
+				isAdmin = null
+			}
+			
+			$.ajax({
+				url:URL,
+				type: 'POST',
+				asynch: true,
+				data: {user: username, password:password, isAdministrator:isAdmin },
+                contentType: 'application/x-www-form-urlencoded',
+                success: function(data, textStatus, jqXHR) {
+                	if (data.status.success === true) {
+                	    window.location.assign("/WebContent/homepage.jsp");
+                    	templates.renderSomePage(json);
+                    	
+                	} 	
+                }              					
+			});	
 		});
-		*/
+		
 		
 		/*
 		indexDiv.addEventListener('click',function(event) {
