@@ -9,10 +9,10 @@
 <html>
 <head>
 
-<!-- <link rel="stylesheet" href="css//main.css" ></link>
- -->
+<link rel="stylesheet" href="css//style.css" ></link>
+<!--
  <link rel="stylesheet" href="homepage.css" ></link>
- 
+ -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
@@ -21,84 +21,92 @@ String sel_type = (String)request.getParameter("choice");
 <title>Welcome <%=name%></title>
 </head>
 	
-<body>
-	<%String errMsg = (String)request.getAttribute("errMsg");%>
-	<%if (errMsg != null) {%>
-		<%= errMsg%>
-	<%}%>
-	<table id="header">
-			<tr>
-				<%if(acct.isAdmin()) {
-					out.println("<th<a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
-					out.println("<th<a href = \"homepage.jsp\">Homepage</a></th>");
-				}
-				
-					%> 
-					
-				<th><a href = <%="\"adminHomepage.jsp?id="+name+"\""%>>Homepage</a></th>
-				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
-				<th>My Achievements</th>
-				<th>My Messages 
-					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
-						<select name = "choice">
-							<option>Received Messages</option>
-							<option>Sent Messages</option>
-							<option>Send A Message</option>
-						</select>
-						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
-						<input name="id" type="hidden" value=<%=name%>>
-						<input type = "submit" value = "Go">
-					</form>
-				</th>
-				<th> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
-				<li><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></li>
-				<th><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
-			</tr>
-	</table>
 	
-	<h2>Nice to see you, <%=name %></h2>
-	<table id = "admin_content">
-		<tr>
-			<td>
-				<div id = "addAnnouncement">
-					Add an Announcement<br></br>
-					<form action = "AdminServlet" method = "POST">
-						<input type = "hidden" name = "id" value = "<%=name %>">
-						<textarea rows = "4" cols = "50" name = "new_ancmnt"></textarea>
-						<input type = "submit"></input>
-					</form>
-				</div>
-				<div id = "siteStats">
-					Site Statistics<br></br>	
-				</div>	
-			</td>
-		</tr>
-		<tr>
-			<td>
-					<div id = "removeAcct">
-						Remove Account<br></br>
-						<form action = "AdminServlet" method = "POST">
-							Account id: <input type = "text" name = "remove_acct" placeholder = <% 
-							Object removed_id = request.getAttribute("remove_acct");
-							if (removed_id != null ) {
-								removed_id = (String)removed_id;
-								out.println("\"Account "+removed_id+" removed.\"");
-							} else {
-								out.println("\"No Account Removed\"");
-							}
-							%>></input>
-							Re-enter account id:<input type = "text" name = "conf_remove_acct"></input>	
-							<input type = "hidden" name = "id" value = <%="\""+name+"\"" %>>					
-							<input type = "submit"></input>
-						</form>
-					</div>									
-			</td>
-		</tr>
-		<tr>
-			<td> Promote User To Admin
-				<form action = "AdminServlet" method = "POST">
-					Account<input type = "text" name = "promote_acct" placeholder = <% 
+<body>
+	
+	<div id = "homepage-wrapper"> 
+		<%String errMsg = (String)request.getAttribute("errMsg");%>
+		<%if (errMsg != null) {%>
+			<%= errMsg%>
+		<%}%>
+		<header>
+			<table id="header">
+					<tr>
+						<%
+						if(acct.isAdmin()) {
+							out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+						} else {
+							out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+						}
+						%>					
+						<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
+						<th class = "btn">My Achievements</th>
+						<th class = "btn">My Messages 
+							<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
+								<select name = "choice">
+									<option>Received Messages</option>
+									<option>Sent Messages</option>
+									<option>Send A Message</option>
+								</select>
+								<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+								<input name="id" type="hidden" value=<%=name%>>
+								<input type = "submit" value = "Go">
+							</form>
+						</th>
+						<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
+						<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
+						<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
+						 
+					</tr>
+			</table>
+		</header>
+		<h2>Nice to see you, <%=name %></h2>
+
+		<% if(acct.isAdmin()) {%>
+			<%/*Begin adminContent div*/ %>
+			<%out.println("<div class = \"divs-to-float\" id = \"div-admin-content\">"); %>
+			<%out.println("<table id = \"table-admin-content\">");%>
+			<%out.println("<tr>");%>
+			<%out.println("<td>");%>
+			
+			<%/*Begin addAnnouncement div*/ %>
+			<% out.println("<div id = \"addAnnouncement\">"); %>
+			<%out.println("Add an Announcement<br></br>");%>		
+			<%out.println("<form class = \"cf\" action = \"AdminServlet\" method = \"POST\">");%>
+			<%out.println("<input type = \"hidden\""+ name+"= \"id\" value = \"name\">"); %>
+			<%out.println("<textarea rows = \"4\" cols = \"15\" name = \"new_ancmnt\"></textarea>");%>
+			<%out.println("<input type = \"submit\"></input>"); %>
+			<%out.println("</form></div>");%>
+			<%/*End addAnnouncement div*/ %>
+			
+			<%/*Begin siteStats div*/ %>
+			<%out.println("<div id = \"siteStats\">");%>
+			<%out.println("\"Site Statistics\"<br></br></div></td></tr><tr><td>");%>
+			<%/*End siteStats div*/ %>
+			
+			<%/*Begin removeAcct div*/ %>
+			<%out.println("<div id = \"removeAcct\">"+"Remove Account<br></br>");%>
+			<%out.println("<form action = \"AdminServlet\" method = \"POST\">");%>
+			<%out.println("Account id: <input type = \"text\" name = \"remove_acct\"");%> 
+			<%out.println("placeholder = ");%>
+			<%Object removed_id = request.getAttribute("remove_acct");
+					if (removed_id != null ) {
+						removed_id = (String)removed_id;
+						out.println("Account "+removed_id+" removed.");
+					} else {
+						out.println("\"No Account Removed\"");
+					}
+			%>
+			<%out.println("</input>");%>	
+			<%out.println("Re-enter account id:<input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
+			<%out.println("<input type = \"hidden\" name = \"id\" value = \""+name+"\" >");%>
+			<%out.println("<input type = \"submit\"></input></form>");%>				
+			
+			<%/*End removeAcct div*/ %>
+			<%out.println("</div></td></tr><tr>");%>
+			<%out.println("<td> Promote User To Admin");%>
+			<% out.println("<form action = \"AdminServlet\" method = \"POST\">Account<input type = \"text\" name = \"promote_acct\" placeholder = ");%>
+			<% 
 							Object promoted_id = request.getAttribute("promote_acct");
 							if (promoted_id != null ) {
 								promoted_id = (String)promoted_id;
@@ -106,6 +114,7 @@ String sel_type = (String)request.getParameter("choice");
 							} else {
 								out.println("\"No Account Promoted\"");
 							}
+
 							%>></input>
 							<input type = "submit"></input>
 				</form>
@@ -131,53 +140,66 @@ String sel_type = (String)request.getParameter("choice");
 				}
 				%>	
 			</div> </td>		
-			<td>
-				<div id = "send_messages">
-					<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
+		
+					<td>
+						<div id = "send_messages">
+							<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
+						</div>
+						<div id="read_messages">
+							<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+								<select name = "choice">
+									<option>Received Messages</option>
+									<option>Sent Messages</option>
+								</select>
+								<input type = "submit" value = "Display Messages">
+							</form>
+							<%		
+								//TODO: The ReceivedMessages is buggy.						
+								List<Message> messages = acct.getReceivedMessages();	
+								out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
+								if (messages.size() > 0) {
+									out.println("<table>");
+									for ( int i = messages.size() -1; i > -1;i-- ) {
+										out.println("<tr>");
+										Message msg = messages.get(i);
+										out.println("<td>"+msg.getSender()+"</td>");
+										out.println("<td>"+msg.getDate()+"</td>");
+										out.println("<td>"+msg.getType()+"</td>");
+										if (i == messages.size() -5) {
+											i = -1;
+										}
+										
+										}
+									}
+									out.println("</table>");
+								}
+								
+							//TODO::Extension to add Sorting mechanisms to table cols					
+							%>				
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+			<div class = "divs-to-float" id = "div-quiz-content">
+				<h3>Quiz Index</h3>
+				<table id = "table-quiz-content">
+					<tr>
+						<td><div  class = "btn" id="achievements">Achievements</div></td>
+						<td><div class = "btn" id="friendsAchievements">Recent Friends Achievements</div></td>
+					</tr>
+					<tr>
+						<td><div class = "btn" id="createdQuizzes">My created Quizzes</div></td>
+						<td><div class = "btn" id="popularQuizzes">Popular Quizzes</div></td>
+					</tr>
+					<tr>
+						<td><div  class = "btn" id="recentQuizzes">Recent Quizzes</div></td>
+						<td><div  class = "btn" id="myHistory">My History</div></td>		
+					</tr>
+				</table>
+				<div id = "result-quiz-content">
 				</div>
-				<div id="read_messages">
-					<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
-						<select name = "choice">
-							<option>Received Messages</option>
-							<option>Sent Messages</option>
-						</select>
-						<input type = "submit" value = "Display Messages">
-					</form>
-					<%			
-						//TODO: The ReceivedMessages is buggy.						
-						List<Message> messages = acct.getReceivedMessages();	
-						out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
-						if (messages.size() > 0) {
-							out.println("<table>");
-							for ( int i = messages.size() -1; i > -1;i-- ) {
-								out.println("<tr>");
-								Message msg = messages.get(i);
-								out.println("<td>"+msg.getSender()+"</td>");
-								out.println("<td>"+msg.getDate()+"</td>");
-								out.println("<td>"+msg.getType()+"</td>");
-								if (i == messages.size() -5) i = -1;
-							}
-							out.println("</table>");
-						}
-						
-					//TODO::Extension to add Sorting mechanisms to table cols					
-					%>				
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td><div id="achievements">Achievements</div></td>
-			<td><div id="friendsAchievements">Recent Friends
-					Achievements</div></td>
-		</tr>
-		<tr>
-			<td><div id="createdQuizzes">My created Quizzes</div></td>
-			<td><div id="popularQuizzes">Popular Quizzes</div></td>
-		</tr>
-		<tr>
-			<td><div id="recentQuizzes">Recent Quizzes</div></td>
-			<td><div id="myHistory">My History</div></td>		
-		</tr>
-	</table>
+			</div>
+		</div>
 </body>
 </html>

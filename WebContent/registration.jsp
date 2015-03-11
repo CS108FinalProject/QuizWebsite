@@ -17,8 +17,10 @@
 	<form action = "RegistrationServlet" method = "POST">
 		<p>Username<input type = "text" class="usr" name = "user"/></p>
 		<p>Password<input type = "password" class="pw" name = "password"/></p>
-		<input type="checkbox" name="isAdministrator" value="Administrator"> Administrator<BR><BR>
+		<div>
+		<input type="checkbox" name="isAdministrator" value="Administrator">Administrator?<BR><BR>
 		<input type = "submit" class="btn" value="sign up" />
+		</div>
 	</form>
 	<p>Already have an Account? <a href = "login.jsp">Login here!</a></p>
 	

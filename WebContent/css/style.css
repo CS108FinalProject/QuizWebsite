@@ -48,6 +48,7 @@ a {
 
 p {
     margin-top: 0px;
+    
 }
 
 form div {
@@ -61,6 +62,8 @@ label {
 input[type="text"], textarea {
     margin-right: 4px;
 }
+
+
 
 /*========================
     Checkboxes
@@ -94,6 +97,11 @@ header h1 a {
     color: #fff;
     padding-left: 25px;
 }
+
+ th p {
+  text-align: -webkit-left;
+ 
+ }
 
 /*==============================*
          WELCOME PAGE STYLING
@@ -179,14 +187,91 @@ header a.btn {
 
 
 
+/**************************** HOMEPAGE STYLING******************/
+#header  {
+    margin-bottom: 10px;
+    font-weight: bold;  
 
-/* END WELCOME PAGE STYLING */
+}
+#header tr {
+}
+
+#header th.btn {	
+	border: 2px solid black;
+	color: white;
+	float: left;
+	
+}
+
+
+#header th.btn a {
+	text-decoration: none;
+	color: white;
+}
+
+#msg-header {
+	padding: 1px 10px 1px;
+	
+}
+
+
+ #homepage-wrapper div {
+ 	border: 2px solid #34495E;
+ }
+ 
+ #addAnnouncement div {
+	position: absolute;
+}
+
+#addAnnouncement textarea {
+	padding:0px;	
+	rows: 5px;
+	cols: 20px;
+}
+ /*For styling the generic user content*/
+
+#div-account-content  {
+	position: relative;
+/* 	margin-right: 500px;
+	margin-left: 500px; */
+/* 	border: 2px solid #34495E;
+ */}
+ 
+ #encapsulate-generic-content {
+ 	width: 500px;
+ }
+ 
+
+ 
+ div.divs-to-float{
+ 	float: left;	
+ }
+ 
+ #result-quiz-content {
+ height: 200px;
+ }
+  
+	#quiz-index {
+		align-content: left;
+	}
+
+/*Admin-Content*/
+#div-admin-content  {
+	width: 500px;
+}
+
+
+table-result-quiz-content {
+	
+}
+
+/******************		END 	************/
+
 
 #wrapper {
     width: 1200px;
     height: 100%;
 }
-
 #navigation {
     float: left;
     width: 450px;
