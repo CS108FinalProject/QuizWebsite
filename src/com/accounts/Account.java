@@ -550,6 +550,9 @@ public class Account implements Constants {
 	}
 	
 	
+	//public String getRecentFriendActivi
+	
+	
 	
 	
 	//----------------------------Helper Methods-------------------------------//

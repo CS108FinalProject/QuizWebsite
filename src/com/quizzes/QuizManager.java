@@ -300,5 +300,10 @@ public class QuizManager implements Constants {
 	}
 	
 	
+	public static void main(String[] args) {
+		new Database();
+		Quiz quiz = QuizManager.getQuiz("TestIII");
+		System.out.println(quiz.getDescription());
+	}
 
 }
