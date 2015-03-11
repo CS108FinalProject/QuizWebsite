@@ -17,6 +17,7 @@
 <%String name = (String)getServletContext().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
+List<Object> content_to_display = (List<Object>)request.getAttribute("content_to_display");
 %>
 <title>Welcome <%=name%></title>
 </head>
@@ -28,10 +29,11 @@ String sel_type = (String)request.getParameter("choice");
 		<%String errMsg = (String)request.getAttribute("errMsg");%>
 		<%if (errMsg != null) {%>
 			<%= errMsg%>
+			<%request.setAttribute("errMsg", null);%>
 		<%}%>
 		<header>
 			<table id="header">
-					<tr>
+					<tr >
 						<%
 						if(acct.isAdmin()) {
 							out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
@@ -41,12 +43,11 @@ String sel_type = (String)request.getParameter("choice");
 						%>					
 						<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
 						<th class = "btn">My Achievements</th>
-						<th class = "btn">My Messages 
+						<th  id = "msg-header" class = "btn">My Messages 
 							<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 								<select name = "choice">
 									<option>Received Messages</option>
 									<option>Sent Messages</option>
-									<option>Send A Message</option>
 								</select>
 								<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
 								<input name="id" type="hidden" value=<%=name%>>
@@ -55,8 +56,7 @@ String sel_type = (String)request.getParameter("choice");
 						</th>
 						<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
 						<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
-						<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>
-						 
+						<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>						 
 					</tr>
 			</table>
 		</header>
@@ -128,79 +128,96 @@ String sel_type = (String)request.getParameter("choice");
 			
 		<%}%>
 		
-		<div class = "divs-to-float"  id = "div-account-content">
-			<table id = "table-account-content">
-				<tr>
-					<%//Displays any admin announcements as a list%>
-					<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
-					<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
-						<%if (admin_anmts != null) { 
-							out.println("<ul>");
-							int anmts_len = admin_anmts.size();
-							for (int i = anmts_len - 1; i > -1; i--) { 
-								out.println("<li>"+admin_anmts.get(i)+"</li>");
-								if (i == anmts_len - 5) i = -1;
-							} 
-							out.println("</ul>");
-						} else {
-							out.println("<br></br>Hello, no new announcements.");
-						}
-						%>	
-					</div> </td>		
-					<td>
-						<div id = "send_messages">
-							<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
-						</div>
-						<div id="read_messages">
-							<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
-								<select name = "choice">
-									<option>Received Messages</option>
-									<option>Sent Messages</option>
-								</select>
-								<input type = "submit" value = "Display Messages">
-							</form>
-							<%			
-								//TODO: The ReceivedMessages is buggy.						
-								List<Message> messages = acct.getReceivedMessages();	
-								out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
-								if (messages.size() > 0) {
-									out.println("<table>");
-									for ( int i = messages.size() -1; i > -1;i-- ) {
-										out.println("<tr>");
-										Message msg = messages.get(i);
-										out.println("<td>"+msg.getSender()+"</td>");
-										out.println("<td>"+msg.getDate()+"</td>");
-										out.println("<td>"+msg.getType()+"</td>");
-										if (i == messages.size() -5) i = -1;
-									}
-									out.println("</table>");
-								}
-								
-							//TODO::Extension to add Sorting mechanisms to table cols					
-							%>				
-						</div>
-					</td>
-				</tr>
-			</table>
-		</div>
-			<div class = "divs-to-float" id = "div-quiz-content">
-				<table id = "table-quiz-content">
+
+			<div class = "divs-to-float"  id = "div-account-content">
+				<table id = "table-account-content">
 					<tr>
-						<td><div  class = "btn" id="achievements">Achievements</div></td>
-						<td><div class = "btn" id="friendsAchievements">Recent Friends Achievements</div></td>
-					</tr>
-					<tr>
-						<td><div class = "btn" id="createdQuizzes">My created Quizzes</div></td>
-						<td><div class = "btn" id="popularQuizzes">Popular Quizzes</div></td>
-					</tr>
-					<tr>
-						<td><div  class = "btn" id="recentQuizzes">Recent Quizzes</div></td>
-						<td><div  class = "btn" id="myHistory">My History</div></td>		
-					</tr>
-				</table>
-				<div id = "result-quiz-content">
+						<%//Displays any admin announcements as a list%>
+						<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
+						<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
+							<%if (admin_anmts != null) { 
+								out.println("<ul>");
+								int anmts_len = admin_anmts.size();
+								for (int i = anmts_len - 1; i > -1; i--) { 
+									out.println("<li>"+admin_anmts.get(i)+"</li>");
+									if (i == anmts_len - 5) i = -1;
+								} 
+								out.println("</ul>");
+							} else {
+								out.println("<br></br>Hello, no new announcements.");
+							}
+							%>	
+						</div> </td></tr>		
+						<tr>
+							<td>
+								<div id = "send_messages">
+									<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
+								</div>
+								<div id="read_messages">
+									<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+										<select name = "choice">
+											<option>Received Messages</option>
+											<option>Sent Messages</option>
+										</select>
+										<input type = "submit" value = "Display Messages">
+									</form>
+									<%			
+										List<Message> messages = acct.getReceivedMessages();	
+										out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
+										if (messages.size() > 0) {
+											out.println("<table>");
+											for ( int i = messages.size() -1; i > -1;i-- ) {
+												out.println("<tr>");
+												Message msg = messages.get(i);
+												out.println("<td>"+msg.getSender()+"</td>");
+												out.println("<td>"+msg.getDate()+"</td>");
+												out.println("<td>"+msg.getType()+"</td>");
+												if (i == messages.size() -5) i = -1;
+											}
+											out.println("</table>");
+										}
+										
+									//TODO::Extension to add Sorting mechanisms to table cols					
+									%>				
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id = "quiz-index">	
+									<tr><th>Quiz Index</th></tr>				
+									<tr>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=achievements"  class = "btn" id="achievements">Achievements</a></td>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=friendsAchievements" class = "btn" id="friendsAchievements">Recent Friends Achievements</a></td>
+									</tr>
+									<tr>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=createdQuizzes" class = "btn" id="createdQuizzes">My created Quizzes</a></td>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=popularQuizzes" class = "btn" id="popularQuizzes">Popular Quizzes</a></td>
+									</tr>
+									<tr>
+										<td><a  href = "HomepageQuizIndexServlet?type_to_display=recentQuizzes" class = "btn" id="recentQuizzes">Recent Quizzes</a></td>
+										<td><a  href = "HomepageQuizIndexServlet?type_to_display=myHistory" class = "btn" id="myHistory">My History</a></td>		
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<div id = "result-quiz-content">
+						<%if(content_to_display != null) {
+							String cont_type = (String)request.getParameter("type_to_display"); 
+							int cont_size = content_to_display.size();
+							out.println("<table id = \"table-result-quiz-content\"> ");
+							for (int i = cont_size - 1; i >= 0;i-- ) {	
+								out.println("<tr>");
+								out.println("<td>"+content_to_display.get(i)+"</td>");
+								out.println("</tr>");
+							}
+							out.println("</table>");			
+						}%>					
+						
+					</div>
 				</div>
 			</div>
-		</div>
+			
 </body>
 </html>
