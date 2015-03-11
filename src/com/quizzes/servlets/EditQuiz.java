@@ -84,11 +84,20 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 				}
 			}
 			
-			
+			request.setAttribute(QUIZ_NAME, modQuizName);
+			RequestDispatcher dispatch = request.getRequestDispatcher("editQuiz.jsp"); 
+			dispatch.forward(request, response);
 			
 		} else if (requestType.equals(REMOVE_QUIZ)) {
 			quiz.removeQuiz();
 			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
+			dispatch.forward(request, response);
+			
+		} else if (requestType.equals(REMOVE_QUESTIONS)) {
+			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);
+			request.setAttribute(QUIZ_NAME, modQuizName);
+			request.setAttribute(QUIZ_NAME, quizName);
+			RequestDispatcher dispatch = request.getRequestDispatcher("removeQuestions.jsp"); 
 			dispatch.forward(request, response);
 			
 		} else if (requestType.equals(ADD_QUESTIONS)) {

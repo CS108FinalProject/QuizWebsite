@@ -146,4 +146,21 @@ public class AccountManager implements Constants {
 		}
 		return users;
 	}
+	
+	
+	/**
+	 * Returns a list of all announcements.
+	 * @return
+	 */
+	public static List<String> getAnnouncements() {
+		List<String> announcements = new ArrayList<String>();
+		List<Map<String,Object>> rows = Database.getTable(ANNOUNCEMENTS);
+		
+		// add all announcement contents to the list
+		for (Map<String,Object> row : rows) {
+			announcements.add((String) row.get(CONTENT));
+		}
+		
+		return announcements;
+	}
 }

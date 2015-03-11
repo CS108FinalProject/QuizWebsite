@@ -2,6 +2,7 @@
     pageEncoding="US-ASCII"%>
 
 <%@ page import = "com.accounts.*"%>
+<%@ page import = "com.quizzes.*"%>
 <%@ page import = "com.util.*"%>
 <%@ page import = "java.util.*"%>
 <%@ page import = "javax.swing.*" %>
@@ -25,18 +26,19 @@
   		if (errMsg != null) {
  			 out.println("<p>"+errMsg+"</p><BR>");
   		}
+  		//System.out.println("description: " + QuizManager.getQuiz(quizName).getDescription());
   	%>
 	
-	<form action="EditQuizServlet" method="post"> 
+	<form action="EditQuiz" method="post"> 
 		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR>
-		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> >Description</textarea><BR><BR>
+		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
 		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%>> Is Immediate<BR>
 		<input type="checkbox" name=<%=Constants.IS_RANDOM%>> Is Random<BR>
 		<input type="checkbox" name=<%=Constants.IS_ONE_PAGE%>> Is One Page<BR><BR>
 		<input type = "hidden" name=<%=Constants.QUIZ_NAME%> value = <%=quizName%>>
-		<input type="submit" name=<%=Constants.REQUEST%> value=<%=Constants.REMOVE_QUIZ%>>
-		<input type="submit" name=<%=Constants.REQUEST%> value=<%=Constants.REMOVE_QUESTIONS%>>
-		<input type="submit" name=<%=Constants.REQUEST%> value=<%=Constants.SAVE_CHANGES%>>
+		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Quiz">
+		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Questions">
+		<input type="submit" name=<%=Constants.REQUEST%> value="Save Changes">
 	</form>
 
 </body>
