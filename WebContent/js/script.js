@@ -191,7 +191,7 @@
  
 
         });
-        
+
         $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
             event.preventDefault();
             console.log( "I am checked");
@@ -240,6 +240,50 @@
                     }
             }); 
         });
+
+
+        // Listen to Dropdown of Selected
+        $("#quiz_selection").on("change", function() {
+
+            // jQuery
+            var selectedVal = $(this).find(':selected').val();
+            var selectedText = $(this).find(':selected').text();
+            console.log( selectedVal );
+            console.log( selectedText );
+
+            var type;
+            switch (selectedVal) {
+                case "mostPopularQuizzes":
+                    type = "mostPopularQuizzes";
+                    break;
+                case "allQuizzes":
+                    type = "allQuizzes";
+                    break;
+                case "recentlyCreatedQuizzes":
+                    type = "recentlyCreatedQuizzes";
+                    break;
+                default:
+                // do nothing
+            }
+
+            if ( selectedVal === "mostPopularQuizzes" ) {
+                var URL = "/QuizWebsite/GetData";
+                var myRequest = { request: { type: type, numRecords: 10 } };
+                $.ajax({
+                    url: URL,
+                        type: 'POST',
+                        async: true,
+                        dataType: 'json',
+                        data: { json: JSON.stringify(myRequest) },
+                        contentType: 'application/x-www-form-urlencoded',
+
+                        success: function(data, textStatus, jqXHR) {
+                            console.log(data);
+                        }
+                }); 
+            }
+        });
+
 
         /*************************RIGHT PANE EVENT LISTENERS**************************/
 
