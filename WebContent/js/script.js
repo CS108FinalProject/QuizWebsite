@@ -1,6 +1,5 @@
 (function(window, document, undefined) {
     
-
     // pane elementss
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
@@ -113,8 +112,6 @@
         $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
     }
 
-    generateOnePageQuiz();
-
     // TO DO
     function generateMultiplePageQuiz(isImmediate) {
         if ( isImmediate ) {
@@ -216,7 +213,6 @@
         
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
-            console.log("hello world");
             $('#right-pane').html( templates.renderQuizForm() );
         });
 
@@ -246,42 +242,42 @@
         $("#quiz_selection").on("change", function() {
 
             // jQuery
+            var creator = getUrlVar("user");
             var selectedVal = $(this).find(':selected').val();
             var selectedText = $(this).find(':selected').text();
-            console.log( selectedVal );
-            console.log( selectedText );
-
             var type;
+            var myRequest;
             switch (selectedVal) {
                 case "mostPopularQuizzes":
                     type = "mostPopularQuizzes";
+                    myRequest = {request: { type: type, creator: creator  } };
                     break;
                 case "allQuizzes":
                     type = "allQuizzes";
+                    myRequest = {request: { type: type } };
                     break;
                 case "recentlyCreatedQuizzes":
                     type = "recentlyCreatedQuizzes";
+                    myRequest = {request: { type: type, numRecords: 10} };
                     break;
                 default:
                 // do nothing
             }
 
-            if ( selectedVal === "mostPopularQuizzes" ) {
-                var URL = "/QuizWebsite/GetData";
-                var myRequest = { request: { type: type, numRecords: 10 } };
-                $.ajax({
-                    url: URL,
-                        type: 'POST',
-                        async: true,
-                        dataType: 'json',
-                        data: { json: JSON.stringify(myRequest) },
-                        contentType: 'application/x-www-form-urlencoded',
+            var URL = "/QuizWebsite/GetData";
+            var myRequest = { request: { type: type, numRecords: 10 } };
+            $.ajax({
+                url: URL,
+                type: 'POST',
+                async: true,
+                dataType: 'json',
+                data: { json: JSON.stringify(myRequest) },
+                contentType: 'application/x-www-form-urlencoded',
 
-                        success: function(data, textStatus, jqXHR) {
-                            console.log(data);
-                        }
-                }); 
-            }
+                success: function(data, textStatus, jqXHR) {
+                    displayOnLeftPane(data);
+                }
+            }); 
         });
 
 
@@ -460,7 +456,7 @@
         console.log( quizzes );
         console.log( quizzes.status.success );
         var arg = { success: quizzes.status.success, quizzes: quizzes.data };
-        $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: arg.success, quizzes: arg.quizzes} ) );
+        $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: quizzes.status.success, quizzes: quizzes.data} ) );
         $('left-pane').html("Hello");
     }
 
@@ -945,33 +941,33 @@
      /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
 
      // request database for the quiz
-    var quizName = getUrlVar("quiz"); // tested and works
-    var URL = "/QuizWebsite/GetData";
-    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
-        $.ajax({
-            url: URL,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            data: { json: JSON.stringify(request) },
-            contentType: 'application/x-www-form-urlencoded',
-
-            success: function(response, textStatus, jqXHR) {
-                if ( response.status.success ) {
-                    storeBooleanTypeForQuestion( response );
-                }
-                // tested -> works proper way to obtain booleans
-                var onePage = getQuizToTake().quizMetaData.is_one_page;
-                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
-                if ( onePage ) {           // checked works
-                    generateOnePageQuiz();
-                } else {
-                    // test all values
-                    generateMultiplePageQuiz(isImmediate);
-                }
-
-            }
-    }); 
+//    var quizName = getUrlVar("quiz"); // tested and works
+//    var URL = "/QuizWebsite/GetData";
+//    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
+//        $.ajax({
+//            url: URL,
+//            type: 'POST',
+//            async: true,
+//            dataType: 'json',
+//            data: { json: JSON.stringify(request) },
+//            contentType: 'application/x-www-form-urlencoded',
+//
+//            success: function(response, textStatus, jqXHR) {
+//                if ( response.status.success ) {
+//                    storeBooleanTypeForQuestion( response );
+//                }
+//                // tested -> works proper way to obtain booleans
+//                var onePage = getQuizToTake().quizMetaData.is_one_page;
+//                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
+//                if ( onePage ) {           // checked works
+//                    generateOnePageQuiz();
+//                } else {
+//                    // test all values
+//                    generateMultiplePageQuiz(isImmediate);
+//                }
+//
+//            }
+//    }); 
        
 
 
