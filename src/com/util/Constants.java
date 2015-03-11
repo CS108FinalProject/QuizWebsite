@@ -135,6 +135,7 @@ public interface Constants {
 	public static final String REQUEST = "request";
 	public static final String QUIZ = "quiz";
 	public static final String ALL_QUIZZES = "allQuizzes";
+	public static final String ALL_QUIZZES_STRING = "allQuizzesString";
 	public static final String ALL_CREATOR_QUIZZES = "allCreatorQuizzes";
 	public static final String MOST_POPULAR_QUIZZES = "mostPopularQuizzes";
 	public static final String RECENTLY_CREATED_QUIZZES = "recentlyCreatedQuizzes";
