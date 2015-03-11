@@ -187,6 +187,28 @@ public class Quiz implements Constants {
 	
 	
 	/**
+	 * Changes the name of the quiz to the provided name. Iterates over
+	 * all questions that belong to the quiz and changes names.
+	 * provided name cannot already be in use.
+	 * @param newName
+	 */
+	public void setName(String newName) {
+		Util.validateString(newName);
+		
+		if (QuizManager.quizNameInUse(newName)) {
+			throw new IllegalArgumentException("name " + newName + " already in use.");
+		}
+		
+		this.name = newName;
+		
+		Database.setValues(QUIZZES, QUIZ_NAME, name, QUIZ_NAME, newName);
+		for (String questionType : QUESTION_TYPES) {
+			Database.setValues(questionType, QUIZ_NAME, name, QUIZ_NAME, newName);
+		}
+	}
+	
+	
+	/**
 	 * @return the Account of the quiz creator.
 	 */
 	public Account getCreator() {
@@ -223,6 +245,27 @@ public class Quiz implements Constants {
 		
 		Util.validateObjectType(values.get(0), STRING);
 		return (String) values.get(0);
+	}
+	
+	
+	/**
+	 * Sets the description.
+	 * @param newDescription
+	 */
+	public void setDescription(String newDescription) {
+		Util.validateString(newDescription);
+		
+		int modified = Database.setValues(QUIZZES, QUIZ_NAME, name, DESCRIPTION, newDescription);
+		
+		if (modified == 0) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (modified > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
 	}
 	
 	
@@ -267,6 +310,24 @@ public class Quiz implements Constants {
 	
 	
 	/**
+	 * Sets random status for the quiz.
+	 */
+	public void setRandom(boolean random) {
+		int modified = Database.setValues(QUIZZES, QUIZ_NAME, name, IS_RANDOM, random);
+		
+		if (modified == 0) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (modified > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+	}
+	
+	
+	/**
 	 * @return whether or not the quiz is one page.
 	 */
 	public boolean isOnePage() {
@@ -283,6 +344,24 @@ public class Quiz implements Constants {
 		
 		Util.validateObjectType(values.get(0), BOOLEAN);
 		return (Boolean) values.get(0);
+	}
+	
+	
+	/**
+	 * Sets onePage status for the quiz.
+	 */
+	public void setOnePage(boolean onePage) {
+		int modified = Database.setValues(QUIZZES, QUIZ_NAME, name, IS_ONE_PAGE, onePage);
+		
+		if (modified == 0) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (modified > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
 	}
 	
 	
@@ -304,6 +383,25 @@ public class Quiz implements Constants {
 		Util.validateObjectType(values.get(0), BOOLEAN);
 		return (Boolean) values.get(0);
 	}
+	
+	
+	/**
+	 * Sets immediate status for the quiz.
+	 */
+	public void setImmediate(boolean immediate) {
+		int modified = Database.setValues(QUIZZES, QUIZ_NAME, name, IS_IMMEDIATE, immediate);
+		
+		if (modified == 0) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Cannot find description for " + name);
+		}
+		
+		if (modified > 1) {
+			throw new RuntimeException("Corrupt table status for " + QUIZZES + 
+					" . Duplicate entries for " + name);
+		}
+	}
+
 	
 	
 	/**
@@ -433,10 +531,10 @@ public class Quiz implements Constants {
 			throw new IllegalArgumentException("Both questions have to be the same type");
 		}
 		
-		// Quiz name cannot be modified in a question.
-		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
-			throw new IllegalArgumentException("The quiz name in a question cannot be modified");
-		}
+//		// Quiz name cannot be modified in a question.
+//		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
+//			throw new IllegalArgumentException("The quiz name in a question cannot be modified");
+//		}
 		
 		// If the question prompt was modified, ensure it is not duplicate.
 		if (!oldQuestion.getQuestion().equals(newQuestion.getQuestion())) {

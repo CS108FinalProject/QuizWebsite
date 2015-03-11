@@ -2,6 +2,7 @@ package com.quizzes.servlets;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,27 +45,58 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 		
 		if (requestType.equals(SAVE_CHANGES)) {
 			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);
+			String description = request.getParameter(DESCRIPTION);
+			
+			String isRandomString = request.getParameter(IS_RANDOM);
+			boolean isRandom = (isRandomString != null);
+			
+			String isOnePageString = request.getParameter(IS_ONE_PAGE);
+			boolean isOnePage = (isOnePageString != null);
+			
+			String isImmediateString = request.getParameter(IS_IMMEDIATE);
+			boolean isImmediate = (isImmediateString != null);
+			
+			if (description != null && !description.equals(quiz.getDescription())) {
+				quiz.setDescription(description);
+			}
+			
+			if (isRandom != quiz.isRandom()) {
+				quiz.setRandom(isRandom);
+			}
+			
+			if (isOnePage != quiz.isOnePage()) {
+				quiz.setOnePage(isOnePage);
+			}
+			
+			if (isImmediate != quiz.isImmediate()) {
+				quiz.setImmediate(isImmediate);
+			}
+			
+			if (modQuizName != null && !modQuizName.equals(quiz.getName())) { 
+				// Quiz name was changed and is already taken.
+				if (QuizManager.quizNameInUse(modQuizName)) {
+					request.setAttribute(ERROR_MESSAGE, "The selected quiz name is already in use.");
+					RequestDispatcher dispatch = request.getRequestDispatcher("editQuiz.jsp"); 
+					dispatch.forward(request, response);
+				
+				} else {
+					quiz.setName(modQuizName);
+				}
+			}
+			
+			
 			
 		} else if (requestType.equals(REMOVE_QUIZ)) {
 			quiz.removeQuiz();
-			
-		} else if (requestType.equals(REMOVE_QUESTIONS)) {
-			
+			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
+			dispatch.forward(request, response);
 			
 		} else if (requestType.equals(ADD_QUESTIONS)) {
-			
+			// Not Implemented yet.
 			
 		} else {
-			
+			throw new IllegalArgumentException("Cannot recognize request type " + requestType);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 //		 response.setContentType("application/json");
