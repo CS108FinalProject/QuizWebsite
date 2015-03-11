@@ -25,7 +25,7 @@
 
 
 <body>	
-		<%String errMsg = (String)request.getAttribute("errMsg");%>
+	<%String errMsg = (String)request.getAttribute("errMsg");%>
 	<%if (errMsg == null) { %>
 			<%="<h1>Welcome to ExQuizite!</h1>"%>	
 	<%} else {%>

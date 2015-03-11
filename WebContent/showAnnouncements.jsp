@@ -10,7 +10,7 @@
 <head>
 <%
 String name = (String)getServletContext().getAttribute("session_user");
-List<String> admin_anmts = AccountManager.getAccount(name).getAnnouncements();;
+	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//main.css" ></link>
