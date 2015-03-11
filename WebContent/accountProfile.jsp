@@ -12,7 +12,7 @@
 <body>
 	
 	<%
-		String sender_name =  (String) getServletContext().getAttribute("session_user");
+		String sender_name = (String) getServletContext().getAttribute("session_user");
 		String friend_name;
 		Account acct = AccountManager.getAccount(sender_name);
 		if (request.getParameter("friend_id") != null) {
