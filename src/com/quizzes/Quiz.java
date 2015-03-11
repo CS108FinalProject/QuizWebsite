@@ -556,7 +556,7 @@ public class Quiz implements Constants {
 	public void removeQuestion(Question question) {
 		Util.validateObject(question);
 		for (String tableName : QUESTION_TYPES) {
-			Database.removeRows(tableName, QUIZ_NAME, name, QUESTION, question);
+			Database.removeRows(tableName, QUIZ_NAME, name, QUESTION, question.getQuestion());
 		}
 	}
 	
