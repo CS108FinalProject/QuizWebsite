@@ -156,6 +156,7 @@ public interface Constants {
 	public static final String REMOVE_QUIZ = "remove_quiz";
 	public static final String REMOVE_QUESTIONS = "remove_questions";
 	public static final String ADD_QUESTIONS = "add_questions";
+	public static final String MODIFIED_QUIZ_NAME = "modified_quiz_name";
 	
 	// Edit Quiz Servlet
 	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";

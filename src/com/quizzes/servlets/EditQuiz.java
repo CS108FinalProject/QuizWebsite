@@ -1,7 +1,6 @@
 package com.quizzes.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,16 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.accounts.AccountManager;
 import com.quizzes.Quiz;
 import com.quizzes.QuizManager;
 import com.util.*;
 
-import java.util.*;
-/**
- * Servlet implementation class EditQuiz
- * Author: Kelsey Young Stanford University '15
- */
 @WebServlet("/EditQuiz")
 public class EditQuiz extends HttpServlet implements com.util.Constants {
 	private static final long serialVersionUID = 1L;
@@ -38,23 +31,24 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Re-purposed for HTMP/JSP.
 		
 		String requestType = (String) request.getParameter(REQUEST);
 		Util.validateString(requestType);
 		
+		String quizName = (String) request.getParameter(QUIZ_NAME);
+		Util.validateString(quizName);
+		Quiz quiz = QuizManager.getQuiz(quizName);
+		
+		
 		if (requestType.equals(SAVE_CHANGES)) {
-			
-			
+			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);
 			
 		} else if (requestType.equals(REMOVE_QUIZ)) {
-			
-			
+			quiz.removeQuiz();
 			
 		} else if (requestType.equals(REMOVE_QUESTIONS)) {
-			
 			
 			
 		} else if (requestType.equals(ADD_QUESTIONS)) {
