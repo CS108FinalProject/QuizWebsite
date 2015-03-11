@@ -1,6 +1,6 @@
 (function(window, document, undefined) {
     
-    
+
     // pane elementss
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
@@ -106,12 +106,11 @@
 
     // TO DO
     function generateOnePageQuiz() {
-        var template = document.getElementById('single-response-test');
-        console.log( template );
-        var obj = Handlebars.compile( template.innerHTML );
-        console.log( obj );
-        var questions = [{question: "Who is the first President"}, {question: "Who is the second President"}];
-        $('#right-pane').html( obj( {questions: questions}) );
+        var template = document.getElementById('one-page-display-template');
+        var render = Handlebars.compile( template.innerHTML );
+        var questions = getQuizToTake().questions;
+        var onepage = getQuizToTake().quizMetaData.is_one_page;
+        $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
     }
 
     generateOnePageQuiz();
@@ -135,10 +134,63 @@
 
     }
 
+    function storeBooleanTypeForQuestion( response ) { 
+        // store boolean types of question types
+        var questions = response.data.questions;
+        for(var i = 0; i < questions.length; i++) {
+            switch( questions[i].type ) {
+                case "Response":
+                    questions[i].isResponse = true;
+                    break;
+                case "Fill_Blank":
+                    questions[i].isFillInTheBlank = true;
+                    break;
+                case "Multiple_Choice":
+                    questions[i].isMultipleChoice = true;
+                    break;
+                case "Picture":
+                    questions[i].isPicture = true;
+                    break;
+                case "MultiResponse":
+                    questions[i].isMultiResponse = true;
+                    break;
+                case "Matching":
+                    questions[i].isMatching = true;
+                    break;
+                default:
+                    // don't add any booleans
+            }
+        }
+        response.data.questions = questions;
+        storeQuizToTake( response.data )
+    }
+
     // LISTENERS
      $(document).ready(function() {
 
         /*************************LEFT PANE EVENT LISTENERS**************************/
+
+        $('#left-pane').on('click', '#lp-quiz-name', function(event) {
+            event.preventDefault();
+            console.log( "I am checked");
+            $('#lp-quiz-edit').prop("disabled",true);
+            var quizName = $('#lp-quiz-name').text();
+            var myQuizzes = getMyQuizzes();
+            var quizzes = myQuizzes.data; // array of quiz objects
+            var questionsArr;
+            var success = myQuizzes.status.success;
+            for(var i = 0; i < quizzes.length; i++ ) {
+                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+                    questionsArr = quizzes[i].questions
+                }
+            }
+            console.log( questionsArr );
+            $('#lp-quiz-edit').prop("disabled",false);
+            $('#right-pane').html( templates.renderEditQuizOptions( 
+                            {questions: questionsArr, success: success}) );
+ 
+
+        });
 
         $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
             event.preventDefault();
@@ -188,6 +240,50 @@
                     }
             }); 
         });
+
+
+        // Listen to Dropdown of Selected
+        $("#quiz_selection").on("change", function() {
+
+            // jQuery
+            var selectedVal = $(this).find(':selected').val();
+            var selectedText = $(this).find(':selected').text();
+            console.log( selectedVal );
+            console.log( selectedText );
+
+            var type;
+            switch (selectedVal) {
+                case "mostPopularQuizzes":
+                    type = "mostPopularQuizzes";
+                    break;
+                case "allQuizzes":
+                    type = "allQuizzes";
+                    break;
+                case "recentlyCreatedQuizzes":
+                    type = "recentlyCreatedQuizzes";
+                    break;
+                default:
+                // do nothing
+            }
+
+            if ( selectedVal === "mostPopularQuizzes" ) {
+                var URL = "/QuizWebsite/GetData";
+                var myRequest = { request: { type: type, numRecords: 10 } };
+                $.ajax({
+                    url: URL,
+                        type: 'POST',
+                        async: true,
+                        dataType: 'json',
+                        data: { json: JSON.stringify(myRequest) },
+                        contentType: 'application/x-www-form-urlencoded',
+
+                        success: function(data, textStatus, jqXHR) {
+                            console.log(data);
+                        }
+                }); 
+            }
+        });
+
 
         /*************************RIGHT PANE EVENT LISTENERS**************************/
 
@@ -862,9 +958,8 @@
 
             success: function(response, textStatus, jqXHR) {
                 if ( response.status.success ) {
-                    storeQuizToTake( response.data )
+                    storeBooleanTypeForQuestion( response );
                 }
-
                 // tested -> works proper way to obtain booleans
                 var onePage = getQuizToTake().quizMetaData.is_one_page;
                 var isImmediate = getQuizToTake().quizMetaData.is_immediate;

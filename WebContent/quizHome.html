@@ -23,6 +23,12 @@
                         <div class="cf" id="quiz-create-container">
                             <input type="button" id="my-quizzes" class="nav_btns" value="My Quizzes" />
                             <input type="button" id="new-quiz-button" class="nav_btns" value="Create New Quiz" />
+                            <select id="quiz_selection">
+                                <option id="popular_quizzes" value="mostPopularQuizzes">Popular Quizzes</option>
+                                <option id="recently_created_quizzes" value="recentlyCreatedQuizzes">Recently Created Quizzes</option>
+                                <option id="all_quizzes" value="allQuizzes">All Quizzes</option>
+                                <option id="my_recently_created_quizzes" value="audi">My Recently Created Quizzes</option>
+                            </select>
                         </div>
                     </div>
 
@@ -240,6 +246,7 @@
                 <h2>Create Picture Question</h2>
 
                 <h3>Picture URL</h3>
+                <p>Enter a tiny URL. Here is a <a href="http://tiny.cc/">URL shortener</a></p>
                 <div>
                     <textarea rows="1" cols="40" name="description"
                         id="pic_url" placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
@@ -410,12 +417,39 @@
             </form>
         </script>
 
+        <!-- template to display SUBMISSION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="one-page-display-template">
+            <form class="cf" id="edit-quiz-options">
+                {{#if onepage}}
+                    {{#each questions}}
+                        {{#if this.isResponse}}
+                            <div id="response_single_page">
+                                <h2>Question {{@index}} </h2>
+                                <p id="response_question">{{this.question}}</p>
+                                <input type="text" placeholder="Enter your answer">
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isPicture}}
+                             <div id="picture_single_page">
+                                <h2>Question {{@index }}</h2>
+                                <p>{{this.question}}</p>
+                                <img src={{this.pictureURL}}  height="200" width="200">
+                                <input type="text" placeholder="Enter your answer">
+                            </div>
+                        {{/if}}
+
+                    {{/each}}
+                {{/if}}
+            </form>
+        </script>
+
         <!--TEST CODE FOR SINGLE RESPONSE RENDERING TEMPLATE -->
         <script type="text/x-handlebars-template" id="single-response-test">
             <form class="cf" id="edit-quiz-options">
                 {{#each questions}}
                     <div id="response_single_page">
-                        <h2>Question {{inc @index} </h2>
+                        <h2>Question {{@index}} </h2>
                         <p id="response_question">{{this.question}}</p>
                         <input type="text" placeholder="Enter your answer">
                     </div>
@@ -428,7 +462,7 @@
         
         
         <!-- JavaScript -->
-        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="js/handlebars-v3.0.0.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
     </body>
 </html>
