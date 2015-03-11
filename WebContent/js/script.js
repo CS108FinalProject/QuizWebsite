@@ -109,6 +109,7 @@
         var render = Handlebars.compile( template.innerHTML );
         var questions = getQuizToTake().questions;
         var onepage = getQuizToTake().quizMetaData.is_one_page;
+        console.log( getQuizToTake() );
         $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
     }
 
@@ -140,7 +141,10 @@
                     questions[i].isResponse = true;
                     break;
                 case "Fill_Blank":
+                    console.log( questions[i]);
                     questions[i].isFillInTheBlank = true;
+                    questions[i].blankedQuestion = formatBlanksInQuestion( questions[i].question, 
+                        questions[i].answers );
                     break;
                 case "Multiple_Choice":
                     questions[i].isMultipleChoice = true;
@@ -148,8 +152,9 @@
                 case "Picture":
                     questions[i].isPicture = true;
                     break;
-                case "MultiResponse":
+                case "Multi_Response":
                     questions[i].isMultiResponse = true;
+
                     break;
                 case "Matching":
                     questions[i].isMatching = true;
@@ -162,10 +167,23 @@
         storeQuizToTake( response.data )
     }
 
+    function formatBlanksInQuestion( question, answers ) {
+        console.log( question );
+        var blanks = Object.keys(answers);
+        console.log( blanks );
+        var modifiedString = question;
+        for( var i = 0; i < blanks.length; i++ ) {
+            modifiedString = modifiedString.replace( blanks[i], "<input type=\"text\"/>" );
+        }
+        return modifiedString;
+    }
+
     // LISTENERS
      $(document).ready(function() {
 
         /*************************LEFT PANE EVENT LISTENERS**************************/
+
+        // if a quiz is clicked from the menu
 
         $('#left-pane').on('click', '#lp-quiz-name', function(event) {
             event.preventDefault();
@@ -220,7 +238,7 @@
             var creator = getUrlVar("user");
             $('#my-quizzes').prop("disabled",true);
             var URL = "/QuizWebsite/GetData";
-            var myRequest = { request: { type: "allCreatorQuizzes", creator: creator } };
+            var myRequest = { request: { type: "allCreatorQuizzesString", creator: creator } };
             $.ajax({
                 url: URL,
                     type: 'POST',
@@ -231,8 +249,8 @@
 
                     success: function(data, textStatus, jqXHR) {
                         $('#my-quizzes').prop("disabled",false);
-                        storeMyQuizzes(data);
                         displayOnLeftPane(data);
+                        console.log( data );
                     }
             }); 
         });
@@ -455,9 +473,7 @@
     function displayOnLeftPane(quizzes) {
         console.log( quizzes );
         console.log( quizzes.status.success );
-        var arg = { success: quizzes.status.success, quizzes: quizzes.data };
         $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: quizzes.status.success, quizzes: quizzes.data} ) );
-        $('left-pane').html("Hello");
     }
 
     function validateForm(questionType, question, answer, blank) {
@@ -766,7 +782,7 @@
         // finally store information in local storage
         var quiz = getPendingQuiz();
         var questions = quiz.questions;
-        //questions.pop();
+        questions.pop();
         questions.push( questionInfo );
         quiz.questions = questions;
 
@@ -897,27 +913,26 @@
                     break;
                 case "Finish and Create Quiz":  
                     var date = moment().format('YYYY/MM/DD HH:mm');
-                    console.log( date );
                     var quiz = getPendingQuiz();
-                    var quizMetaData = quiz.quizMetaData;
-                    quizMetaData.date_created = date;
-                    quiz.quizMetaData = quizMetaData;
-                    console.log( quiz );
-                    updatePendingQuiz(quiz);    
-
+                    quiz.quizMetaData.date_created = date; 
                     var URL = "/QuizWebsite/CreateQuiz";
-                    var createdQuiz = getPendingQuiz();
-                    console.log( createdQuiz );
+                    console.log( quiz );
                     $.ajax({
                         url: URL,
                         type: 'POST',
                         async: true,
                         dataType: 'json',
-                        data: { json: JSON.stringify(createdQuiz) },
+                        data: { json: JSON.stringify(quiz) },
                         contentType: 'application/x-www-form-urlencoded',
 
                         success: function(data, textStatus, jqXHR) {
-                            console.log( data );
+                            if ( data.status.success ) {
+                                console.log( data );
+                                $('#right-pane').html("Quiz Added Successfully");
+                            } else {
+                                $('#right-pane').html("There was an Error in Adding your question");
+                            }
+                            
                         }
                     }); 
 
@@ -940,34 +955,35 @@
 
      /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
 
-     // request database for the quiz
-//    var quizName = getUrlVar("quiz"); // tested and works
-//    var URL = "/QuizWebsite/GetData";
-//    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
-//        $.ajax({
-//            url: URL,
-//            type: 'POST',
-//            async: true,
-//            dataType: 'json',
-//            data: { json: JSON.stringify(request) },
-//            contentType: 'application/x-www-form-urlencoded',
-//
-//            success: function(response, textStatus, jqXHR) {
-//                if ( response.status.success ) {
-//                    storeBooleanTypeForQuestion( response );
-//                }
-//                // tested -> works proper way to obtain booleans
-//                var onePage = getQuizToTake().quizMetaData.is_one_page;
-//                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
-//                if ( onePage ) {           // checked works
-//                    generateOnePageQuiz();
-//                } else {
-//                    // test all values
-//                    generateMultiplePageQuiz(isImmediate);
-//                }
-//
-//            }
-//    }); 
+   // WARNING THIS CODE WILL RUN EVEN IF THERE IS NO URL IN THE BROWSWER
+   var quizName = getUrlVar("quiz"); // tested and works
+   var URL = "/QuizWebsite/GetData";
+   var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
+       $.ajax({
+           url: URL,
+           type: 'POST',
+           async: true,
+           dataType: 'json',
+           data: { json: JSON.stringify(request) },
+           contentType: 'application/x-www-form-urlencoded',
+
+           success: function(response, textStatus, jqXHR) {
+               if ( response.status.success ) {
+                   storeBooleanTypeForQuestion( response );
+               }
+               // tested -> works proper way to obtain booleans
+               var onePage = getQuizToTake().quizMetaData.is_one_page;
+               var isImmediate = getQuizToTake().quizMetaData.is_immediate;
+               if ( onePage ) { 
+                      // checked works
+                   generateOnePageQuiz();
+               } else {
+                   // test all values
+                   generateMultiplePageQuiz(isImmediate);
+               }
+
+           }
+   }); 
        
 
 
