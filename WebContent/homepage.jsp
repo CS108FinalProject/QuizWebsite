@@ -68,7 +68,7 @@ String sel_type = (String)request.getParameter("choice");
 	 <section id="announcements">
 	 	<%//Displays any admin announcements as a list%>
 	     <%
-	     ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
+	     List<String> admin_anmts = AccountManager.getAccount(name).getAnnouncements();
 	     %>
 	    
 	     <!--  HTML beginning for Announcments -->

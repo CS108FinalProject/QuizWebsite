@@ -116,7 +116,7 @@ String sel_type = (String)request.getParameter("choice");
 	<table id = "content">
 		<tr>
 			<%//Displays any admin announcements as a list%>
-			<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
+			<%	List<String> admin_anmts = AccountManager.getAccount(name).getAnnouncements(); %>
 			<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");

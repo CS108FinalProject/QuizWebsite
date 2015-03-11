@@ -47,6 +47,15 @@ public class AccountManager implements Constants {
 			columns.put(SEEN, BOOLEAN);
 			Database.createTable(MESSAGES, columns);
 		}
+		
+		if (!Database.tableExists(ANNOUNCEMENTS)) {
+			Map<String, String> columns = new LinkedHashMap<String, String>();
+			columns.put(USERNAME, STRING);
+			columns.put(CONTENT, STRING);
+			columns.put(DATE, STRING);
+			Database.createTable(ANNOUNCEMENTS, columns);
+		}
+		
 	}
 	
 	

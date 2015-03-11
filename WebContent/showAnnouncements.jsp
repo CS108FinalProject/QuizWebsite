@@ -4,13 +4,13 @@
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "javax.swing.*" %>
 	<%@ page import = "java.awt.*" %>
-	<%@ page import = "java.awt.List" %>
+	<%@ page import = "java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <%
 String name = (String)getServletContext().getAttribute("session_user");
-ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements");
+List<String> admin_anmts = AccountManager.getAccount(name).getAnnouncements();;
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//main.css" ></link>
