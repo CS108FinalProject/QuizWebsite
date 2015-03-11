@@ -59,8 +59,10 @@ public class Connector {
 			stmt.executeQuery("USE " + database);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Unable to setup Database connection.");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Unable to setup Database connection.");
 		}
 	}
 	
@@ -79,13 +81,12 @@ public class Connector {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException("Unable to close Database connection.");
 		}
 	}
 
 	public Connection getConnection() {
-		// TODO Auto-generated method stub
 		return con;
 	}
 	

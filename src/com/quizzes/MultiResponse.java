@@ -1,15 +1,15 @@
 package com.quizzes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.util.Constants;
 import com.util.Util;
 
 public class MultiResponse extends Question implements Constants {
 	
-	private TreeMap<Integer, String> answers;
+	private List<String> answers;
 	private boolean isOrdered;
 
 	/**
@@ -23,7 +23,7 @@ public class MultiResponse extends Question implements Constants {
 	 * @param isOrdered determines if answers have to be provided in a 
 	 * specific order
 	 */
-	public MultiResponse(String quizName, String question, TreeMap<Integer, String> answers,
+	public MultiResponse(String quizName, String question, List<String> answers,
 			boolean isOrdered) {
 		super(quizName, question);
 		
@@ -36,7 +36,7 @@ public class MultiResponse extends Question implements Constants {
 	/**
 	 * @return the answers
 	 */
-	public TreeMap<Integer, String> getAnswers() {
+	public List<String> getAnswers() {
 		return answers;
 	}
 
@@ -44,7 +44,7 @@ public class MultiResponse extends Question implements Constants {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(TreeMap<Integer, String> answers) {
+	public void setAnswers(List<String> answers) {
 		Util.validateObject(answers);
 		this.answers = answers;
 	}
@@ -54,9 +54,9 @@ public class MultiResponse extends Question implements Constants {
 	 * Adds the passed answer to the question.
 	 * @param answer
 	 */
-	public void addAnswer(int order, String answer) {
+	public void addAnswer(String answer) {
 		Util.validateString(answer);
-		answers.put(order, answer);
+		answers.add(answer);
 	}
 	
 	
@@ -66,14 +66,10 @@ public class MultiResponse extends Question implements Constants {
 	public void removeAnswer(String answer) {
 		Util.validateString(answer);
 		
-		for (int order : answers.keySet()) {
-			String cur = answers.get(order);
-			if (cur.equals(answer)) {
-				answers.remove(order);
-				return;
-			}
+		if (!answers.contains(answer)) {
+			throw new IllegalArgumentException(answer + " is not currently in this question.");
 		}
-		throw new IllegalArgumentException(answer + " is not currently in this question.");
+		answers.remove(answer);
 	}
 
 
@@ -99,23 +95,17 @@ public class MultiResponse extends Question implements Constants {
 	 * Determines whether the passed answer is correct.
 	 * Ignores the order parameter if question isOrdered = false.
 	 */
-	public boolean answerIsCorrect(String answer, int order) {
-		Util.validateString(answer);
+	public boolean answerIsCorrect(List<String> providedAnswers) {
+		Util.validateObject(providedAnswers);
 		
 		if (isOrdered) {
-			if (!answers.containsKey(order)) {
-				throw new IllegalArgumentException(order + " is not a valid "
-						+ "order for this question");
-			}
-			
-			if (answers.get(order).equals(answer)) return true;
-			return false;
+			return providedAnswers.equals(answers);
 			
 		} else {
-			for (int storedOrder : answers.keySet()) {
-				if (answers.get(storedOrder).equals(answer)) return true;
+			for (String providedAnswer : providedAnswers) {
+				if (!answers.contains(providedAnswer)) return false;
 			}
-			return false;
+			return true;
 		}
 	}
 	
@@ -125,6 +115,7 @@ public class MultiResponse extends Question implements Constants {
 	 */
 	public Map<String, Object> toMap() {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(TYPE, MULTI_RESPONSE);
 		result.put(QUIZ_NAME, quizName);
 		result.put(QUESTION, question);
 		result.put(IS_ORDERED, isOrdered);

@@ -47,7 +47,7 @@ public class GetData extends HttpServlet implements Constants {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean success = true;
-		String errorMessage = "";
+		String errorMessage = "success";
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
@@ -56,7 +56,7 @@ public class GetData extends HttpServlet implements Constants {
 			Util.validateString(jsonString);
 			
 			Map<String, Object> jsonObject = Json.parseJsonObject(jsonString);
-			Util.validateObject(jsonObject);
+			Util.validateObject(jsonObject); 
 			
 			// Get and validate type for requestMap
 			if (!(jsonObject.get(REQUEST) instanceof Map<?, ?>)) {
@@ -66,6 +66,7 @@ public class GetData extends HttpServlet implements Constants {
 			
 			Map<String, Object> requestMap = (Map<String, Object>) jsonObject.get(REQUEST);
 			Util.validateObject(requestMap);
+			
 			
 			// Get request type
 			String requestType = (String) requestMap.get(TYPE);
@@ -89,6 +90,19 @@ public class GetData extends HttpServlet implements Constants {
 				List<Object> resultList = new ArrayList<Object>();
 				for (Quiz quiz : allQuizzes) {
 					resultList.add(quiz.toMap());
+				}
+				result.put(DATA, resultList);
+				
+				
+			// All Quizzes name and description in String form.
+			} else if (requestType.equals(ALL_QUIZZES_STRING)) {
+				List<Quiz> allQuizzes = QuizManager.getAllQuizzes();
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : allQuizzes) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put(QUIZ_NAME, quiz.getName());
+					map.put(DESCRIPTION, quiz.getDescription());
+					resultList.add(map);
 				}
 				result.put(DATA, resultList);
 				

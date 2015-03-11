@@ -196,7 +196,7 @@ public class QuizManager implements Constants {
 	 */
 	public static List<Quiz> getQuizzes(Account creator) {
 		Util.validateObject(creator);
-		List<Map<String, Object>> table = Database.getRows(QUIZZES, CREATOR, creator);
+		List<Map<String, Object>> table = Database.getRows(QUIZZES, CREATOR, creator.getUserName());
 		if (table == null || table.size() == 0) return null;
 		
 		List<Quiz> result = new ArrayList<Quiz>();

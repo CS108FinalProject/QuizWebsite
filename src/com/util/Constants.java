@@ -113,14 +113,14 @@ public interface Constants {
 	public static final String MESSAGE_NOTE = "note";
 	
 	// Database data types
-	public static final String DB_STRING = "CHAR(64)";
+	public static final String DB_STRING = "TEXT";
 	public static final String DB_INT = "INT(4)";
 	public static final String DB_BOOLEAN = "TINYINT";
 	public static final String DB_DOUBLE = "DOUBLE";
 	public static final String DB_LONG = "BIGINT(8)";
 	
 	// Database 'Raw' types
-	public static final String DB_RAW_STRING = "char(64)";
+	public static final String DB_RAW_STRING = "text";
 	public static final String DB_RAW_DOUBLE = "double";
 	public static final String DB_RAW_INT = "int(4)";
 	public static final String DB_RAW_LONG = "bigint(8)";
@@ -138,6 +138,7 @@ public interface Constants {
 	public static final String REQUEST = "request";
 	public static final String QUIZ = "quiz";
 	public static final String ALL_QUIZZES = "allQuizzes";
+	public static final String ALL_QUIZZES_STRING = "allQuizzesString";
 	public static final String ALL_CREATOR_QUIZZES = "allCreatorQuizzes";
 	public static final String MOST_POPULAR_QUIZZES = "mostPopularQuizzes";
 	public static final String RECENTLY_CREATED_QUIZZES = "recentlyCreatedQuizzes";

@@ -17,11 +17,21 @@
 
         <div id="wrapper">
             <div id="navigation">
-                <div id="interactors">
+                <div class ="cf" id="interactors">
                     <!-- buttons and search -->
-                    <a class="btn" id="new_quiz_button">New Quiz</a>
-                    <input type="text" name="search" id="search"
-                        placeholder="Search questions..." />
+                    <div class="cf quiz-nav" id="quiz-nav">
+                        <div class="cf" id="quiz-create-container">
+                            <input type="button" id="my-quizzes" class="nav_btns" value="My Quizzes" />
+                            <input type="button" id="new-quiz-button" class="nav_btns" value="Create New Quiz" />
+                            <select id="quiz_selection">
+                                <option id="popular_quizzes" value="mostPopularQuizzes">Popular Quizzes</option>
+                                <option id="recently_created_quizzes" value="recentlyCreatedQuizzes">Recently Created Quizzes</option>
+                                <option id="all_quizzes" value="allQuizzes">All Quizzes</option>
+                                <option id="my_recently_created_quizzes" value="audi">My Recently Created Quizzes</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div id="left-pane">
@@ -32,11 +42,96 @@
                 <div id="right-pane">
                 <!-- add quiz form, quiz-type form, and creation form
                      container when a question is selected -->
+
+                <!-- Response Question template -->
+                <div id="response_single_page">
+                    <h2>Question 1</h2>
+                    <p id="response_question">This is a test</p>
+                    <input type="text" placeholder="Enter your answer">
+                </div>
+
+                <!-- Picture Question template -->
+                <div id="picture_single_page">
+                    <h2>Question 2</h2>
+                    <p>Who is this man</p>
+                    <img src="http://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg" alt="W3Schools.com" height="200" width="200">
+                    <input type="text" placeholder="Enter your answer">
+                </div>
+
+                <!-- Multi-Response Question template -->
+                <div id="multi_response_single_page">
+                    <h2>Question 3</h2>
+                    <p id="multi_response_question">This is a test</p>
+                    <input type="text" placeholder="Enter your response">
+                    <input type="text" placeholder="Enter your response">
+                    <input type="text" placeholder="Enter your response">
+                </div>
+
+                <!-- Multiple Choice Question template -->
+                <div id="multiple_choice_single_page">
+                    <h2>Question 4</h2>
+                    <p id="multiple_choice__question">This is a test</p>
+                    <input type="checkbox" placeholder="Enter your response">Red
+                    <input type="checkbox" placeholder="Enter your response">White
+                    <input type="checkbox" placeholder="Enter your response">Blue
+                </div>
+
+                <!-- Fill in the Blank template -->
+                <div id="multiple_choice_single_page">
+                    <h2>Question 5</h2>
+                    <input type="text">is the President<input type="text">.
+                </div>
+
+                <!-- Matching Template -->
+                <div id="matching_single_page">
+                    <h2>Question 6</h2>
+                    <p>Red</p><select>
+                                  <option value="volvo">Volvo</option>
+                                  <option value="saab">Saab</option>
+                                  <option value="mercedes">Mercedes</option>
+                                  <option value="audi">Audi</option>
+                                </select>
+                    <p>White</p><select>
+                                  <option value="volvo">Volvo</option>
+                                  <option value="saab">Saab</option>
+                                  <option value="mercedes">Mercedes</option>
+                                  <option value="audi">Audi</option>
+                                </select>
+                    <p>Blue</p><select>
+                                  <option value="volvo">Volvo</option>
+                                  <option value="saab">Saab</option>
+                                  <option value="mercedes">Mercedes</option>
+                                  <option value="audi">Audi</option>
+                                </select>
+                </div>
+
                 </div>
         </div>
 
         <!-- Handlebars Templates to Render various views -->
         <!-- template to display QUIZ CREATION FORM in #main-panel tag -->
+
+        <!-- template to display all quizzes in #left-pane tag. -->
+        <script type="text/x-handlebars-template" id="left-pane-quizzes-template">
+            {{#if success }}
+                {{#each quizzes}}
+                {{! this.date_created represents this quizzes date_created object in
+                    localStorage. }}
+                <div class="list-question question-info" id="{{ this.date_created }}">
+                    <h3 id="lp-quiz-name">{{ this.quizMetaData.quiz_name }}</h3>
+                    <p>{{ this.quizMetaData.description }}</p>
+                    <input id="lp-quiz-edit" type="button" value="Edit"/>
+                </div>
+                {{/each}}
+            {{else}}
+                {{! no quizzes exist; display appropriate message }}
+                <div class="list-question">
+                    <p>No quizzes could be found.</p>
+                </div>
+            {{/if}}
+        </script>
+
+
         <script type="text/x-handlebars-template" id="quiz-form-template">
             <form class="cf" id="quiz-form">
                 <h2>Create a <span>quiz</span></h2>
@@ -151,6 +246,7 @@
                 <h2>Create Picture Question</h2>
 
                 <h3>Picture URL</h3>
+                <p>Enter a tiny URL. Here is a <a href="http://tiny.cc/">URL shortener</a></p>
                 <div>
                     <textarea rows="1" cols="40" name="description"
                         id="pic_url" placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
@@ -218,12 +314,12 @@
         <script type="text/x-handlebars-template" id="matching-template">
             <form class="cf specifc_quiz_form" id="matching">
                 <h2>Create Matching Question</h2>
-
+                <h3>Title</h3>
                 <div>
                     <textarea rows="1" cols="40" id="match_question_header" name="description"
                         placeholder="Enter title to identify question"></textarea>
                 </div>
-
+                <h3>Matching</h3>
                 <div class="cf">
                     <textarea rows="5" cols="40" class="matching" name="description"
                         id="match_question"placeholder="Enter question or Leave Empty if No Question"></textarea>
@@ -295,13 +391,78 @@
         
         </script>
 
+
+        <!-- template to display SUBMISSION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="edit-quiz-options-template">
+            <form class="cf" id="edit-quiz-options">
+                {{#if success }}
+                    <h1>Hello</h1>
+                    {{#each questions}}
+
+                    {{! this.date_created represents this quizzes date_created object in
+                    localStorage. }}
+
+                        <h2>Question{{@index}}: {{this.question}}</h2>
+                        <input type=button value="Edit Question"/>
+
+                    {{/each}}
+
+                {{else}}
+
+                    {{! no quizzes exist; display appropriate message }}
+                    <div class="list-question">
+                        <p>No questions could be found.</p>
+                    </div>
+                {{/if}}
+            </form>
+        </script>
+
+        <!-- template to display SUBMISSION FORM in right pane -->
+        <script type="text/x-handlebars-template" id="one-page-display-template">
+            <form class="cf" id="edit-quiz-options">
+                {{#if onepage}}
+                    {{#each questions}}
+                        {{#if this.isResponse}}
+                            <div id="response_single_page">
+                                <h2>Question {{@index}} </h2>
+                                <p id="response_question">{{this.question}}</p>
+                                <input type="text" placeholder="Enter your answer">
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isPicture}}
+                             <div id="picture_single_page">
+                                <h2>Question {{@index }}</h2>
+                                <p>{{this.question}}</p>
+                                <img src={{this.pictureURL}}  height="200" width="200">
+                                <input type="text" placeholder="Enter your answer">
+                            </div>
+                        {{/if}}
+
+                    {{/each}}
+                {{/if}}
+            </form>
+        </script>
+
+        <!--TEST CODE FOR SINGLE RESPONSE RENDERING TEMPLATE -->
+        <script type="text/x-handlebars-template" id="single-response-test">
+            <form class="cf" id="edit-quiz-options">
+                {{#each questions}}
+                    <div id="response_single_page">
+                        <h2>Question {{@index}} </h2>
+                        <p id="response_question">{{this.question}}</p>
+                        <input type="text" placeholder="Enter your answer">
+                    </div>
+                {{/each}}
+        </script>
+
         <!-- Libraries: JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="http://momentjs.com/downloads/moment.js"></script>
         
         
         <!-- JavaScript -->
-        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="js/handlebars-v3.0.0.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
     </body>
 </html>

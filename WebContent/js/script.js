@@ -1,4 +1,6 @@
 (function(window, document, undefined) {
+    
+
     // pane elementss
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
@@ -23,7 +25,8 @@
     var matchingTemplate = document.getElementById('matching-template');
     var responseTemplate = document.getElementById('response-template');
     var submissionForm = document.getElementById('submission-template');
-    
+    var leftPaneQuizzesTemplate = document.getElementById('left-pane-quizzes-template');
+    var editQuizOptionsTemplate = document.getElementById('edit-quiz-options-template');
 
 
     // compiled Handlebars templates
@@ -36,7 +39,9 @@
         renderMultiResponseQuestion: Handlebars.compile(multiResponseTemplate.innerHTML),
         renderMatchingQuestion: Handlebars.compile(matchingTemplate.innerHTML),
         renderResponseQuestion: Handlebars.compile(responseTemplate.innerHTML),
-        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML)
+        renderSubmissionForm: Handlebars.compile(submissionForm.innerHTML),
+        renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML ),
+        renderEditQuizOptions: Handlebars.compile( editQuizOptionsTemplate.innerHTML )
     };
 
     // HELPER FUNCTIONS 
@@ -50,6 +55,20 @@
         return JSON.parse(localStorage.pendingQuiz);
     }
 
+    function storeMyQuizzes(myQuizzes) {
+        localStorage.myQuizzes = JSON.stringify( myQuizzes );
+    }
+
+    function getMyQuizzes() {
+        if (!localStorage.pendingQuiz) {
+            localStorage.myQuizzes = JSON.stringify({});
+        }
+        return JSON.parse( localStorage.myQuizzes );
+    }
+
+    function clearMyQuizzes() {
+        localStorage.removeItem("myQuizzes");
+    }
     /* updates the pending quiz in localStorage. 
      *
      * Arguments: 
@@ -64,41 +83,209 @@
         localStorage.removeItem( "pendingQuiz")
     }
 
-
-    // /* Returns the questions stored in localStorage. */
-    // function getStoredQuestions() {
-    //     if (!localStorage.questions) {
-    //         // default to empty array
-    //         localStorage.questions = JSON.stringify([]);
-    //     }
-
-    //     return JSON.parse(localStorage.questions);
-    // }
-
-    /* Store the given questions array in localStorage.
-     *
-     * Arguments:
-     * questions -- the questions array to store in localStorage
-     */
     function storeQuestions(questions) {
         localStorage.questions = JSON.stringify(questions);
     }
 
+    function getQuizzes() {
 
-    // we want to render this HTML only once
-    //rightPane.innerHTML = templates.renderQuizForm();
-     var newQuestionForm = document.querySelector('#interactors .btn');
-        newQuestionForm.addEventListener("click", function(event) {
-                event.preventDefault();
-                rightPane.innerHTML = templates.renderQuizForm();
-    });
+    }
+
+    // tested -> works
+    function storeQuizToTake( quizToTake ) {
+        localStorage.quizToTake = JSON.stringify( quizToTake );
+    }
+
+    // tested -> works
+    function getQuizToTake() {
+        if (!localStorage.pendingQuiz) {
+            localStorage.quizToTake = JSON.stringify({});
+        }
+        return JSON.parse( localStorage.quizToTake );
+    }
+
+    // TO DO
+    function generateOnePageQuiz() {
+        var template = document.getElementById('one-page-display-template');
+        var render = Handlebars.compile( template.innerHTML );
+        var questions = getQuizToTake().questions;
+        var onepage = getQuizToTake().quizMetaData.is_one_page;
+        $('#right-pane').html( render( {questions: questions, onepage: onepage}) );
+    }
+
+    generateOnePageQuiz();
+
+    // TO DO
+    function generateMultiplePageQuiz(isImmediate) {
+        if ( isImmediate ) {
+            generateMultiplePageQuizWithFeedBack();
+        } else {
+            generateMultiplePageQuizWithNoFeedBack();
+        }
+    }
+
+    // TO DO
+    function generateMultiplePageQuizWithFeedBack() {
+
+    }
+
+    // TO DO
+    function generateMultiplePageQuizWithNoFeedBack() {
+
+    }
+
+    function storeBooleanTypeForQuestion( response ) { 
+        // store boolean types of question types
+        var questions = response.data.questions;
+        for(var i = 0; i < questions.length; i++) {
+            switch( questions[i].type ) {
+                case "Response":
+                    questions[i].isResponse = true;
+                    break;
+                case "Fill_Blank":
+                    questions[i].isFillInTheBlank = true;
+                    break;
+                case "Multiple_Choice":
+                    questions[i].isMultipleChoice = true;
+                    break;
+                case "Picture":
+                    questions[i].isPicture = true;
+                    break;
+                case "MultiResponse":
+                    questions[i].isMultiResponse = true;
+                    break;
+                case "Matching":
+                    questions[i].isMatching = true;
+                    break;
+                default:
+                    // don't add any booleans
+            }
+        }
+        response.data.questions = questions;
+        storeQuizToTake( response.data )
+    }
 
     // LISTENERS
      $(document).ready(function() {
-        // Create new Quiz Form on click
-        $('#new_quiz_button').click(function() {
-            templates.renderQuizForm();
+
+        /*************************LEFT PANE EVENT LISTENERS**************************/
+
+        $('#left-pane').on('click', '#lp-quiz-name', function(event) {
+            event.preventDefault();
+            console.log( "I am checked");
+            $('#lp-quiz-edit').prop("disabled",true);
+            var quizName = $('#lp-quiz-name').text();
+            var myQuizzes = getMyQuizzes();
+            var quizzes = myQuizzes.data; // array of quiz objects
+            var questionsArr;
+            var success = myQuizzes.status.success;
+            for(var i = 0; i < quizzes.length; i++ ) {
+                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+                    questionsArr = quizzes[i].questions
+                }
+            }
+            console.log( questionsArr );
+            $('#lp-quiz-edit').prop("disabled",false);
+            $('#right-pane').html( templates.renderEditQuizOptions( 
+                            {questions: questionsArr, success: success}) );
+ 
+
         });
+
+        $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
+            event.preventDefault();
+            console.log( "I am checked");
+            $('#lp-quiz-edit').prop("disabled",true);
+            var quizName = $('#lp-quiz-name').text();
+            var myQuizzes = getMyQuizzes();
+            var quizzes = myQuizzes.data; // array of quiz objects
+            var questionsArr;
+            var success = myQuizzes.status.success;
+            for(var i = 0; i < quizzes.length; i++ ) {
+                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+                    questionsArr = quizzes[i].questions
+                }
+            }
+            console.log( questionsArr );
+            $('#lp-quiz-edit').prop("disabled",false);
+            $('#right-pane').html( templates.renderEditQuizOptions( 
+                            {questions: questionsArr, success: success}) );
+ 
+
+        });
+        
+        // Create new Quiz Form on click
+        $('#new-quiz-button').click(function() {
+            console.log("hello world");
+            $('#right-pane').html( templates.renderQuizForm() );
+        });
+
+        $('#my-quizzes').click( function() {
+            var creator = getUrlVar("user");
+            $('#my-quizzes').prop("disabled",true);
+            var URL = "/QuizWebsite/GetData";
+            var myRequest = { request: { type: "allCreatorQuizzes", creator: creator } };
+            $.ajax({
+                url: URL,
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    data: { json: JSON.stringify(myRequest) },
+                    contentType: 'application/x-www-form-urlencoded',
+
+                    success: function(data, textStatus, jqXHR) {
+                        $('#my-quizzes').prop("disabled",false);
+                        storeMyQuizzes(data);
+                        displayOnLeftPane(data);
+                    }
+            }); 
+        });
+
+
+        // Listen to Dropdown of Selected
+        $("#quiz_selection").on("change", function() {
+
+            // jQuery
+            var selectedVal = $(this).find(':selected').val();
+            var selectedText = $(this).find(':selected').text();
+            console.log( selectedVal );
+            console.log( selectedText );
+
+            var type;
+            switch (selectedVal) {
+                case "mostPopularQuizzes":
+                    type = "mostPopularQuizzes";
+                    break;
+                case "allQuizzes":
+                    type = "allQuizzes";
+                    break;
+                case "recentlyCreatedQuizzes":
+                    type = "recentlyCreatedQuizzes";
+                    break;
+                default:
+                // do nothing
+            }
+
+            if ( selectedVal === "mostPopularQuizzes" ) {
+                var URL = "/QuizWebsite/GetData";
+                var myRequest = { request: { type: type, numRecords: 10 } };
+                $.ajax({
+                    url: URL,
+                        type: 'POST',
+                        async: true,
+                        dataType: 'json',
+                        data: { json: JSON.stringify(myRequest) },
+                        contentType: 'application/x-www-form-urlencoded',
+
+                        success: function(data, textStatus, jqXHR) {
+                            console.log(data);
+                        }
+                }); 
+            }
+        });
+
+
+        /*************************RIGHT PANE EVENT LISTENERS**************************/
 
         // Listen to Quiz Creation Form
         $('#right-pane').on('click', '#main_add_question', function(event) {
@@ -143,11 +330,13 @@
             var question = $('#fill_in_the_blank_question').val();
             var answer = $('#enter_answer').val();
             var blank = $('#enter_blank').val();
-
-            if ( typeof questionInfo === 'undefined' ) {
-                initializeFITBQuestionInfo(type, question, answer, blank);
-            } else {
-                addAnotherFandBAnswer(type, question, answer, blank);
+            
+            if ( validateForm(type, question, answer, blank) ) {
+                if ( typeof questionInfo === 'undefined' ) {
+                    initializeFITBQuestionInfo(type, question, answer, blank);
+                } else {
+                    addAnotherFandBAnswer(type, question, answer, blank);
+                }
             }
         });
 
@@ -266,6 +455,30 @@
      
     // Source: (https://gist.github.com/varemenos/2531765#file-getparam-js)
     // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
+
+    function displayOnLeftPane(quizzes) {
+        console.log( quizzes );
+        console.log( quizzes.status.success );
+        var arg = { success: quizzes.status.success, quizzes: quizzes.data };
+        $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: arg.success, quizzes: arg.quizzes} ) );
+        $('left-pane').html("Hello");
+    }
+
+    function validateForm(questionType, question, answer, blank) {
+        if ( question === "" ) {
+            alert("You Must Enter A Question.");
+            return false;
+        } else if ( blank === "" ) {
+            alert("You Must Enter A Blank");
+            return false;
+        } else if ( answer === "" ) {
+            alert("You Must Enter A Value For The Answer");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function getUrlVar(key){
         var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
         return result && unescape(result[1]) || ""; 
@@ -728,6 +941,37 @@
      * in the blank question form.
      *
      */
+
+     /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
+
+     // request database for the quiz
+    var quizName = getUrlVar("quiz"); // tested and works
+    var URL = "/QuizWebsite/GetData";
+    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
+        $.ajax({
+            url: URL,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            data: { json: JSON.stringify(request) },
+            contentType: 'application/x-www-form-urlencoded',
+
+            success: function(response, textStatus, jqXHR) {
+                if ( response.status.success ) {
+                    storeBooleanTypeForQuestion( response );
+                }
+                // tested -> works proper way to obtain booleans
+                var onePage = getQuizToTake().quizMetaData.is_one_page;
+                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
+                if ( onePage ) {           // checked works
+                    generateOnePageQuiz();
+                } else {
+                    // test all values
+                    generateMultiplePageQuiz(isImmediate);
+                }
+
+            }
+    }); 
        
 
 

@@ -17,9 +17,7 @@ public class MainListener implements ServletContextListener {
     /**
      * Default constructor. 
      */
-    public MainListener() {
-        // TODO Auto-generated constructor stub
-    }
+    public MainListener() {}
 
 	/**
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
@@ -34,8 +32,6 @@ public class MainListener implements ServletContextListener {
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
-    public void contextDestroyed(ServletContextEvent arg0)  { 
-         // TODO Auto-generated method stub
-    }
+    public void contextDestroyed(ServletContextEvent arg0)  {}
 	
 }
