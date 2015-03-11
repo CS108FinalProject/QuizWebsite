@@ -507,6 +507,8 @@ public class Account implements Constants {
 	 * @param content
 	 */
 	public void createAnnouncement(String content) {
+		Util.validateString(content);
+		
 		if (this.isAdmin()) {
 			// get date
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -518,23 +520,16 @@ public class Account implements Constants {
 			row.put(CONTENT, content);
 			row.put(DATE, date);
 			Database.addRow(ANNOUNCEMENTS, row);
+			
+		} else {
+			throw new RuntimeException("This user is not an admin.");
 		}
 	}
 	
-	/**
-	 * Returns a list of all announcements.
-	 * @return
-	 */
-	public List<String> getAnnouncements() {
-		List<String> announcements = new ArrayList<String>();
-		List<Map<String,Object>> rows = Database.getTable(ANNOUNCEMENTS);
-		
-		// add all announcement contents to the list
-		for (Map<String,Object> row : rows) {
-			announcements.add((String) row.get(CONTENT));
-		}
-		
-		return announcements;
+	
+	public Map<String, Record> getAchievements() {
+		Map<String, Record> result = new HashMap<String, Record>();
+		return null;
 	}
 	
 	
