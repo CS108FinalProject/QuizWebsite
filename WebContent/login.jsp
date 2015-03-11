@@ -11,7 +11,6 @@
 	function validateForm() {
 		var username = document.getElementById('username').value;
 		var password = document.getElementById('password').value;
-		
 		if ( username == null || username == "" ) {
 			alert("Username cannot be empty");
 			return false;
