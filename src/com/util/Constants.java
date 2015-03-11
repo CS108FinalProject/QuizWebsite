@@ -152,9 +152,9 @@ public interface Constants {
 	public static final String HOURS = "hours";
 	public static final String RECENT_PERFORMANCE = "recentPerformance";
 	public static final String AVG_PERFORMANCE = "avgPerformance";
-	public static final String SAVE_CHANGES = "save_changes";
-	public static final String REMOVE_QUIZ = "remove_quiz";
-	public static final String REMOVE_QUESTIONS = "remove_questions";
+	public static final String SAVE_CHANGES = "Save Changes";
+	public static final String REMOVE_QUIZ = "Remove Quiz";
+	public static final String REMOVE_QUESTIONS = "Remove Questions";
 	public static final String ADD_QUESTIONS = "add_questions";
 	public static final String MODIFIED_QUIZ_NAME = "modified_quiz_name";
 	
