@@ -527,9 +527,26 @@ public class Account implements Constants {
 	}
 	
 	
+	/**
+	 * @return Achievements for this user.
+	 * A Map that links an Achievement string with a record object containing all info
+	 * for how the achievement was obtained.
+	 */
 	public Map<String, Record> getAchievements() {
 		Map<String, Record> result = new HashMap<String, Record>();
-		return null;
+		List<Map<String, Object>> rows = Database.getRows(ACHIEVEMENTS, USERNAME, userName);
+		if (rows == null) return result;
+		
+		for (Map<String, Object> row : rows) {
+			String username = (String) row.get(USERNAME);
+			Account user = AccountManager.getAccount(username);
+			result.put((String) row.get(ACHIEVEMENT), new Record(
+					(String) row.get(QUIZ_NAME), user,
+					(Double) row.get(SCORE),
+					(String) row.get(DATE),
+					(Double) row.get(ELAPSED_TIME)));
+		}
+		return result;
 	}
 	
 	
