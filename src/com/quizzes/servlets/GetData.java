@@ -165,6 +165,26 @@ public class GetData extends HttpServlet implements Constants {
 				result.put(DATA, resultList);
 				
 				
+			// Recently created quizzes for a specific user.
+			} else if (requestType.equals(RECENTLY_CREATED_QUIZZES_FOR_USER_STRING)) {
+				String creatorName = (String) requestMap.get(CREATOR);
+				Util.validateString(creatorName);
+				
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				Account creator = AccountManager.getAccount(creatorName);
+				List<Quiz> quizzes = creator.getRecentlyCreated(numRecords);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : quizzes) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put(QUIZ_NAME, quiz.getName());
+					map.put(DESCRIPTION, quiz.getDescription());
+					resultList.add(map);
+				}
+				
+				
+				
 			// Past User Performance
 			} else if (requestType.equals(PAST_USER_PERFORMANCE)) {
 				// Get Quiz.

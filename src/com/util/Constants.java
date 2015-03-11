@@ -143,6 +143,7 @@ public interface Constants {
 	public static final String ALL_CREATOR_QUIZZES_STRING = "allCreatorQuizzesString";
 	public static final String MOST_POPULAR_QUIZZES = "mostPopularQuizzes";
 	public static final String RECENTLY_CREATED_QUIZZES = "recentlyCreatedQuizzes";
+	public static final String RECENTLY_CREATED_QUIZZES_FOR_USER_STRING = "recentlyCreatedQuizzesForUserString";
 	public static final String PAST_USER_PERFORMANCE = "pastUserPerformance";
 	public static final String NUM_RECORDS = "numRecords";
 	public static final String DATA = "data";
