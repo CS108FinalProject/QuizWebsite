@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accounts.AccountManager;
+import com.quizzes.Quiz;
+import com.quizzes.QuizManager;
+
 /**
  * Servlet implementation class HomepageQuizIndexServlet
  */
@@ -40,7 +44,8 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");	
 
 		String type_to_display = (String)request.getParameter("type_to_display");
-		
+		String username = (String)getServletContext().getAttribute("session_user");
+		int num_records = 5;
 		if (type_to_display.equals("achievements")) {
 	    	List<String> arg1 =  (ArrayList<String>)getServletContext().getAttribute("Received Messages");
 
@@ -49,11 +54,28 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 		} else if (type_to_display.equals("friendsAchievements")) {
 			
 		} else if (type_to_display.equals("createdQuizzes")) {
-			
+			try {
+				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
+				request.setAttribute("content_to_display",usr_quizzes);
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The current user, "+username+" could not be found.  </h1>");
+
+			}
+
 		} else if  (type_to_display.equals("popularQuizzes")) {
 			
+			List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
+			List<Quiz> popular_quizzes =  new ArrayList<Quiz>(num_records);
+
+			//Put popular quizzes in correct order
+			int pop_len = num_records;
+			for (int i = 0 ; i < pop_len;i++) {
+				popular_quizzes.add(i, cpy_popular_quizzes.get(pop_len - i));
+			}
+			request.setAttribute("content_to_display",popular_quizzes);
 		} else if ( type_to_display.equals("recentQuizzes")) {
-			
+			List<Quiz> recent_quizzes =  QuizManager.getRecentlyCreatedQuizzes(num_records);
+			request.setAttribute("content_to_display",recent_quizzes);
 		} else if (type_to_display.equals("myHistory")) {
 			
 		} else {

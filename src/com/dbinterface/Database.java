@@ -1371,7 +1371,18 @@ public class Database implements Constants {
 	// To be used for testing purposes only.
 	public static void main( String [] args ) {
 		new Database();
-		//removeTable(Constants.FRIENDS);
-		//removeTable(Constants.MESSAGES);
+		removeTable(ACCOUNTS);
+		removeTable(RESPONSE);
+		removeTable(FILL_BLANK);
+		removeTable(MULTI_RESPONSE);
+		removeTable(MULTIPLE_CHOICE);
+		removeTable(MATCHING);
+		removeTable(PICTURE);
+		removeTable(QUIZZES);
+		removeTable(HISTORY);
+		removeTable(ACHIEVEMENTS);
+		removeTable(MESSAGES);
+		removeTable(FRIENDS);
+		
 	}
 }

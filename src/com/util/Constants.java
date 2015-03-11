@@ -85,6 +85,9 @@ public interface Constants {
 	public static final String I_AM_THE_GREATEST = "I am the Greatest";
 	public static final String PRACTICE_MAKES_PERFECT = "Practice Makes Perfect";
 	
+	// Announcements table
+	public static final String ANNOUNCEMENTS = "Announcements";
+	
 	// Question Types list
 	public static final List<String> QUESTION_TYPES = new ArrayList<String>(
 			Arrays.asList(RESPONSE, FILL_BLANK, MULTIPLE_CHOICE, PICTURE, 
@@ -135,9 +138,12 @@ public interface Constants {
 	public static final String REQUEST = "request";
 	public static final String QUIZ = "quiz";
 	public static final String ALL_QUIZZES = "allQuizzes";
+	public static final String ALL_QUIZZES_STRING = "allQuizzesString";
 	public static final String ALL_CREATOR_QUIZZES = "allCreatorQuizzes";
+	public static final String ALL_CREATOR_QUIZZES_STRING = "allCreatorQuizzesString";
 	public static final String MOST_POPULAR_QUIZZES = "mostPopularQuizzes";
 	public static final String RECENTLY_CREATED_QUIZZES = "recentlyCreatedQuizzes";
+	public static final String RECENTLY_CREATED_QUIZZES_FOR_USER_STRING = "recentlyCreatedQuizzesForUserString";
 	public static final String PAST_USER_PERFORMANCE = "pastUserPerformance";
 	public static final String NUM_RECORDS = "numRecords";
 	public static final String DATA = "data";
@@ -146,6 +152,11 @@ public interface Constants {
 	public static final String HOURS = "hours";
 	public static final String RECENT_PERFORMANCE = "recentPerformance";
 	public static final String AVG_PERFORMANCE = "avgPerformance";
+	public static final String SAVE_CHANGES = "Save Changes";
+	public static final String REMOVE_QUIZ = "Remove Quiz";
+	public static final String REMOVE_QUESTIONS = "Remove Questions";
+	public static final String ADD_QUESTIONS = "add_questions";
+	public static final String MODIFIED_QUIZ_NAME = "modified_quiz_name";
 	
 	// Edit Quiz Servlet
 	public static final String ORIGINAL_QUIZ_NAME = "originalQuizName";

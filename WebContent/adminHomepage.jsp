@@ -114,39 +114,33 @@ String sel_type = (String)request.getParameter("choice");
 							} else {
 								out.println("\"No Account Promoted\"");
 							}
-			%>
-			<%out.println("</input>");%>
-			<%out.println("<input type = \"submit\"></input>");%>
-			<%out.println("</form>"); %>
-			<%out.println("</td>"); %>
-			<%out.println("</tr></table>");%>
-			
-			<%/*End adminContent div*/ %>
-			<%out.println("</div>"); %>		
-			
-			
-			
-		<%}%>
+
+							%>></input>
+							<input type = "submit"></input>
+				</form>
+			</td>
+		</tr>
+	</table>
+	
+	<table id = "content">
+		<tr>
+			<%//Displays any admin announcements as a list%>
+			<%	List<String> admin_anmts = AccountManager.getAccount(name).getAnnouncements(); %>
+			<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
+				<%if (admin_anmts != null) { 
+					out.println("<ul>");
+					int anmts_len = admin_anmts.size();
+					for (int i = anmts_len - 1; i > -1; i--) { 
+						out.println("<li>"+admin_anmts.get(i)+"</li>");
+						if (i == anmts_len - 5) i = -1;
+					} 
+					out.println("</ul>");
+				} else {
+					out.println("<br></br>Hello, no new announcements.");
+				}
+				%>	
+			</div> </td>		
 		
-		<div class = "divs-to-float"  id = "div-account-content">
-			<table id = "table-account-content">
-				<tr>
-					<%//Displays any admin announcements as a list%>
-					<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
-					<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
-						<%if (admin_anmts != null) { 
-							out.println("<ul>");
-							int anmts_len = admin_anmts.size();
-							for (int i = anmts_len - 1; i > -1; i--) { 
-								out.println("<li>"+admin_anmts.get(i)+"</li>");
-								if (i == anmts_len - 5) i = -1;
-							} 
-							out.println("</ul>");
-						} else {
-							out.println("<br></br>Hello, no new announcements.");
-						}
-						%>	
-					</div> </td>		
 					<td>
 						<div id = "send_messages">
 							<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
@@ -159,7 +153,7 @@ String sel_type = (String)request.getParameter("choice");
 								</select>
 								<input type = "submit" value = "Display Messages">
 							</form>
-							<%			
+							<%		
 								//TODO: The ReceivedMessages is buggy.						
 								List<Message> messages = acct.getReceivedMessages();	
 								out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
@@ -171,7 +165,11 @@ String sel_type = (String)request.getParameter("choice");
 										out.println("<td>"+msg.getSender()+"</td>");
 										out.println("<td>"+msg.getDate()+"</td>");
 										out.println("<td>"+msg.getType()+"</td>");
-										if (i == messages.size() -5) i = -1;
+										if (i == messages.size() -5) {
+											i = -1;
+										}
+										
+										}
 									}
 									out.println("</table>");
 								}

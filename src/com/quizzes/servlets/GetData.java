@@ -93,7 +93,20 @@ public class GetData extends HttpServlet implements Constants {
 				}
 				result.put(DATA, resultList);
 				
-				//
+				
+			// All Quizzes name and description in String form.
+			} else if (requestType.equals(ALL_QUIZZES_STRING)) {
+				List<Quiz> allQuizzes = QuizManager.getAllQuizzes();
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : allQuizzes) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put(QUIZ_NAME, quiz.getName());
+					map.put(DESCRIPTION, quiz.getDescription());
+					resultList.add(map);
+				}
+				result.put(DATA, resultList);
+				
+				
 			// All Quizzes of Creator
 			} else if (requestType.equals(ALL_CREATOR_QUIZZES)) {
 				String creatorName = (String) requestMap.get(CREATOR);
@@ -106,6 +119,24 @@ public class GetData extends HttpServlet implements Constants {
 					resultList.add(quiz.toMap());
 				}
 				result.put(DATA, resultList);
+				
+				
+			// All Quizzes of Creator names and descriptions in String form.
+			} else if (requestType.equals(ALL_CREATOR_QUIZZES_STRING)) {
+				String creatorName = (String) requestMap.get(CREATOR);
+				Util.validateString(creatorName);
+				
+				Account creator = AccountManager.getAccount(creatorName);
+				List<Quiz> creatorQuizzes = QuizManager.getQuizzes(creator);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : creatorQuizzes) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put(QUIZ_NAME, quiz.getName());
+					map.put(DESCRIPTION, quiz.getDescription());
+					resultList.add(map);
+				}
+				result.put(DATA, resultList);
+
 				
 				
 			// Most popular quizzes overall
@@ -132,6 +163,26 @@ public class GetData extends HttpServlet implements Constants {
 					resultList.add(quiz.toMap());
 				}
 				result.put(DATA, resultList);
+				
+				
+			// Recently created quizzes for a specific user.
+			} else if (requestType.equals(RECENTLY_CREATED_QUIZZES_FOR_USER_STRING)) {
+				String creatorName = (String) requestMap.get(CREATOR);
+				Util.validateString(creatorName);
+				
+				// Get number of records requested.
+				int numRecords = (Integer) requestMap.get(NUM_RECORDS);
+				
+				Account creator = AccountManager.getAccount(creatorName);
+				List<Quiz> quizzes = creator.getRecentlyCreated(numRecords);
+				List<Object> resultList = new ArrayList<Object>();
+				for (Quiz quiz : quizzes) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put(QUIZ_NAME, quiz.getName());
+					map.put(DESCRIPTION, quiz.getDescription());
+					resultList.add(map);
+				}
+				
 				
 				
 			// Past User Performance

@@ -2,7 +2,9 @@ package com.accounts;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -498,6 +500,41 @@ public class Account implements Constants {
 	 */
 	public int getNumQuizzesCreated() {
 		return QuizManager.getQuizzes(this).size();
+	}
+	
+	/**
+	 * create a new announcement in the announcements table. 
+	 * @param content
+	 */
+	public void createAnnouncement(String content) {
+		if (this.isAdmin()) {
+			// get date
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			String date = timeStamp.toString();
+			
+			// create and add row to announcements table 
+			Map<String, Object> row = new HashMap<String, Object>();
+			row.put(USERNAME,userName);
+			row.put(CONTENT, content);
+			row.put(DATE, date);
+			Database.addRow(ANNOUNCEMENTS, row);
+		}
+	}
+	
+	/**
+	 * Returns a list of all announcements.
+	 * @return
+	 */
+	public List<String> getAnnouncements() {
+		List<String> announcements = new ArrayList<String>();
+		List<Map<String,Object>> rows = Database.getTable(ANNOUNCEMENTS);
+		
+		// add all announcement contents to the list
+		for (Map<String,Object> row : rows) {
+			announcements.add((String) row.get(CONTENT));
+		}
+		
+		return announcements;
 	}
 	
 	
