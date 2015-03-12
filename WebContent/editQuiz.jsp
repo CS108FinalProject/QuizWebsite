@@ -17,6 +17,7 @@
 
 	<%
 		String quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
+		Quiz quiz = QuizManager.getQuiz(quizName);
 	%>
 	
 	<h1>Edit Quiz <%=quizName%></h1>
@@ -26,6 +27,9 @@
   		if (errMsg != null) {
  			 out.println("<p>"+errMsg+"</p><BR>");
   		}
+  		String isImmediate = (quiz.isImmediate()) ? "checked=\"checked\"" : "";
+  		String isRandom = (quiz.isRandom()) ? "checked=\"checked\"" : "";
+  		String isOnePage = (quiz.isOnePage()) ? "checked=\"checked\"" : "";
   	%>
 	
 	<form action="EditQuiz" method="post"> 
@@ -33,9 +37,9 @@
 		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR>
 		<label> Description</label>
 		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
-		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%>> Is Immediate<BR>
-		<input type="checkbox" name=<%=Constants.IS_RANDOM%>> Is Random<BR>
-		<input type="checkbox" name=<%=Constants.IS_ONE_PAGE%>> Is One Page<BR><BR>
+		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%> <%=isImmediate %>> Is Immediate<BR>
+		<input type="checkbox" name=<%=Constants.IS_RANDOM%> <%=isRandom %>> Is Random<BR>
+		<input type="checkbox" name=<%=Constants.IS_ONE_PAGE%> <%=isOnePage %>> Is One Page<BR><BR>
 		<input type = "hidden" name=<%=Constants.QUIZ_NAME%> value = "<%=quizName%>">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Quiz">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Questions">
