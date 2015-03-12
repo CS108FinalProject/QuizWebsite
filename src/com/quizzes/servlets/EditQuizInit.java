@@ -45,8 +45,8 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		// get quiz Json
 		String quizName = (String)request.getParameter("quiz");
 		Util.validateString(quizName);
-		quizName = Util.accountForSpaces(quizName);
-		System.out.println(quizName);
+		//quizName = Util.accountForSpaces(quizName);
+		//System.out.println(quizName);
 		
 		
 		request.setAttribute(QUIZ_NAME, quizName);

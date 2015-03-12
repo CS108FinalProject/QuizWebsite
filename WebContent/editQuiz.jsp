@@ -36,7 +36,7 @@
 		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%>> Is Immediate<BR>
 		<input type="checkbox" name=<%=Constants.IS_RANDOM%>> Is Random<BR>
 		<input type="checkbox" name=<%=Constants.IS_ONE_PAGE%>> Is One Page<BR><BR>
-		<input type = "hidden" name=<%=Constants.QUIZ_NAME%> value = <%=Util.accountForSpaces(quizName)%>>
+		<input type = "hidden" name=<%=Constants.QUIZ_NAME%> value = "<%=quizName%>">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Quiz">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Questions">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Save Changes">
