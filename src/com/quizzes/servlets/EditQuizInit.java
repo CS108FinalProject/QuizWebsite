@@ -42,7 +42,9 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		// get quiz Json
+		
 		String quizName = (String)request.getParameter("quiz");
+		System.out.println( quizName );
 		Util.validateString(quizName);
 		
 		request.setAttribute(QUIZ_NAME, quizName);

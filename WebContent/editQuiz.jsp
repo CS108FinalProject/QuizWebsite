@@ -16,7 +16,7 @@
 <body>
 
 	<%
-		String quizName = "MyNewQuiz";//(String) request.getAttribute(Constants.QUIZ_NAME);
+		String quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
 	%>
 	
 	<h1>Edit Quiz <%=quizName%></h1>
