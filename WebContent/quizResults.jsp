@@ -80,6 +80,7 @@ double elapsedTime = Double.parseDouble(request.getParameter(Constants.ELAPSED_T
 		</tr>
 		
 		<%
+			
 			out.println("<td>" + date + "</td>" + "<td>" + score + "</td>" + "<td>" + elapsedTime + "</td>");			
 			
 			// create record
