@@ -942,33 +942,34 @@
      /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
 
      // request database for the quiz
-//    var quizName = getUrlVar("quiz"); // tested and works
-//    var URL = "/QuizWebsite/GetData";
-//    var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
-//        $.ajax({
-//            url: URL,
-//            type: 'POST',
-//            async: true,
-//            dataType: 'json',
-//            data: { json: JSON.stringify(request) },
-//            contentType: 'application/x-www-form-urlencoded',
-//
-//            success: function(response, textStatus, jqXHR) {
-//                if ( response.status.success ) {
-//                    storeBooleanTypeForQuestion( response );
-//                }
-//                // tested -> works proper way to obtain booleans
-//                var onePage = getQuizToTake().quizMetaData.is_one_page;
-//                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
-//                if ( onePage ) {           // checked works
-//                    generateOnePageQuiz();
-//                } else {
-//                    // test all values
-//                    generateMultiplePageQuiz(isImmediate);
-//                }
-//
-//            }
-//    }); 
+   var quizName = getUrlVar("quiz"); // tested and works
+   var URL = "/QuizWebsite/GetData";
+   var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
+       $.ajax({
+           url: URL,
+           type: 'POST',
+           async: true,
+           dataType: 'json',
+           data: { json: JSON.stringify(request) },
+           contentType: 'application/x-www-form-urlencoded',
+
+           success: function(response, textStatus, jqXHR) {
+               if ( response.status.success ) {
+                   storeBooleanTypeForQuestion( response );
+               }
+               // tested -> works proper way to obtain booleans
+               console.log( getQuizToTake() );
+               var onePage = getQuizToTake().quizMetaData.is_one_page;
+               var isImmediate = getQuizToTake().quizMetaData.is_immediate;
+               if ( onePage ) {           // checked works
+                   generateOnePageQuiz();
+               } else {
+                   // test all values
+                   generateMultiplePageQuiz(isImmediate);
+               }
+
+           }
+   }); 
        
 
 
