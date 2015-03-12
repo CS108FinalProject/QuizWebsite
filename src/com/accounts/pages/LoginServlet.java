@@ -44,13 +44,8 @@ public class LoginServlet extends HttpServlet {
 				if(AccountManager.passwordMatches(username, password)) {
 					Account acct = AccountManager.getAccount(username);
 					getServletContext().setAttribute("session_user",username);
-					if (acct.isAdmin()) {
-						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
-						dispatch.forward(request, response);
-					} else {
-						RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
-						dispatch.forward(request, response);
-					}
+					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
+					dispatch.forward(request, response);
 				} else {
 					/*Needed for the case that the Account Exists but the Password Fails*/
 					request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
@@ -69,7 +64,5 @@ public class LoginServlet extends HttpServlet {
 			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
 			dispatch.forward(request, response);
 		}
-
 	}
-
 }

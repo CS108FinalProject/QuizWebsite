@@ -13,7 +13,7 @@ String name = (String)getServletContext().getAttribute("session_user");
 	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="css//main.css" ></link>
+<link rel="stylesheet" href="css//style.css" ></link>
 <title>Announcements</title>
 </head>
 <body>
