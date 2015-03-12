@@ -191,6 +191,7 @@
         $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
             event.preventDefault();
             console.log( "I am checked");
+            var URL = "/QuizWebsite/EditQuizInit";
             $('#lp-quiz-edit').prop("disabled",true);
             var quizName = $('#lp-quiz-name').text();
             $.ajax({
