@@ -13,7 +13,8 @@ String name = (String)getServletContext().getAttribute("session_user");
 	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="css//main\.css" ></link>
+<link rel="stylesheet" href="css//style.css" ></link>
+
 <title>Announcements</title>
 </head>
 <body>
@@ -23,12 +24,12 @@ String name = (String)getServletContext().getAttribute("session_user");
 				<%
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
-					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				%> 
-					
+				<th><a href = "homepage.jsp">Homepage</a></th>					
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 

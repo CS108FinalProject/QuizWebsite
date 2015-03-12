@@ -226,8 +226,7 @@ public class QuizManager implements Constants {
 		// Count all quiz occurrences.
 		Map<String, Integer> quizCount = new HashMap<String, Integer>();
 		for (Map<String, Object> row : rows) {
-			String quizName = (String) row.get(QUIZ_NAME);
-			
+			String quizName = (String) row.get(QUIZ_NAME);			
 			if (quizCount.containsKey(quizName)) {
 				quizCount.put(quizName, quizCount.get(quizName) + 1);
 				

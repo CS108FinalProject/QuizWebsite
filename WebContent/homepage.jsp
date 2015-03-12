@@ -14,10 +14,31 @@
  <link rel="stylesheet" href="homepage.css" ></link>
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%String name = (String)getServletContext().getAttribute("session_user");
-Account acct = AccountManager.getAccount(name);
-String sel_type = (String)request.getParameter("choice");
-List<Object> content_to_display = (List<Object>)request.getAttribute("content_to_display");
+<%
+String name = (String)getServletContext().getAttribute("session_user");
+
+/*Temp hack while we solve the session_user servletcontext issue*/
+Account acct = null;
+String sel_type = null;
+List<String> content_to_display = null;
+if (name != null) {
+	System.out.println("name is "+name);
+ 	try {
+	 acct = AccountManager.getAccount(name);
+ 	} catch(Exception e ) {
+ 		System.out.println("The account for "+name+" was not found.");
+ 	}
+	sel_type = (String)request.getParameter("choice");
+	content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
+} else {
+	/*This will be deleted soon...Used for testing purposes*/
+	response.setContentType("text/html; charset=UTF-8");	
+	request.setAttribute("errMsg", "<h1>You must be logged in to access homepage.</h1>");
+
+	RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+	dispatch.forward(request, response);	
+}
+
 %>
 <title>Welcome <%=name%></title>
 </head>
@@ -181,16 +202,16 @@ List<Object> content_to_display = (List<Object>)request.getAttribute("content_to
 								<table id = "quiz-index">	
 									<tr><th>Quiz Index</th></tr>				
 									<tr>
-										<td><a href = "HomepageQuizIndexServlet?type_to_display=achievements"  class = "btn" id="achievements">Achievements</a></td>
-										<td><a href = "HomepageQuizIndexServlet?type_to_display=friendsAchievements" class = "btn" id="friendsAchievements">Recent Friends Achievements</a></td>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=myAchievements"  class = "btn" id="myAchievements">My Achievements</a></td>
+										<td><a  href = "HomepageQuizIndexServlet?type_to_display=myTakenQuizzes" class = "btn" id="myTakenQuizzes">My Recently Taken Quizzes</a></td>					
 									</tr>
 									<tr>
-										<td><a href = "HomepageQuizIndexServlet?type_to_display=createdQuizzes" class = "btn" id="createdQuizzes">My created Quizzes</a></td>
-										<td><a href = "HomepageQuizIndexServlet?type_to_display=popularQuizzes" class = "btn" id="popularQuizzes">Popular Quizzes</a></td>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=createdQuizzes" class = "btn" id="createdQuizzes">My Created Quizzes</a></td>
+										<td><a  href = "HomepageQuizIndexServlet?type_to_display=recentQuizzes" class = "btn" id="recentQuizzes">All Recently Created Quizzes</a></td>
 									</tr>
 									<tr>
-										<td><a  href = "HomepageQuizIndexServlet?type_to_display=recentQuizzes" class = "btn" id="recentQuizzes">Recent Quizzes</a></td>
-										<td><a  href = "HomepageQuizIndexServlet?type_to_display=myHistory" class = "btn" id="myHistory">My History</a></td>		
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=friendActivities" class = "btn" id="friendActivities">Recent Friends' Activities</a></td>		
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=popularQuizzes" class = "btn" id="popularQuizzes">Popular Quizzes</a></td>					
 									</tr>
 								</table>
 							</td>
@@ -207,7 +228,10 @@ List<Object> content_to_display = (List<Object>)request.getAttribute("content_to
 								out.println("</tr>");
 							}
 							out.println("</table>");			
-						}%>											
+						} else {
+							System.out.println("null");
+						}
+						%>											
 					</div>
 				</div>
 			</div>			
