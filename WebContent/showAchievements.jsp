@@ -11,8 +11,18 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="css//style.css" ></link>
-	<title>Achievements</title>
 </head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+th {
+    background-color: #34495E;
+    color: white;
+}
+</style>
 <body>
 
 <%
@@ -52,6 +62,8 @@
 </header>
 	
 	<BR><BR>
+	<h2>Achievements</h2>
+	<BR>
 	<table id="achievements">
 		<tr>
 			<th>Achievement Earned</th>
@@ -65,12 +77,12 @@
 			for (String achievement : achievements.keySet()) {
 				Record record = achievements.get(achievement);
 				
-				out.println("<td>" + achievement + "</td>" 
+				out.println("<tr><td>" + achievement + "</td>" 
 				+ "<td>" + record.getQuizName() + "</td>" 
 				+ "<td>" + record.getScore() + "</td>" 
 				+ "<td>" + record.getDate() + "</td>" 
-				+ "<td>" + record.getElapsedTime() + "</td>");
-			}		
+				+ "<td>" + record.getElapsedTime() + "</td></tr>");
+			}	
 		%>
 	</table>
 	
