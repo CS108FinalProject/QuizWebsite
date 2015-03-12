@@ -17,7 +17,6 @@
 <%
 // Get quiz name and instantiate a Quiz object.
 String quizName = (String)request.getParameter(Constants.QUIZ_NAME);
-System.out.println(quizName);
 Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
@@ -164,12 +163,16 @@ Map<String, Double> average = quiz.getAveragePerformance();
 </table>
 
 
-<!-- Buttons to take or edit the quiz -->
-<a href=""><button type="button" onclick="alert('Hello world!')">Take Quiz</button></a>
+<!-- Button to take quiz -->
+<a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>"><button type="button">Take Quiz</button></a>
+
+<!-- Button to Edit Quiz -->
 <form action="EditQuizInit" method="POST">
 <input type="hidden" name="quiz" value="<%=quizName%>">
 <input type="submit" value="Edit Quiz">
 </form>
+
+<!-- Button to go back to Homepage -->
 <a href="homepage.jsp"><button type="button">Back Home</button></a>
 </body>
 </html>

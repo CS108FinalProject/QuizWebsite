@@ -849,10 +849,15 @@ public class Database implements Constants {
 		if (columnToBeSetValueSwitch) {
 			columnToBeSetValue = getBooleanFromInt((Integer) columnToBeSetValue);
 		}
+		
+		if (columnGuide.equals(columnToBeSet)) {
+			guideValue = columnToBeSetValue;
+		}
 			
 		List<Object> values = getValues(tableName, columnGuide, guideValue, columnToBeSet, 
 				columnToBeSetValue, columnToBeSet);
 		
+		if (values == null) return 0;
 		return values.size();
 	}
 	
