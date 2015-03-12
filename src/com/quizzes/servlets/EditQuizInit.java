@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,15 +45,11 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		// get quiz Json
 		String quizName = (String)request.getParameter("quiz");
 		Util.validateString(quizName);
+		quizName = Util.accountForSpaces(quizName);
+		
 		
 		request.setAttribute(QUIZ_NAME, quizName);
 		RequestDispatcher dispatch = request.getRequestDispatcher("editQuiz.jsp"); 
 		dispatch.forward(request, response);
-		
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Util.addStatus(true, SUCCESS, result);
-//		response.setContentType("application/json");
-//		PrintWriter out = response.getWriter();
-//		out.write(Json.getJsonString(result));
 	}
 }

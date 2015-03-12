@@ -66,5 +66,28 @@ String name = (String)getServletContext().getAttribute("session_user");
 				}
 				%>	
 </div>
+
+	<table id="achievements">
+		<tr>
+			<th>Achievement Earned</th>
+			<th>Quiz</th>
+			<th>Score</th>
+			<th>Date</th>
+			<th>Elapsed Time (min)</th>
+		</tr>
+		
+		<%
+			for (String achievement : achievements.keySet()) {
+				Record record = achievements.get(achievement);
+				
+				out.println("<td>" + achievement + "</td>" 
+				+ "<td>" + record.getQuizName() + "</td>" 
+				+ "<td>" + record.getScore() + "</td>" 
+				+ "<td>" + record.getDate() + "</td>" 
+				+ "<td>" + record.getElapsedTime() + "</td>");
+			}		
+		%>
+	</table>
+	
 </body>
 </html>
