@@ -40,7 +40,6 @@
             </div>
 
                 <div id="right-pane">
-                </div>
              
         </div>
 
@@ -375,47 +374,21 @@
                             </div>
                         {{/if}}
 
-                        {{#if this.isMultiResponse }} 
-                            <div id="multi_response_page">
-                                <h2>Question {{@index }}</h2>
-                                <p>{{this.question}}</p>
-                                {{#each this.answers}}
-                                    <input type="text" placeholder="Enter your answer">
-                                {{/each}}
-                            </div>
-                        {{/if}}
-
-                        {{#if this.isMultipleChoice }} 
-                            <div id="multiple_choice_page">
-                                <h2>Question {{@index }}</h2>
-                                <p>{{this.question}}</p>
-                                {{#each this.answers}}
-                                    <input type="checkbox" placeholder="Enter your answer">{{@key}}
-
-                                {{/each}}
-                            </div>
-                        {{/if}}
-
-                        {{#if this.isMatching }} 
-                            <div id="matching_page">
-                                <h2>Question {{@index }}</h2>
-                                <p>{{this.question}}</p>
-                                {{#each this.answers}}
-                                    {{@key}}<input type="text">{{this}}<br/>
-                                {{/each}}
-                            </div>
-                        {{/if}}
-
-                        {{#if this.isFillInTheBlank }} 
-                            <div id="matching_page">
-                                <h2>Question {{@index }}</h2>
-                                {{{this.blankedQuestion}}}
-                            </div>
-                        {{/if}}
-
                     {{/each}}
                 {{/if}}
             </form>
+        </script>
+
+        <!--TEST CODE FOR SINGLE RESPONSE RENDERING TEMPLATE -->
+        <script type="text/x-handlebars-template" id="single-response-test">
+            <form class="cf" id="edit-quiz-options">
+                {{#each questions}}
+                    <div id="response_single_page">
+                        <h2>Question {{@index}} </h2>
+                        <p id="response_question">{{this.question}}</p>
+                        <input type="text" placeholder="Enter your answer">
+                    </div>
+                {{/each}}
         </script>
 
         <!-- Libraries: JQuery -->

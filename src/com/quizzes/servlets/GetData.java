@@ -282,6 +282,7 @@ public class GetData extends HttpServlet implements Constants {
 		
 		} catch (Exception e) {
 			success = false;
+			e.printStackTrace();
 			errorMessage = e.getMessage();
 			if (errorMessage == null) errorMessage = "No message provided";
 		}
