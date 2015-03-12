@@ -4,8 +4,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet" href="css//main.css" ></link>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="css//style.css" ></link>
 <title>Insert title here</title>
 </head>
 <body>
@@ -17,22 +17,22 @@
 			name = (String) request.getAttribute("username");
 		}
 	%>
-	
+<header>	
 	<table id="header">
 			<tr>
 				<%
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				%> 			
 					
-				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
-				<th>My Achievements</th>
+				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
-				<th>My Messages 
+				<th class = "btn">My Messages 
 					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
@@ -43,11 +43,11 @@
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
-				<th>Quizzes</th>
+				<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
 			</tr>
 	</table>
-	
+</header>	
 	<h1>Here are your messages, <%=name%></h1>
 	<ul>
 		<%

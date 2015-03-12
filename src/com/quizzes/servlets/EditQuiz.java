@@ -45,7 +45,7 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 		
 		
 		if (requestType.equals(SAVE_CHANGES)) {
-			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);
+			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);			
 			String description = request.getParameter(DESCRIPTION);
 			
 			String isRandomString = request.getParameter(IS_RANDOM);
