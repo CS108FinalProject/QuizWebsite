@@ -141,5 +141,30 @@ List<Record> recentScores = quiz.getRecentPerformance(0);
 			}		
 		%>
 </table>
+
+
+<%
+// Get average statistics for this quiz.
+Map<String, Double> average = quiz.getAveragePerformance();
+%>
+
+<!-- Average performance table -->
+<h4>Average Performance:</h4>
+<table id="averagePerformance">
+		<tr>
+			<th>Score</th>
+			<th>Elapsed Time</th>
+		</tr>
+		
+		<%
+			out.println("<td>" + average.get(Constants.SCORE) + "</td>"
+				+ "<td>" + average.get(Constants.ELAPSED_TIME) + "</td>"); 
+		%>
+</table>
+
+
+<!-- Buttons to take or edit the quiz -->
+<button type="button" onclick="alert('Hello world!')">Take Quiz</button>  
+<button type="button" onclick="alert('Hello world!')">Edit Quiz</button>
 </body>
 </html>

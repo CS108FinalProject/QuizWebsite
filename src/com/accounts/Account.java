@@ -588,10 +588,6 @@ public class Account implements Constants {
 			}
 			return result;
 		}
-		
-		
-		
-		
 		return result;
 	}
 	
