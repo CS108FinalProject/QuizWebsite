@@ -86,7 +86,6 @@
 						}
 						
 					} else { // case of read message
-						System.out.println("name: " + name + " sender: " + msg.getSender());
 						Account sender_account = AccountManager.getAccount(msg.getSender());
 						Account recipient_account = AccountManager.getAccount(msg.getRecipient());
 						if (recipient_account.isFriend(sender_account) || sender_account.isFriend(recipient_account)) {

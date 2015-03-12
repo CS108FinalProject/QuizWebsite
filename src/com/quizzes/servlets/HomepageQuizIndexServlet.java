@@ -65,7 +65,6 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 		} else if  (type_to_display.equals("popularQuizzes")) {
 			
 			List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-			System.out.println(cpy_popular_quizzes.size());
 			List<Quiz> popular_quizzes =  new ArrayList<Quiz>();
 
 			//Put popular quizzes in correct order

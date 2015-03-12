@@ -36,7 +36,6 @@
 			int index = Integer.parseInt(request.getParameter("index"));
 			quiz.removeQuestion(questions.get(index));
 			questions.remove(index);
-			System.out.println("size: " + questions.size());
 		}
 		
 		// remove quiz if it has no questions
