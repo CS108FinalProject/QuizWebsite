@@ -1,6 +1,9 @@
 package com.quizzes.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.Constants;
+import com.util.Json;
 import com.util.Util;
 
 /**
@@ -44,5 +48,11 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		request.setAttribute(QUIZ_NAME, quizName);
 		RequestDispatcher dispatch = request.getRequestDispatcher("editQuiz.jsp"); 
 		dispatch.forward(request, response);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		Util.addStatus(true, SUCCESS, result);
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		out.write(Json.getJsonString(result));
 	}
 }
