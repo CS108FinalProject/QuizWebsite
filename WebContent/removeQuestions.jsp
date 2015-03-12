@@ -39,11 +39,28 @@
 		}
 		
 		// remove quiz if it has no questions
+		questions = quiz.getQuestions();
 		if (questions.size() == 0) {
-			request.setAttribute(Constants.QUIZ_NAME, quizName);
-			ServletContext context= getServletContext();
+			//request.setAttribute(Constants.QUIZ_NAME, quizName);
+			/* ServletContext context= getServletContext();
 			RequestDispatcher rd= context.getRequestDispatcher("/RemoveQuiz");
-			rd.forward(request, response);
+			rd.forward(request, response); */
+			QuizManager.getQuiz(quizName).removeQuiz();
+			
+			//HTTPSession session = UserSession;
+			//String name = session.getAttribute("session_user");
+			//System.out.println(name);
+			//out.print("<p><a href=\".jsp?friend_id=" + msg.getSender() 
+			//	 	+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + "</a> sent you a message!</p>");
+			
+			out.println("<form action=\"RemoveQuiz\" method=\"post\">");
+			out.println("<input type=\"submit\" value=\"Return to Homepage\">");
+			out.println("</form>");
+			
+			//pageContext.forward("homepage.jsp");
+			//System.out.println("<jsp:forward page=\"homepage.jsp\" />");
+			//out.println("<jsp:forward page=\"homepage.jsp\" />");
+			//System.out.println("<jsp:forward page=\"homepage.jsp\" />");
 		}
 		
 		// print all questions 

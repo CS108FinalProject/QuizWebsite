@@ -45,38 +45,69 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 
 		String type_to_display = (String)request.getParameter("type_to_display");
 		String username = (String)getServletContext().getAttribute("session_user");
+		
+		List<String> result_list = new ArrayList<String>();
 		int num_records = 5;
-		if (type_to_display.equals("achievements")) {
+		/*Default num records to put in the result_list*/
+		
+		/*Field for User Achievements*/
+		if (type_to_display.equals("myAchievements")) {
 	    	List<String> arg1 =  (ArrayList<String>)getServletContext().getAttribute("Received Messages");
 
 			request.setAttribute("content_to_display", arg1);
 			
-		} else if (type_to_display.equals("friendsAchievements")) {
+			/*Field for Friends' Achievements*/
+		} else if (type_to_display.equals("friendActivities")) {
 			
+			/*My recently created quizzes*/
 		} else if (type_to_display.equals("createdQuizzes")) {
 			try {
 				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
+				
 				request.setAttribute("content_to_display",usr_quizzes);
 			} catch (Exception e) {
 				request.setAttribute("errMsg", "<h1> The current user, "+username+" could not be found.  </h1>");
-
 			}
-
+			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-			
-			List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-			List<Quiz> popular_quizzes =  new ArrayList<Quiz>();
 
-			//Put popular quizzes in correct order
-			int pop_len = num_records;
-			for (int i = 0 ; i < pop_len;i++) {
-				popular_quizzes.add(i, cpy_popular_quizzes.get(pop_len - i));
+			try {
+				List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
+				System.out.println(cpy_popular_quizzes.size());
+				List<Quiz> popular_quizzes =  new ArrayList<Quiz>();
+	
+				//Put popular quizzes in correct order
+				int pop_len = num_records;
+				for (int i = 0 ; i < pop_len;i++) {
+					popular_quizzes.add(i, cpy_popular_quizzes.get(pop_len - i));
+				}
+				request.setAttribute("content_to_display",popular_quizzes);
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
 			}
-			request.setAttribute("content_to_display",popular_quizzes);
+			/*All recently created quizzes*/
 		} else if ( type_to_display.equals("recentQuizzes")) {
-			List<Quiz> recent_quizzes =  QuizManager.getRecentlyCreatedQuizzes(num_records);
-			request.setAttribute("content_to_display",recent_quizzes);
-		} else if (type_to_display.equals("myHistory")) {
+			try {
+				List<Quiz> recent_quizzes =  QuizManager.getRecentlyCreatedQuizzes(num_records);
+				int rec_quiz_len = recent_quizzes.size();
+				/*For each Recent Quiz print the quiz data and a link to the quiz Summary page*/
+
+				for (int i = 0; i < rec_quiz_len;i++ ) {
+					Quiz curr = recent_quizzes.get(i);
+					String creator = curr.getCreator().getUserName();
+					String birthdate = curr.getCreationDate();
+					String quizname = curr.getName();
+					result_list.add("<a href = \"quizSummary.jsp?quizName="+quizname+"\">The quiz "+quizname+" was created by "+creator+" on "+birthdate+"</a>");
+				}
+				System.out.println("This is the recently created quizzes "+result_list);
+				request.setAttribute("content_to_display",result_list);
+
+			}catch (Exception e) {
+				request.setAttribute("errMsg", "<h1>There are no recently created Quizzes.</h1>");
+			}
+		
+			/*My Recently Taken Quizzes */
+		} else if (type_to_display.equals("myTakenQuizzes")) {
 			
 		} else {
 			request.setAttribute("errMsg", "<h1> Sorry we could not process your request at this time</h1>");

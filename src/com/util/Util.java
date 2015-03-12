@@ -141,8 +141,11 @@ public class Util implements Constants {
 				result += tok.nextToken();
 				result += delim;
 			}
+			
+			return result.substring(0, result.length() - delim.length());
 		}
-		return result.substring(0, result.length() - delim.length());
+		
+		return str;
 	}
 	
 	
