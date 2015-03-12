@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1060,7 +1061,7 @@ public class Database implements Constants {
 	/**
 	 * Closes the database connection
 	 */
-	public void close() {
+	public static void close() {
 		con.close();
 	}
 	
@@ -1376,18 +1377,13 @@ public class Database implements Constants {
 	// To be used for testing purposes only.
 	public static void main( String [] args ) {
 		new Database();
-		removeTable(ACCOUNTS);
-		removeTable(RESPONSE);
-		removeTable(FILL_BLANK);
-		removeTable(MULTI_RESPONSE);
-		removeTable(MULTIPLE_CHOICE);
-		removeTable(MATCHING);
-		removeTable(PICTURE);
-		removeTable(QUIZZES);
-		removeTable(HISTORY);
-		removeTable(ACHIEVEMENTS);
-		removeTable(MESSAGES);
-		removeTable(FRIENDS);
-		
+		Map<String, Object> columns = new HashMap<String, Object>();
+		columns.put(QUIZ_NAME, "AllQuizzes3");
+		columns.put(USERNAME, "notadmin");
+		columns.put(SCORE, 70.00);
+		columns.put(DATE, "2015/3/12 10:07"); 
+		columns.put(ELAPSED_TIME, 40.00); 
+		Database.addRow(HISTORY, columns);
+		Database.close();
 	}
 }

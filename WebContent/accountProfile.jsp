@@ -5,9 +5,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet" href="css//main.css" ></link>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
 	
@@ -27,60 +26,67 @@
 	<%if (errMsg != null) { %>
 		<%= errMsg%>
 	<%}%>
-	
-	<table id="header">
-			<tr>
-				<%if(acct.isAdmin()) {
-					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
-				}
-					%> 			
-				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
-				<th>My Achievements</th>
 
-				<th>My Messages 
-					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
+<header>	
+		<table id="header">
+			<tr>
+				<%
+				if(acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+				%> 			
+					
+				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
+
+				<th class = "btn">My Messages 
+					<form action = <%="\"showMessage.jsp?id="+sender_name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
-						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input name="id" type="hidden" value=<%=sender_name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th> <a href="searchFriends.jsp?id=<%=sender_name%>"> Lookup Users</a> </th>
-				<th>Quizzes</th>
+				<th class = "btn"> <a href="searchFriends.jsp?id=<%=sender_name%>"> Lookup Users</a> </th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+sender_name+"\""%>> Quizzes</a></th>
 			</tr>
 	</table>
-	
+</header>
+
+	<BR>
+	<h2><%=friend_name %>'s Profile</h2>
+	<BR>
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Send Note">
-		<textarea rows = "4" cols = "20"  name="msg_content" ></textarea>
+		<textarea rows = "4" cols = "10"  name="msg_content" ></textarea>
 	</form>
-	
+	<BR>
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 
 		<input type="submit" name=message_type value="Send Friend Request">
 	</form>
-	
+	<BR>
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 
 		<input type="submit" name=message_type value="Unfriend">
 	</form>
-	
+	<BR>
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
 		<input type="submit" name=message_type value="Challenge">
-		<textarea rows = "1" cols = "20"  name="quizName" ></textarea>
+		<textarea rows = "1" cols = "10"  name="quizName" ></textarea>
 	</form>
 	
 	<br>
