@@ -282,8 +282,7 @@ table-result-quiz-content {
 }
 
 #right-pane {
-    float: left;
-    width: 600px;
+    width: 80%;
     padding: 50px 0 50px 70px; 
 }
 

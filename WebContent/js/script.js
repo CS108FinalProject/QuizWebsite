@@ -823,7 +823,7 @@
             }
 
             questions.push( questionInfo );
-            quiz.questions = questions;
+            quiz.questions = questions.trim();
             console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
@@ -839,7 +839,7 @@
     // based on a click on the question types page
     function addQuestionInfo(questionType) {
         var quiz = getPendingQuiz();
-        var questions = quiz.questions;
+        var questions = quiz.questions.trim();
         var questionInfo = {};
         questionInfo["type"] = questionType;
         questions.push( questionInfo );
@@ -852,7 +852,7 @@
     // in the local storage
     function clearLastSelectedQuestionType() {
         var quiz = getPendingQuiz();
-        var questions = quiz.questions;
+        var questions = quiz.questions.trim();
         questions.pop();
         quiz.questions = questions;
         updatePendingQuiz( quiz);
@@ -933,7 +933,12 @@
                         contentType: 'application/x-www-form-urlencoded',
 
                         success: function(data, textStatus, jqXHR) {
-                            console.log( data );
+                            if ( data.status.success ) {
+                                $('#right-pane').html('Quiz Added Successfully');
+                            } else {
+                                $('#right-pane').html('An Error Occurred While Attempting to Create Your Quiz');
+                            }
+                            
                         }
                     }); 
 
@@ -946,26 +951,81 @@
             var numberOfPoints = 0;
             var numberCorrect = 0;
             var totalScore;
-
+           
             for(var i = 0; i < questions.length; i++) {
+                // Picture and Multiple Choice Scoring Work
                 if ( questions[i].type === "Picture" ||
                     questions[i].type === "Response" ) {
+                    var questionIndex = i;
                     numberOfPoints++;
+                    var isAnswer = false;
                     var idString = questions[i].id;
                     var answer = document.getElementById(idString).value;
-                    var listOfAnswers = questions[i].answers;
-                    console.log( listOfAnswers );
-                    if(  listOfAnswers[0].indexOf( answer ) != -1 ) {
-                        numberCorrect++;
+
+                    var listOfAnswers = questions[questionIndex].answers;
+                    if ( answer != "" ) {
+                        if ( listOfAnswers.indexOf(answer) != -1 ) {
+                            isAnswer = true;
+                        } 
                     }
+
+                    if ( isAnswer ) { numberCorrect++; };
                 } else if ( questions[i].type === "Multiple_Choice" ) {
+                    // Multiple Choice Question Works
+                    numberOfPoints++;
                     var thisQuestion = questions[i];
                     var idString = questions[i].id;
                     var array = document.getElementsByClassName(idString);
-                    console.log( thisQuestion );
-                    for(var i = 0; i < array.length; i++ ) {
-                        console.log( array[i].name );
-                        console.log( thisQuestion.answers[array[i].name] );
+                    var theSame = true;
+                    for(var j = 0; j < array.length; j++ ) {
+                        if ( !(thisQuestion.answers[array[j].name] === array[j].checked ) ) {
+                            theSame = false;
+                        }
+                    }
+
+                    if ( theSame ) {
+                        numberCorrect++;
+                    } 
+                } else if ( questions[i].type === "Multi_Response" ) {
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    var inOrder = true;
+
+                    if ( thisQuestion.isOrdered ) {
+                        for(var j = 0; j < array.length; j++ ) {
+                            numberOfPoints++;
+                            if(  thisQuestion.answers.indexOf( array[j].value ) != j ) {
+                                inOrder = false;
+                            }
+                        }
+                        if (inOrder) { numberCorrect += array.length; }
+                    } else {
+                        for(var j = 0; j < array.length; j++ ) {
+                            numberOfPoints++;
+                            if(  thisQuestion.answers.indexOf( array[j].value ) != -1 ) {
+                                numberCorrect++;
+                            }
+                        }
+                    }
+                } else if ( questions[i].type === "Matching" ) {
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    console.log( array );
+                    console.log( thisQuestion.answers );
+                    var count = 0;
+                    var MatchAnswers = thisQuestion.answers;
+                    for(var key in MatchAnswers ) {
+                        if ( array[count].value === MatchAnswers[key] ) {
+                            numberCorrect++;
+                            numberOfPoints++;
+                            count++;
+                        } else {
+                            numberOfPoints++;
+                            count++;
+                        }
+
                     }
                 }
             }
@@ -973,6 +1033,7 @@
             console.log( numberCorrect );
             console.log( numberOfPoints );
 
+            $('#right-pane').html("You got " + numberCorrect + " out of " + numberOfPoints + "points" );
         }
            
     });
