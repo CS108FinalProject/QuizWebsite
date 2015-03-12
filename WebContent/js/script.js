@@ -823,7 +823,7 @@
             }
 
             questions.push( questionInfo );
-            quiz.questions = questions.trim();
+            quiz.questions = questions;
             console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
@@ -839,7 +839,7 @@
     // based on a click on the question types page
     function addQuestionInfo(questionType) {
         var quiz = getPendingQuiz();
-        var questions = quiz.questions.trim();
+        var questions = quiz.questions;
         var questionInfo = {};
         questionInfo["type"] = questionType;
         questions.push( questionInfo );
@@ -852,7 +852,7 @@
     // in the local storage
     function clearLastSelectedQuestionType() {
         var quiz = getPendingQuiz();
-        var questions = quiz.questions.trim();
+        var questions = quiz.questions;
         questions.pop();
         quiz.questions = questions;
         updatePendingQuiz( quiz);
