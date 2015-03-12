@@ -669,7 +669,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
 				true, cut, SCORE, true);
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		for (Map<String, Object> row : rows) {
 			result.add(new Record(
@@ -679,7 +679,6 @@ public class Quiz implements Constants {
 					(Double) row.get(ELAPSED_TIME)));
 		}
 		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	
