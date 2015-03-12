@@ -229,7 +229,7 @@ if (name != null) {
 							}
 							out.println("</table>");			
 						} else {
-							System.out.println("null");
+							System.out.println("content is null");
 						}
 						%>											
 					</div>

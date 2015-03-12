@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accounts.Account;
 import com.accounts.AccountManager;
-import com.quizzes.Quiz;
-import com.quizzes.QuizManager;
-
+import com.quizzes.*;
+import com.util.Constants;
 /**
  * Servlet implementation class HomepageQuizIndexServlet
  */
 @WebServlet("/HomepageQuizIndexServlet")
-public class HomepageQuizIndexServlet extends HttpServlet {
+public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -97,7 +97,7 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 					String creator = curr.getCreator().getUserName();
 					String birthdate = curr.getCreationDate();
 					String quizname = curr.getName();
-					result_list.add("<a href = \"quizSummary.jsp?quizName="+quizname+"\">The quiz "+quizname+" was created by "+creator+" on "+birthdate+"</a>");
+					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
 				}
 				System.out.println("This is the recently created quizzes "+result_list);
 				request.setAttribute("content_to_display",result_list);
@@ -108,6 +108,17 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 		
 			/*My Recently Taken Quizzes */
 		} else if (type_to_display.equals("myTakenQuizzes")) {
+			try {
+				Account acct = AccountManager.getAccount(username);
+				List<Record> quizzes_taken = acct.getPastPerformance(num_records);
+				int quizzes_taken_len = quizzes_taken.size();
+				for (int i = quizzes_taken_len - 1;i >= 0;i--) {
+					//String taken
+				}
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1>You have not taken any quizzes lately..</h1>");
+
+			}
 			
 		} else {
 			request.setAttribute("errMsg", "<h1> Sorry we could not process your request at this time</h1>");
