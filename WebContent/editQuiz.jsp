@@ -16,7 +16,7 @@
 <body>
 
 	<%
-		String quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
+		String quizName = "MyNewQuiz";//(String) request.getAttribute(Constants.QUIZ_NAME);
 	%>
 	
 	<h1>Edit Quiz <%=quizName%></h1>
@@ -26,11 +26,12 @@
   		if (errMsg != null) {
  			 out.println("<p>"+errMsg+"</p><BR>");
   		}
-  		//System.out.println("description: " + QuizManager.getQuiz(quizName).getDescription());
   	%>
 	
 	<form action="EditQuiz" method="post"> 
+		<label> Title</label>
 		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR>
+		<label> Description</label>
 		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
 		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%>> Is Immediate<BR>
 		<input type="checkbox" name=<%=Constants.IS_RANDOM%>> Is Random<BR>
