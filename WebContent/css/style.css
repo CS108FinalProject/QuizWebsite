@@ -516,3 +516,16 @@ table-result-quiz-content {
 .cf {
     *zoom: 1;
 }
+
+
+table.statTable {
+	font: 14px/1.5 "Open Sans", "PT Sans", "Source Sans Pro",
+        "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+    background-color: #ECF0F1;
+    color: #333;
+    
+	table, th, td {
+    border: 1px solid black;
+	
+}
+

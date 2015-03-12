@@ -9,7 +9,7 @@
 <html>
 <head>
 <%
-String name = (String)getServletContext().getAttribute("session_user");
+	String name = (String)getServletContext().getAttribute("session_user");
 	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18,22 +18,22 @@ String name = (String)getServletContext().getAttribute("session_user");
 <title>Announcements</title>
 </head>
 <body>
-
-<table id="header">
+<header>
+	<table id="header">
 			<tr>
 				<%
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				} else {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				%> 
-				<th><a href = "homepage.jsp">Homepage</a></th>					
-				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
-				<th>My Achievements</th>
+				<th class = "btn"><a href = "homepage.jsp">Homepage</a></th>					
+				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
-				<th>My Messages 
+				<th class = "btn">My Messages 
 					<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
@@ -44,13 +44,14 @@ String name = (String)getServletContext().getAttribute("session_user");
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
-				<th> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
-				<th>Quizzes</th>
+				<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
 			</tr>
 	</table>
-
-
-<div id="announcements">Announcements
+</header>
+<BR>
+<h2>Announcements</h2>
+<div id="announcements">
 				<%if (admin_anmts != null) { 
 					out.println("<ul>");
 					int anmts_len = admin_anmts.size();

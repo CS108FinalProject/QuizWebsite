@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accounts.AccountManager;
 import com.quizzes.Quiz;
 import com.quizzes.QuizManager;
 import com.util.*;
@@ -43,9 +44,8 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 		Util.validateString(quizName);
 		Quiz quiz = QuizManager.getQuiz(quizName);
 		
-		
 		if (requestType.equals(SAVE_CHANGES)) {
-			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);
+			String modQuizName = request.getParameter(MODIFIED_QUIZ_NAME);			
 			String description = request.getParameter(DESCRIPTION);
 			
 			String isRandomString = request.getParameter(IS_RANDOM);
@@ -101,8 +101,13 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 			RequestDispatcher dispatch = request.getRequestDispatcher("removeQuestions.jsp"); 
 			dispatch.forward(request, response);
 			
-		} else if (requestType.equals(ADD_QUESTIONS)) {
-			// Not Implemented yet.
+		} else if (requestType.equals("Return to Homepage")) {
+			String username = (String)getServletContext().getAttribute("session_user");
+			RequestDispatcher dispatch = null;
+			if ((AccountManager.getAccount(username)).isAdmin()) {
+				dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
+			} else dispatch = request.getRequestDispatcher("homepage.jsp"); 	
+			dispatch.forward(request, response);
 			
 		} else {
 			throw new IllegalArgumentException("Cannot recognize request type " + requestType);

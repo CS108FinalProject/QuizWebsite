@@ -37,7 +37,7 @@
 				}
 					%> 			
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
-				<th>My Achievements</th>
+				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
 				<th>My Messages 
 					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					

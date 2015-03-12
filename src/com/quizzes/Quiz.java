@@ -199,12 +199,12 @@ public class Quiz implements Constants {
 			throw new IllegalArgumentException("name " + newName + " already in use.");
 		}
 		
-		this.name = newName;
-		
 		Database.setValues(QUIZZES, QUIZ_NAME, name, QUIZ_NAME, newName);
 		for (String questionType : QUESTION_TYPES) {
 			Database.setValues(questionType, QUIZ_NAME, name, QUIZ_NAME, newName);
 		}
+		
+		this.name = newName;
 	}
 	
 	
