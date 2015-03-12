@@ -34,13 +34,7 @@ List<Object> content_to_display = (List<Object>)request.getAttribute("content_to
 		<header>
 			<table id="header">
 					<tr >
-						<%
-						if(acct.isAdmin()) {
-							out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-						} else {
-							out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-						}
-						%>					
+						<th class = "btn"><a href = "homepage.jsp">Homepage</a></th>		
 						<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
 						<th class = "btn">My Achievements</th>
 						<th  id = "msg-header" class = "btn">My Messages 
@@ -133,7 +127,7 @@ List<Object> content_to_display = (List<Object>)request.getAttribute("content_to
 				<table id = "table-account-content">
 					<tr>
 						<%//Displays any admin announcements as a list%>
-						<%	ArrayList<String> admin_anmts = (ArrayList<String>)getServletContext().getAttribute("announcements"); %>
+						<%	ArrayList<String> admin_anmts =(ArrayList<String>)AccountManager.getAnnouncements(); %>
 						<td><div id="announcements"><a href = "showAnnouncements.jsp">Announcements</a>
 							<%if (admin_anmts != null) { 
 								out.println("<ul>");

@@ -47,7 +47,8 @@ public class AdminServlet extends HttpServlet {
 		 * for all the cases of the admin servlet's purposes.
 		 */
 		//ArrayList<String> announcements = (ArrayList<String>)getServletContext().getAttribute("announcements");
-		if (new_ancmnt != null) { // create a new announcement
+		if (new_ancmnt != null) { 
+			// create a new announcement
 			AccountManager.getAccount(user_id).createAnnouncement(new_ancmnt);
 		} else if (acct_to_remove != null && !acct_to_remove.equals("")) {
 			 if (AccountManager.accountExists(acct_to_remove)) {
@@ -68,13 +69,9 @@ public class AdminServlet extends HttpServlet {
 		}
 		
 		//Send back to the user homepage regardless
-		if (AccountManager.getAccount(user_id).isAdmin()) {
-			RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp");
-			dispatch.forward(request, response);
-		} else {
 			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
 			dispatch.forward(request, response);
-		}
+
 	}
 
 }
