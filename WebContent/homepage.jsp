@@ -31,6 +31,7 @@ if (name != null) {
 	sel_type = (String)request.getParameter("choice");
 	content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
 } else {
+	/*This will be deleted soon...Used for testing purposes*/
 	response.setContentType("text/html; charset=UTF-8");	
 	request.setAttribute("errMsg", "<h1>You must be logged in to access homepage.</h1>");
 
