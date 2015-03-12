@@ -38,7 +38,7 @@
 		questions = quiz.getQuestions();
 		if (questions.size() == 0) {
 			QuizManager.getQuiz(quizName).removeQuiz();
-			out.println("<form action=\"RemoveQuiz\" method=\"post\">");
+			out.println("<form action=\"RemoveQuiz\" method=\"POST\">");
 			out.println("<input type=\"submit\" value=\"Return to Homepage\">");
 			out.println("</form>");
 		}

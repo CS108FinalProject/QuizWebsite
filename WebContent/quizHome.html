@@ -12,8 +12,8 @@
     <body>
         <header>
             
-            <h1><a href="/">Home</a></h1>
-            <h1><a href="/">Quizzes</a></h1>
+            <h1><a href="homepage.jsp">Home</a><a href="/">Quizzes</a></h1>
+
         </header>
 
         <div id="wrapper">
@@ -56,8 +56,8 @@
                 <div class="list-question question-info" id="{{ this.date_created }}">
                     <h3 id="lp-quiz-name">{{ this.quiz_name }}</h3>
                     <p>{{ this.description }}</p>
-                    <form class="login_form" action = "EditQuizInit" method = "POST">
-                        <input type="hidden" name="quiz" value={{ this.quiz_name}}>
+                    <form class="login_form" action = "EditQuizInit" method ="POST">
+                        <input type="hidden" name="quiz" value={{this.quiz_name}}>
                         <input id="lp-quiz-edit" type="submit" value="Edit"/>
                     </form>
                 </div>
@@ -365,8 +365,8 @@
                             <div id="response_single_page">
                                 <h2>Question {{@index}} </h2>
                                 <p id="response_question">{{this.question}}</p>
-                                <input type="text" placeholder="Enter your answer">
-                            </div>
+                                <input id={{this.id}} type="text" placeholder="Enter your answer">
+                            </div> 
                         {{/if}}
 
                         {{#if this.isPicture}}
@@ -374,30 +374,57 @@
                                 <h2>Question {{@index }}</h2>
                                 <p>{{this.question}}</p>
                                 <img src={{this.pictureURL}}  height="200" width="200">
-                                <input type="text" placeholder="Enter your answer">
+                                <input id={{this.id}} type="text" placeholder="Enter your answer">
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isMultiResponse }} 
+                            <div id="multi_response_page">
+                                <h2>Question {{@index }}</h2>
+                                <p>{{this.question}}</p>
+                                {{#each this.answers}}
+                                    <input id={{this.id}} type="text" placeholder="Enter your answer">
+                                {{/each}}
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isMultipleChoice }} 
+                            <div id="multiple_choice_page">
+                                <h2>Question {{@index }}</h2>
+                                <p>{{this.question}}</p>
+                                {{#each this.answers}}
+                                    <input id={{this.id}} type="checkbox" name={{@key}} placeholder="Enter your answer" value>{{@key}}
+
+                                {{/each}}
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isMatching }} 
+                                {{#each this.answers}}
+                                    {{@key}}<input id={{this.id}} type="text">{{this}}<br/>
+                                {{/each}}
+                            </div>
+                        {{/if}}
+
+                        {{#if this.isFillInTheBlank }} 
+                            <div id="matching_page">
+                                <h2>Question {{@index }}</h2>
+                                {{{this.blankedQuestion}}}
                             </div>
                         {{/if}}
 
                     {{/each}}
                 {{/if}}
-            </form>
-        </script>
 
-        <!--TEST CODE FOR SINGLE RESPONSE RENDERING TEMPLATE -->
-        <script type="text/x-handlebars-template" id="single-response-test">
-            <form class="cf" id="edit-quiz-options">
-                {{#each questions}}
-                    <div id="response_single_page">
-                        <h2>Question {{@index}} </h2>
-                        <p id="response_question">{{this.question}}</p>
-                        <input type="text" placeholder="Enter your answer">
-                    </div>
-                {{/each}}
+                <input id="quiz-submission" type="button" value="Submit"/>
+            </form>
         </script>
 
         <!-- Libraries: JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="http://momentjs.com/downloads/moment.js"></script>
+        <script src="http://builds.emberjs.com/release/ember.prod.js"></script>
+        
         
         
         <!-- JavaScript -->
