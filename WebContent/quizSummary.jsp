@@ -16,12 +16,13 @@
 <body>
 <%
 // Get quiz name and instantiate a Quiz object.
-String quizName = "AllQuizzes2"; //= (String)request.getParameter(Constants.QUIZ_NAME);
+String quizName = (String)request.getParameter(Constants.QUIZ_NAME);
+System.out.println(quizName);
 Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
 // Get logged in user.
-String loggedInUser = "notadmin"; //(String)getServletContext().getAttribute("session_user");
+String loggedInUser = (String)getServletContext().getAttribute("session_user");
 Util.validateString(loggedInUser);
 Account user = AccountManager.getAccount(loggedInUser);
 %>
