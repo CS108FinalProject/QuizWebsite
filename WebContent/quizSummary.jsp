@@ -165,7 +165,11 @@ Map<String, Double> average = quiz.getAveragePerformance();
 
 
 <!-- Buttons to take or edit the quiz -->
-<button type="button" onclick="alert('Hello world!')">Take Quiz</button>  
-<button type="button" onclick="alert('Hello world!')">Edit Quiz</button>
+<a href=""><button type="button" onclick="alert('Hello world!')">Take Quiz</button></a>
+<form action="EditQuizInit" method="POST">
+<input type="hidden" name="quiz" value="<%=quizName%>">
+<input type="submit" value="Edit Quiz">
+</form>
+<a href="homepage.jsp"><button type="button">Back Home</button></a>
 </body>
 </html>
