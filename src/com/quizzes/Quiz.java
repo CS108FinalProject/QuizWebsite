@@ -669,7 +669,7 @@ public class Quiz implements Constants {
 		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
 				true, cut, SCORE, true);
 		
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		for (Map<String, Object> row : rows) {
 			result.add(new Record(
@@ -679,7 +679,6 @@ public class Quiz implements Constants {
 					(Double) row.get(ELAPSED_TIME)));
 		}
 		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	
@@ -732,8 +731,13 @@ public class Quiz implements Constants {
 	 * @return a Map with keys "score" and "elapsed_time" providing such values.
 	 */
 	public Map<String, Double> getAveragePerformance() {
+		Map<String, Double> result = new HashMap<String, Double>();
 		List<Map<String, Object>> rows = Database.getTable(HISTORY);
-		if (rows == null || rows.size() == 0) return null;
+		if (rows == null || rows.size() == 0) {
+			result.put(SCORE, 0.0);
+			result.put(ELAPSED_TIME, 0.0);
+			return result;
+		}
 		
 		double avgScore = 0;
 		double avgElapsed = 0;
@@ -746,7 +750,6 @@ public class Quiz implements Constants {
 		avgScore = avgScore / rows.size();
 		avgElapsed = avgElapsed / rows.size();
 		
-		Map<String, Double> result = new HashMap<String, Double>();
 		result.put(SCORE, avgScore);
 		result.put(ELAPSED_TIME, avgElapsed);
 		return result;
@@ -991,5 +994,4 @@ public class Quiz implements Constants {
 		result.put(QUESTIONS, questionList);
 		return result;
 	}
-	
 }
