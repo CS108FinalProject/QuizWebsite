@@ -5,6 +5,7 @@
 <%@ page import = "com.quizzes.*"%>
 <%@ page import = "com.util.*"%>
 <%@ page import = "java.util.*"%>
+<%@ page import = "java.text.DecimalFormat" %>
     
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -14,6 +15,19 @@
 <title>Quiz Summary</title>
 <link rel="stylesheet" href="css//style.css" ></link>
 </head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+th {
+    background-color: #34495E;
+    color: white;
+}
+</style>
+
+
 <body>
 <%
 // Get quiz name and instantiate a Quiz object.
@@ -25,6 +39,7 @@ Quiz quiz = QuizManager.getQuiz(quizName);
 String loggedInUser = (String)getServletContext().getAttribute("session_user");
 Util.validateString(loggedInUser);
 Account user = AccountManager.getAccount(loggedInUser);
+DecimalFormat formatter = new DecimalFormat("0.00");
 %>
 
 
@@ -39,7 +54,10 @@ Account user = AccountManager.getAccount(loggedInUser);
 
 <!-- Print quiz description -->
 <h3>Description: </h3>
-<p> <%=quiz.getDescription()%>
+<p> <%=quiz.getDescription()%></p>
+<br/>
+
+
 
 <%
 // Get Past Performance.
@@ -48,7 +66,7 @@ List<Record> pastPerformance = user.getPastPerformance(0);
 
 <!--  Past performance table -->
 <h4>Past Performance:</h4>
-<table id="pastPerformanceTable">
+<table id="pastPerformanceTable" class="statTable">
 		<tr>
 			<th>Date</th>
 			<th>Score</th>
@@ -57,12 +75,13 @@ List<Record> pastPerformance = user.getPastPerformance(0);
 		
 		<%
 			for (Record record : pastPerformance) {
-				out.println("<td>" + record.getDate() + "</td>" 
-				+ "<td>" + record.getScore() + "</td>" 
-				+ "<td>" + record.getElapsedTime() + "</td>");
+				out.println("<tr><td>" + record.getDate() + "</td>" 
+				+ "<td>" + formatter.format(record.getScore()) + "</td>" 
+				+ "<td>" + formatter.format(record.getElapsedTime()) + "</td></tr>");
 			}		
 		%>
 </table>
+<br/>
 
 
 <%
@@ -83,13 +102,14 @@ List<Record> topScorers = quiz.getTopPerformers(0);
 		
 		<%
 			for (Record record : topScorers) {
-				out.println("<td>" + record.getUser().getUserName() + "</td>"
+				out.println("<tr><td>" + record.getUser().getUserName() + "</td>"
 				+ "<td>" + record.getDate() + "</td>" 
-				+ "<td>" + record.getScore() + "</td>" 
-				+ "<td>" + record.getElapsedTime() + "</td>");
+				+ "<td>" + formatter.format(record.getScore()) + "</td>" 
+				+ "<td>" + formatter.format(record.getElapsedTime()) + "</td></tr>");
 			}		
 		%>
 </table>
+<br/>
 
 
 <%
@@ -109,13 +129,14 @@ List<Record> recentTopScorers = quiz.topScorersWithinTimePeriod(0.25);
 		
 		<%
 			for (Record record : recentTopScorers) {
-				out.println("<td>" + record.getUser().getUserName() + "</td>"
+				out.println("<tr><td>" + record.getUser().getUserName() + "</td>"
 				+ "<td>" + record.getDate() + "</td>" 
-				+ "<td>" + record.getScore() + "</td>" 
-				+ "<td>" + record.getElapsedTime() + "</td>");
+				+ "<td>" + formatter.format(record.getScore()) + "</td>" 
+				+ "<td>" + formatter.format(record.getElapsedTime()) + "</td></tr>");
 			}		
 		%>
 </table>
+<br/>
 
 
 <%
@@ -135,13 +156,14 @@ List<Record> recentScores = quiz.getRecentPerformance(0);
 		
 		<%
 			for (Record record : recentTopScorers) {
-				out.println("<td>" + record.getUser().getUserName() + "</td>"
+				out.println("<tr><td>" + record.getUser().getUserName() + "</td>"
 				+ "<td>" + record.getDate() + "</td>" 
-				+ "<td>" + record.getScore() + "</td>" 
-				+ "<td>" + record.getElapsedTime() + "</td>");
+				+ "<td>" + formatter.format(record.getScore()) + "</td>" 
+				+ "<td>" + formatter.format(record.getElapsedTime()) + "</td></tr>");
 			}		
 		%>
 </table>
+<br/>
 
 
 <%
@@ -158,10 +180,11 @@ Map<String, Double> average = quiz.getAveragePerformance();
 		</tr>
 		
 		<%
-			out.println("<td>" + average.get(Constants.SCORE) + "</td>"
-				+ "<td>" + average.get(Constants.ELAPSED_TIME) + "</td>"); 
+			out.println("<tr><td>" + formatter.format(average.get(Constants.SCORE)) + "</td>"
+				+ "<td>" + formatter.format(average.get(Constants.ELAPSED_TIME)) + "</td></tr>"); 
 		%>
 </table>
+<br/>
 
 
 <!-- Button to take quiz -->
