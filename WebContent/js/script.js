@@ -219,7 +219,7 @@
             var creator = getUrlVar("user");
             $('#my-quizzes').prop("disabled",true);
             var URL = "/QuizWebsite/GetData";
-            var myRequest = { request: { type: "allCreatorQuizzesString", creator: creator } };
+            //var myRequest = { request: { type: "allCreatorQuizzesString", creator: creator } };
             $.ajax({
                 url: URL,
                     type: 'POST',
