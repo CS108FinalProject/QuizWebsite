@@ -456,7 +456,6 @@ public class Quiz implements Constants {
 			result.add(questions.get(question));
 		}
 		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	
