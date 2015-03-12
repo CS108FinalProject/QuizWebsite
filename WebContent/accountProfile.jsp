@@ -30,12 +30,7 @@
 	
 	<table id="header">
 			<tr>
-				<%if(acct.isAdmin()) {
-					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
-				}
-					%> 			
+				<th><a href = "homepage.jsp">Homepage</a></th>
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 

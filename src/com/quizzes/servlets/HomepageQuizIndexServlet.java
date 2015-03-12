@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,13 +54,54 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		
 		/*Field for User Achievements*/
 		if (type_to_display.equals("myAchievements")) {
-	    	List<String> arg1 =  (ArrayList<String>)getServletContext().getAttribute("Received Messages");
+			try {
+				/*Loop through the map based of the keys(Strings of Achievement Type)*/
+				Account acct = AccountManager.getAccount(username);
+				Map<String , Record> map =  acct.getAchievements();
+				Set<String> keys = map.keySet();
+				for (String key: keys) {
+					Record rec = map.get(key);
+					String date = rec.getDate();
+					String to_insert = "The achievement: "+key+" was earned "+date;
+					result_list.add(to_insert);
+					System.out.print("Got this foar in myAchiev.");
+				}
+		    	
+		    	if (result_list.size() > 0) {
+					request.setAttribute("content_to_display", result_list);
 
-			request.setAttribute("content_to_display", arg1);
+		    	} else {
+		    		result_list.add("<h1>You have no achievements</h1>");
+					request.setAttribute("content_to_display",result_list);
+		    	}
+					
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+
+			}
 			
-			/*Field for Friends' Achievements*/
+			/*Field for Friends' Activities*/
 		} else if (type_to_display.equals("friendActivities")) {
-			
+			try {
+				Account account = AccountManager.getAccount(username);
+				List<Activity> acts = account.getRecentFriendActivity(num_records);
+				int num_acts = acts.size();
+				for (int i = 0; i < num_acts;i++) {
+					Activity curr = acts.get(i);
+					String activity = curr.getActivity();
+					String date = curr.getDate();
+					String user = curr.getUser().getUserName();
+					String str = user+" "+activity+" at "+date;
+					result_list.add(str);
+				}
+		    	if (result_list.size() > 0) {
+					request.setAttribute("content_to_display", result_list);
+
+		    	} else {
+					request.setAttribute("content_to_display", "<h1>There are no recent activities.</h1>");
+		    	}			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+			}
 			/*My recently created quizzes*/
 		} else if (type_to_display.equals("createdQuizzes")) {
 			try {
@@ -159,7 +201,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					String quizName = rec.getQuizName();
 					String date = rec.getDate();
 					double score = rec.getScore();
-					String to_insert = "The quiz "+quizName+" was taken on "+date+" with a score of "+score;
+					String to_insert = "The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> was taken on "+date+" with a score of "+score;
 					result_list.add(to_insert);
 				}
 				/*The case that no record found*/
