@@ -10,18 +10,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Insert title here</title>
+<title>Achievements</title>
+<link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
 <%
 String name = (String)getServletContext().getAttribute("session_user");
 	Map<String,Record> achievements = (Map<String,Record>)AccountManager.getAccount(name).getAchievements();
 %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="css//main\.css" ></link>
-<title>Achievements</title>
-</head>
-<body>
 
 <table id="header">
 			<tr>
@@ -53,7 +49,7 @@ String name = (String)getServletContext().getAttribute("session_user");
 			</tr>
 	</table>
 
-	<table id="achievements">
+	<table id="achievements" class="statisticsTable">
 		<tr>
 			<th>Achievement Earned</th>
 			<th>Quiz</th>

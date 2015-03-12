@@ -1,10 +1,6 @@
 package com.quizzes.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.Constants;
-import com.util.Json;
 import com.util.Util;
 
 /**
@@ -43,13 +38,8 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		// get quiz Json
-		
 		String quizName = (String)request.getParameter("quiz");
-		System.out.println( quizName );
 		Util.validateString(quizName);
-		//quizName = Util.accountForSpaces(quizName);
-		//System.out.println(quizName);
-		
 		
 		request.setAttribute(QUIZ_NAME, quizName);
 		RequestDispatcher dispatch = request.getRequestDispatcher("editQuiz.jsp"); 
