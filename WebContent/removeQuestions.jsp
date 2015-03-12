@@ -28,16 +28,22 @@
 		} else {
 			quizName = request.getParameter("quizName");	
 		}
-		//System.out.println("quizName: " + quizName);
 		Quiz quiz = QuizManager.getQuiz(quizName);
 		List<Question> questions = quiz.getQuestions();
 		
 		// remove question
 		if (request.getParameter("index") != null) {
 			int index = Integer.parseInt(request.getParameter("index"));
-			System.out.println(questions.get(index).getQuestion());
 			quiz.removeQuestion(questions.get(index));
 			questions.remove(index);
+		}
+		
+		// remove quiz if it has no questions
+		if (questions.size() == 0) {
+			request.setAttribute(Constants.QUIZ_NAME, quizName);
+			ServletContext context= getServletContext();
+			RequestDispatcher rd= context.getRequestDispatcher("/RemoveQuiz");
+			rd.forward(request, response);
 		}
 		
 		// print all questions 

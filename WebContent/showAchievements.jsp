@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
     <%@ page import = "com.accounts.*"%>
+    <%@ page import = "com.quizzes.*"%>
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "javax.swing.*" %>
 	<%@ page import = "java.awt.*" %>
@@ -8,13 +9,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Insert title here</title>
+</head>
+<body>
 <%
 String name = (String)getServletContext().getAttribute("session_user");
-	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
+	Map<String,Record> achievements = (Map<String,Record>)AccountManager.getAccount(name).getAchievements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//main\.css" ></link>
-<title>Announcements</title>
+<title>Achievements</title>
 </head>
 <body>
 
@@ -49,16 +54,15 @@ String name = (String)getServletContext().getAttribute("session_user");
 	</table>
 
 
-<div id="announcements">Announcements
-				<%if (admin_anmts != null) { 
+<div id="achievements">Achievements
+				<%if (achievements != null) { 
 					out.println("<ul>");
-					int anmts_len = admin_anmts.size();
-					for (int i = 0; i < anmts_len; i++) { 
-						out.println("<li>"+admin_anmts.get(i)+"</li>");
+					for (String achievement : achievements.keySet()) { 
+						out.println("<li>"+achievement+"</li>");
 					} 
 					out.println("</ul>");
 				} else {
-					out.println("<br></br>Hello, no new announcements.");
+					out.println("<br></br>Hello, no new achievements.");
 				}
 				%>	
 </div>
