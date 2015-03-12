@@ -958,6 +958,7 @@
                    storeBooleanTypeForQuestion( response );
                }
                // tested -> works proper way to obtain booleans
+               
                console.log( getQuizToTake() );
                var onePage = getQuizToTake().quizMetaData.is_one_page;
                var isImmediate = getQuizToTake().quizMetaData.is_immediate;
