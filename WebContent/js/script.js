@@ -191,21 +191,25 @@
         $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
             event.preventDefault();
             console.log( "I am checked");
+            var URL = "/QuizWebsite/EditQuizInit";
             $('#lp-quiz-edit').prop("disabled",true);
             var quizName = $('#lp-quiz-name').text();
-            var myQuizzes = getMyQuizzes();
-            var quizzes = myQuizzes.data; // array of quiz objects
-            var questionsArr;
-            var success = myQuizzes.status.success;
-            for(var i = 0; i < quizzes.length; i++ ) {
-                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
-                    questionsArr = quizzes[i].questions
-                }
-            }
-            console.log( questionsArr );
-            $('#lp-quiz-edit').prop("disabled",false);
-            $('#right-pane').html( templates.renderEditQuizOptions( 
-                            {questions: questionsArr, success: success}) );
+            $.ajax({
+                url: URL,
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    data: { quiz_name: quizName },
+                    contentType: 'application/x-www-form-urlencoded',
+
+                    success: function(data, textStatus, jqXHR) {
+                        $('#my-quizzes').prop("disabled",false);
+                        console.log( data );
+                        storeMyQuizzes(data);
+                        displayOnLeftPane(data);
+                    }
+            });
+            $('#right-pane').html( "HELLO" );
  
 
         });
@@ -219,7 +223,7 @@
             var creator = getUrlVar("user");
             $('#my-quizzes').prop("disabled",true);
             var URL = "/QuizWebsite/GetData";
-            //var myRequest = { request: { type: "allCreatorQuizzesString", creator: creator } };
+            var myRequest = { request: { type: "allCreatorQuizzesString", creator: creator } };
             $.ajax({
                 url: URL,
                     type: 'POST',
