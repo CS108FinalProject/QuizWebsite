@@ -166,52 +166,36 @@
 
         /*************************LEFT PANE EVENT LISTENERS**************************/
 
-        $('#left-pane').on('click', '#lp-quiz-name', function(event) {
-            event.preventDefault();
-            console.log( "I am checked");
-            $('#lp-quiz-edit').prop("disabled",true);
-            var quizName = $('#lp-quiz-name').text();
-            var myQuizzes = getMyQuizzes();
-            var quizzes = myQuizzes.data; // array of quiz objects
-            var questionsArr;
-            var success = myQuizzes.status.success;
-            for(var i = 0; i < quizzes.length; i++ ) {
-                if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
-                    questionsArr = quizzes[i].questions
-                }
-            }
-            console.log( questionsArr );
-            $('#lp-quiz-edit').prop("disabled",false);
-            $('#right-pane').html( templates.renderEditQuizOptions( 
-                            {questions: questionsArr, success: success}) );
+        // $('#left-pane').on('click', '#lp-quiz-name', function(event) {
+        //     event.preventDefault();
+        //     console.log( "I am checked");
+        //     $('#lp-quiz-edit').prop("disabled",true);
+        //     var quizName = $('#lp-quiz-name').text();
+        //     var myQuizzes = getMyQuizzes();
+        //     var quizzes = myQuizzes.data; // array of quiz objects
+        //     var questionsArr;
+        //     var success = myQuizzes.status.success;
+        //     for(var i = 0; i < quizzes.length; i++ ) {
+        //         if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
+        //             questionsArr = quizzes[i].questions
+        //         }
+        //     }
+        //     console.log( questionsArr );
+        //     $('#lp-quiz-').prop("disabled",false);
+        //     $('#right-pane').html( templates.renderEditQuizOptions( 
+        //                     {questions: questionsArr, success: success}) );
  
 
-        });
+        // });
 
-        $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
-            event.preventDefault();
-            console.log( "I am checked");
-            var URL = "/QuizWebsite/EditQuizInit";
-            var quizName = $('#lp-quiz-name').text();
-            $.ajax({
-                url: URL,
-                    type: 'POST',
-                    async: true,
-                    dataType: 'json',
-                    data: { quiz_name: quizName },
-                    contentType: 'application/x-www-form-urlencoded',
+        // $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
+        //     event.preventDefault();
+        //     console.log( "I am checked");
+        //     var URL = "/QuizWebsite/EditQuizInit";
+        //     var quizName = $('#lp-quiz-name').text();
+        //     console.log()
 
-                    success: function(data) {
-                        $('#my-quizzes').prop("disabled",false);
-                        console.log( data );
-
-                        $('#right-pane').html( data );
-                    }
-            });
-            window.location.href='http://localhost:8080/QuizWebsite/editQuiz.jsp';
- 
-
-        });
+        // });
         
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
