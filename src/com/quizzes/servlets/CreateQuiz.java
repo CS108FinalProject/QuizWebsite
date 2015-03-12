@@ -50,7 +50,6 @@ public class CreateQuiz extends HttpServlet implements Constants {
 		try {
 			// get quiz Json
 			String dataString = (String)request.getParameter(JSON);
-			System.out.println(dataString);
 			Map<String, Object> dataMap = Json.parseJsonObject(dataString);
 			
 			// create quiz
@@ -65,7 +64,6 @@ public class CreateQuiz extends HttpServlet implements Constants {
 			success = false;
 			errorMessage = e.getMessage();
 			if (errorMessage == null) errorMessage = "No message provided";
-			System.out.println(errorMessage);
 		}
 		
 		// Setup and send response to client.

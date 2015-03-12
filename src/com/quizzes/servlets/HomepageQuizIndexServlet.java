@@ -70,6 +70,7 @@ public class HomepageQuizIndexServlet extends HttpServlet {
 			}
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
+
 			try {
 				List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
 				System.out.println(cpy_popular_quizzes.size());

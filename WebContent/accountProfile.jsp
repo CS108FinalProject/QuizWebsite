@@ -76,6 +76,13 @@
 		<input type="submit" name=message_type value="Unfriend">
 	</form>
 	
+	<form action="SendMessageServlet" method="post"> 
+		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
+		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>
+		<input type="submit" name=message_type value="Challenge">
+		<textarea rows = "1" cols = "20"  name="quizName" ></textarea>
+	</form>
+	
 	<br>
 	<br>
 	

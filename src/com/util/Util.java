@@ -3,6 +3,7 @@ package com.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Useful methods to be used throughout the project.
@@ -121,6 +122,27 @@ public class Util implements Constants {
 		statusMap.put(SUCCESS, success);
 		statusMap.put(ERROR_MESSAGE, errorMessage);
 		map.put(STATUS, statusMap);
+	}
+	
+	
+	/**
+	 * Prepares a string that contains spaces to be sent over the wire.
+	 */
+	public static String accountForSpaces(String str) {
+		validateString(str);
+		String result = "";
+		String delim = "%20";
+		
+		if (str.contains(" ")) {
+			StringTokenizer tok = new StringTokenizer(str);
+			
+			
+			while (tok.hasMoreTokens()) {
+				result += tok.nextToken();
+				result += delim;
+			}
+		}
+		return result.substring(0, result.length() - delim.length());
 	}
 	
 	

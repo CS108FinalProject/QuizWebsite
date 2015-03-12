@@ -86,7 +86,6 @@
 						}
 						
 					} else { // case of read message
-						System.out.println("name: " + name + " sender: " + msg.getSender());
 						Account sender_account = AccountManager.getAccount(msg.getSender());
 						Account recipient_account = AccountManager.getAccount(msg.getRecipient());
 						if (recipient_account.isFriend(sender_account) || sender_account.isFriend(recipient_account)) {
@@ -110,7 +109,15 @@
 						}	
 					}
 				} else if (msg.getType().equals(Constants.MESSAGE_CHALLENGE)) { // case of challenge
-					// go to challenge page
+					if (msgToDisplay.equals("Received Messages")) {
+						out.println("<li><p><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
+								+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + 
+								"</a> sent you a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> quiz" + "</a></p>");
+					} else {
+						out.print("<li><p>You sent <a href=\"accountProfile.jsp?friend_id=" + msg.getRecipient() 
+								+ "&username=" + msg.getSender() + "\">" + msg.getRecipient() + 
+								"</a> a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> quiz" + "</a></p>");
+						}
 				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) { // case of note
 					if (msgToDisplay.equals("Received Messages")) { 
 						out.println("<form action=\"MessageServlet\" method=\"post\">");
@@ -123,8 +130,8 @@
 						out.println("</form>");
 					} else {
 						out.println("<form action=\"MessageServlet\" method=\"post\">");
-						out.print("<li><p>You sent <a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
-								+ "&username=" + msg.getRecipient() + "\">" + msg.getRecipient() + "</a> a message!</p>");
+						out.print("<li><p>You sent <a href=\"accountProfile.jsp?friend_id=" + msg.getRecipient() 
+								+ "&username=" + msg.getSender() + "\">" + msg.getRecipient() + "</a> a message!</p>");
 						out.println("<input type=\"submit\" value=\"Read Message\", name=\"message_button\">");
 						out.println("<input name=\"message_content\" " + "type=\"hidden\" value=\"" + msg.getContent() + "\"/>");
 						out.println("<input name=\"sender\" " + "type=\"hidden\" value=\"" + msg.getSender() + "\"/>");

@@ -57,7 +57,7 @@ if (name != null) {
 					<tr >
 						<th class = "btn"><a href = "homepage.jsp">Homepage</a></th>		
 						<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
-						<th class = "btn">My Achievements</th>
+						<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 						<th  id = "msg-header" class = "btn">My Messages 
 							<form action = <%="\"showMessage.jsp?id="+name+"\""%>>					
 								<select name = "choice">

@@ -54,19 +54,13 @@ public class MessageServlet extends HttpServlet {
 				receiver_account.readMessage(msg);
 			}
 		}
-		//System.out.println("msg: " + msg);
-		//receiver_account.readMessage(msg);
 		
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {
-			//request.setAttribute("message_read", "yes");
 			try {
 				receiver_account.addFriend(sender_account);
-				//request.setAttribute("friendship_status", "Friend Added!");
 			} catch (RuntimeException e) {
-				//request.setAttribute("friendship_error", e.getMessage());
 				return;
-				//System.out.println("Exception thrown");
 			}
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
@@ -74,15 +68,11 @@ public class MessageServlet extends HttpServlet {
 		// case of friend request decline
 		} else if (msg_type.equals("Decline")) {
 			// do nothing
-			//request.setAttribute("friendship_status", "Friend request declined!");
-			//request.setAttribute("message_read", "yes");
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 		
 		// case of read note 
 		} else if (msg_type.equals("Read Message")) {
-			// forward to show note page
-			//request.setAttribute("message_read", "yes");
 			request.setAttribute("sender", request.getParameter("sender"));
 			request.setAttribute("message_content", request.getParameter("message_content"));
 			RequestDispatcher dispatch = request.getRequestDispatcher("showNote.jsp");

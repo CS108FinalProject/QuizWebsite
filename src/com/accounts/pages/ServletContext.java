@@ -23,20 +23,7 @@ public class ServletContext implements ServletContextListener {
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent arg0)  { 
-
-    	/*
-    	try {
-			Account administrator = AccountManager.createAccount("admin", "admin");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-    	*/
-    	//Want the admin accounts , so that I can call admin.getMessages()
-
-    
-
     	arg0.getServletContext().setAttribute("session_user", "");
-
     }
 
 	/**

@@ -221,7 +221,7 @@ public class QuizManager implements Constants {
 		List<Quiz> result = new LinkedList<Quiz>();
 		
 		List<Map<String, Object>> rows = Database.getTable(HISTORY);
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Count all quiz occurrences.
 		Map<String, Integer> quizCount = new HashMap<String, Integer>();
@@ -263,7 +263,6 @@ public class QuizManager implements Constants {
 			}
 		}
 		
-		if (result.size() == 0) return null;
 		return result;
 	}
 	
@@ -281,7 +280,7 @@ public class QuizManager implements Constants {
 		List<Quiz> result = new ArrayList<Quiz>();
 		
 		List<Map<String, Object>> rows = Database.getSortedTable(QUIZZES, DATE_CREATED, true);
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {
@@ -300,9 +299,9 @@ public class QuizManager implements Constants {
 	
 	
 	public static void main(String[] args) {
-//		new Database();
-//		Quiz quiz = QuizManager.getQuiz("TestIII");
-//		System.out.println(quiz.getDescription());
+		new Database();
+		Quiz quiz = QuizManager.getQuiz("PicAndResponse");
+		System.out.println(quiz.getDescription());
 	}
 
 }

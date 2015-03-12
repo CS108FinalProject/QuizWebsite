@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
     <%@ page import = "com.accounts.*"%>
+    <%@ page import = "com.quizzes.*"%>
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "javax.swing.*" %>
 	<%@ page import = "java.awt.*" %>
@@ -8,14 +9,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Insert title here</title>
+</head>
+<body>
 <%
 String name = (String)getServletContext().getAttribute("session_user");
-	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
+	Map<String,Record> achievements = (Map<String,Record>)AccountManager.getAccount(name).getAchievements();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="css//style.css" ></link>
-
-<title>Announcements</title>
+<link rel="stylesheet" href="css//main\.css" ></link>
+<title>Achievements</title>
 </head>
 <body>
 
@@ -24,12 +28,12 @@ String name = (String)getServletContext().getAttribute("session_user");
 				<%
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
-					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th><a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
 				%> 
-				<th><a href = "homepage.jsp">Homepage</a></th>					
+					
 				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th>My Achievements</th>
 
@@ -49,19 +53,27 @@ String name = (String)getServletContext().getAttribute("session_user");
 			</tr>
 	</table>
 
-
-<div id="announcements">Announcements
-				<%if (admin_anmts != null) { 
-					out.println("<ul>");
-					int anmts_len = admin_anmts.size();
-					for (int i = 0; i < anmts_len; i++) { 
-						out.println("<li>"+admin_anmts.get(i)+"</li>");
-					} 
-					out.println("</ul>");
-				} else {
-					out.println("<br></br>Hello, no new announcements.");
-				}
-				%>	
-</div>
+	<table id="achievements">
+		<tr>
+			<th>Achievement Earned</th>
+			<th>Quiz</th>
+			<th>Score</th>
+			<th>Date</th>
+			<th>Elapsed Time (min)</th>
+		</tr>
+		
+		<%
+			for (String achievement : achievements.keySet()) {
+				Record record = achievements.get(achievement);
+				
+				out.println("<td>" + achievement + "</td>" 
+				+ "<td>" + record.getQuizName() + "</td>" 
+				+ "<td>" + record.getScore() + "</td>" 
+				+ "<td>" + record.getDate() + "</td>" 
+				+ "<td>" + record.getElapsedTime() + "</td>");
+			}		
+		%>
+	</table>
+	
 </body>
 </html>
