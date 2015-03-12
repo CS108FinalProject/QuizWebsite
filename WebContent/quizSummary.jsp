@@ -12,6 +12,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Quiz Summary</title>
+<link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
 <%
