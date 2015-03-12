@@ -3,8 +3,11 @@ package com.accounts.pages;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+
 import java.util.*;
+
 import com.accounts.*;
+import com.dbinterface.Database;
 /**
  * Application Lifecycle Listener implementation class servletContext
  *
@@ -29,6 +32,7 @@ public class ServletContext implements ServletContextListener {
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
-    public void contextDestroyed(ServletContextEvent arg0)  {}
+    public void contextDestroyed(ServletContextEvent arg0)  {
+    }
 	
 }

@@ -184,7 +184,7 @@ if (name != null) {
 											for ( int i = messages.size() -1; i > -1;i-- ) {
 												out.println("<tr>");
 												Message msg = messages.get(i);
-												out.println("<td>"+msg.getSender()+"</td>");
+												out.println("<td><a href = \"accountProfile.jsp?friend_id="+msg.getSender()+"\">"+msg.getSender()+"</a></td>");
 												out.println("<td>"+msg.getDate()+"</td>");
 												out.println("<td>"+msg.getType()+"</td>");
 												if (i == messages.size() -5) i = -1;
@@ -224,6 +224,7 @@ if (name != null) {
 							out.println("<table id = \"table-result-quiz-content\"> ");
 							for (int i = cont_size - 1; i >= 0;i-- ) {	
 								out.println("<tr>");
+								System.out.println("To test "+content_to_display.get(i));
 								out.println("<td>"+content_to_display.get(i)+"</td>");
 								out.println("</tr>");
 							}

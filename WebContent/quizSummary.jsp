@@ -21,6 +21,10 @@ table, th, td {
     text-align: center;
 }
 
+td {
+    padding: 10px;
+}
+
 th {
     background-color: #34495E;
     color: white;
@@ -65,7 +69,7 @@ List<Record> pastPerformance = user.getPastPerformance(0);
 %>
 
 <!--  Past performance table -->
-<h4>Past Performance:</h4>
+<h4>Your Past Performance:</h4>
 <table id="pastPerformanceTable" class="statTable">
 		<tr>
 			<th>Date</th>

@@ -3,6 +3,8 @@ package com.quizzes.servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,38 +54,111 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		
 		/*Field for User Achievements*/
 		if (type_to_display.equals("myAchievements")) {
-	    	List<String> arg1 =  (ArrayList<String>)getServletContext().getAttribute("Received Messages");
+			try {
+				/*Loop through the map based of the keys(Strings of Achievement Type)*/
+				Account acct = AccountManager.getAccount(username);
+				Map<String , Record> map =  acct.getAchievements();
+				Set<String> keys = map.keySet();
+				for (String key: keys) {
+					Record rec = map.get(key);
+					String date = rec.getDate();
+					String to_insert = "The achievement: "+key+" was earned "+date;
+					result_list.add(to_insert);
+					System.out.print("Got this foar in myAchiev.");
+				}
+		    	
+		    	if (result_list.size() > 0) {
+					request.setAttribute("content_to_display", result_list);
 
-			request.setAttribute("content_to_display", arg1);
+		    	} else {
+		    		result_list.add("<h1>You have no achievements</h1>");
+					request.setAttribute("content_to_display",result_list);
+		    	}
+					
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+
+			}
 			
-			/*Field for Friends' Achievements*/
+			/*Field for Friends' Activities*/
 		} else if (type_to_display.equals("friendActivities")) {
-			
+			try {
+				Account account = AccountManager.getAccount(username);
+				List<Activity> acts = account.getRecentFriendActivity(num_records);
+				int num_acts = acts.size();
+				for (int i = 0; i < num_acts;i++) {
+					Activity curr = acts.get(i);
+					String activity = curr.getActivity();
+					String date = curr.getDate();
+					String user = curr.getUser().getUserName();
+					String str = user+" "+activity+" at "+date;
+					result_list.add(str);
+				}
+		    	if (result_list.size() > 0) {
+					request.setAttribute("content_to_display", result_list);
+
+		    	} else {
+					request.setAttribute("content_to_display", "<h1>There are no recent activities.</h1>");
+		    	}			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+			}
 			/*My recently created quizzes*/
 		} else if (type_to_display.equals("createdQuizzes")) {
 			try {
 				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
-				
-				request.setAttribute("content_to_display",usr_quizzes);
+				int num_quizzes = usr_quizzes.size();
+				int counter = 0;
+				/*Iterate through usr_quizzes backwards so that we have newest quiz first */
+				for (int i = num_quizzes - 1; i >= 0;i--) {
+					Quiz curr = usr_quizzes.get(i);
+					String quizName = curr.getName();
+					String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;
+					result_list.add(str);
+					counter++;
+					if (counter == num_records) i = -1;
+				}
+				if (result_list.size() > 0 ) {
+					request.setAttribute("content_to_display",result_list);
+
+				} else {
+					request.setAttribute("content_to_display","You haven't created any new quizzes");
+
+				}
 			} catch (Exception e) {
-				request.setAttribute("errMsg", "<h1> The current user, "+username+" could not be found.  </h1>");
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+
+				//request.setAttribute("errMsg", "<h1> The current user, "+username+" could not be found.  </h1>");
 			}
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
 
 			try {
-				List<Quiz> cpy_popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-				System.out.println(cpy_popular_quizzes.size());
-				List<Quiz> popular_quizzes =  new ArrayList<Quiz>();
+				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
+				System.out.println(popular_quizzes.size());
 	
-				//Put popular quizzes in correct order
-				int pop_len = num_records;
-				for (int i = 0 ; i < pop_len;i++) {
-					popular_quizzes.add(i, cpy_popular_quizzes.get(pop_len - i));
+				/*Construct a brief message for each popular quiz*/
+				int pop_quizzes_len = popular_quizzes.size();
+				for (int i = 0 ; i < pop_quizzes_len;i++) {
+					Quiz curr = popular_quizzes.get(i);
+					Map<String, Double> perf_map = curr.getAveragePerformance();
+					double avg_score = perf_map.get("score");
+					double elapsed_time = perf_map.get("elapsed_time");
+					String quizName =curr.getName();
+					String to_insert = "The popular quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> has an average score of "+avg_score+" and average time taken of "+elapsed_time;
+					result_list.add(to_insert);
+					if ( i == num_records - 1) i = pop_quizzes_len;
 				}
-				request.setAttribute("content_to_display",popular_quizzes);
+				/* Case where there are no popular quizzes in database */
+				if (pop_quizzes_len > 0 ) {
+					request.setAttribute("content_to_display",result_list);
+				} else {
+					result_list.add("There are no popular quizzes at this time.");
+					request.setAttribute("content_to_display",result_list);
+				}
 			} catch (Exception e) {
-				request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+
+				//request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
 			}
 			/*All recently created quizzes*/
 		} else if ( type_to_display.equals("recentQuizzes")) {
@@ -99,11 +174,20 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					String quizname = curr.getName();
 					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
 				}
-				System.out.println("This is the recently created quizzes "+result_list);
-				request.setAttribute("content_to_display",result_list);
+				if (result_list.size() > 0) {
+					System.out.println("This is the recently created quizzes "+result_list);
+					request.setAttribute("content_to_display",result_list);
+				} else {
 
+					result_list.add(username+", you don't have any quizzes taken on record.");
+					request.setAttribute("content_to_display",result_list);
+
+				}
+		
 			}catch (Exception e) {
-				request.setAttribute("errMsg", "<h1>There are no recently created Quizzes.</h1>");
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+
+				//request.setAttribute("errMsg", "<h1>There are no recently created Quizzes.</h1>");
 			}
 		
 			/*My Recently Taken Quizzes */
@@ -113,11 +197,25 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				List<Record> quizzes_taken = acct.getPastPerformance(num_records);
 				int quizzes_taken_len = quizzes_taken.size();
 				for (int i = quizzes_taken_len - 1;i >= 0;i--) {
-					//String taken
+					Record rec = quizzes_taken.get(i);
+					String quizName = rec.getQuizName();
+					String date = rec.getDate();
+					double score = rec.getScore();
+					String to_insert = "The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> was taken on "+date+" with a score of "+score;
+					result_list.add(to_insert);
+				}
+				/*The case that no record found*/
+				if (result_list.size() > 0) {
+					request.setAttribute("content_to_display",result_list);
+				} else {
+					result_list.add(username+", you don't have any quizzes taken on record.");
+					request.setAttribute("content_to_display",result_list);
 				}
 			} catch (Exception e) {
-				request.setAttribute("errMsg", "<h1>You have not taken any quizzes lately..</h1>");
+				/*The case that an exception is thrown. */
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
+				//request.setAttribute("errMsg", "<h1>You have not taken any quizzes lately..</h1>");
 			}
 			
 		} else {
