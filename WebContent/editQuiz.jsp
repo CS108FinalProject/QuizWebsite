@@ -40,6 +40,7 @@
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Quiz">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Questions">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Save Changes">
+		<input type="submit" name=<%=Constants.REQUEST%> value="Return to Homepage">
 	</form>
 
 </body>
