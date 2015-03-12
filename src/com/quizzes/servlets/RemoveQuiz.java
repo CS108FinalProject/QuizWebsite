@@ -34,15 +34,14 @@ public class RemoveQuiz extends HttpServlet implements Constants {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Re-purposed for HTML/JSP.
-		response.setContentType("text/html; charset=UTF-8");
-		
+		response.setContentType("text/html; charset=UTF-8");		
 		String quizName = (String) request.getParameter(QUIZ_NAME);
 		if (quizName == null) quizName = (String) request.getAttribute(QUIZ_NAME);
-		Util.validateString(quizName);
-		
-		Quiz quiz = QuizManager.getQuiz(quizName);
-		quiz.removeQuiz();
-		
+		if (quizName != null) {
+			Util.validateString(quizName);
+			Quiz quiz = QuizManager.getQuiz(quizName);
+			quiz.removeQuiz();
+		}
 		RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
 		dispatch.forward(request, response);
 		

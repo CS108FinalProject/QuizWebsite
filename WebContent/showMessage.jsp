@@ -65,7 +65,11 @@
 			}
 			
 			// Print messages
+			out.println("<table>");
 			for (Message msg : messages) {
+				out.println("<tr>");
+				out.println("<td>"+msg.getDate()+"</td>");
+				out.print("<td>");
 				request.setAttribute("message", msg);
 				if (msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) { // case of friend request
 					if (!msg.isRead()) { // case of unread message
@@ -139,8 +143,9 @@
 						out.println("</form>");
 					}	
 				}
-				
-			} 
+				out.println("</td>");
+			}
+			out.println("</table>");
 			
 		%>
 	</ul>	
