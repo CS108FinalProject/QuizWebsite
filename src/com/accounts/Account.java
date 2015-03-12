@@ -5,11 +5,13 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dbinterface.Database;
+import com.quizzes.Activity;
 import com.quizzes.Quiz;
 import com.quizzes.QuizManager;
 import com.quizzes.Record;
@@ -550,7 +552,53 @@ public class Account implements Constants {
 	}
 	
 	
-	//public String getRecentFriendActivi
+	/**
+	 * @param numRecords desired number of entries
+	 * @return List of Activity objects each containing details about recent activities.
+	 * The list is sorted by most recent to less recent.
+	 */
+	public List<Activity> getRecentFriendActivity(int numRecords) {
+		List<Activity> result = new ArrayList<Activity>();
+		
+		//Iterate over friends
+		for (Account friend : getFriends()) {
+			Map<String, Record> achievements = friend.getAchievements();
+			
+			// Iterate over achievements
+			for (String achievement : achievements.keySet()) {
+				Record record = achievements.get(achievement);
+				
+				result.add(new Activity(friend, "earned achievement " + achievement, 
+						QuizManager.getQuiz(record.getQuizName()), record.getDate()));
+			}
+			
+			// Iterate over recently created quizzes.
+			for (Quiz quiz : this.getRecentlyCreated(0)) {
+				result.add(new Activity(friend, "created quiz", quiz, quiz.getCreationDate()));
+			}
+			
+			// Iterate over recently taken quizzes.
+			for (Record record : this.getPastPerformance(0)) {
+				Quiz quiz = QuizManager.getQuiz(record.getQuizName());
+				result.add(new Activity(friend, "took quiz", quiz, record.getDate()));
+			}
+			
+			// Sort from most recent.
+			Collections.sort(result);
+			if (numRecords == 0) return result;
+			
+			// Only return requested amount of values.
+			for (int i = result.size() - 1; i > numRecords - 1; i--) {
+				result.remove(i);
+			}
+			return result;
+		}
+		
+		
+		
+		
+		return result;
+	}
 	
 	
 	
