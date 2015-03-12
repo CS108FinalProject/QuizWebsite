@@ -141,7 +141,6 @@
                     questions[i].id = Math.random();
                     break;
                 case "Fill_Blank":
-                    console.log( "Check" );
                     questions[i].isFillInTheBlank = true;
                     questions[i].blankedQuestion = formatBlankedQuestion( questions[i] );
                     questions[i].id = Math.random();
@@ -155,15 +154,12 @@
                     questions[i].id = Math.random();
                     break;
                 case "Multi_Response":
-                    console.log( questions[i ]);
                     questions[i].isMultiResponse = true;
                     questions[i].id = Math.random();
                     break;
                 case "Matching":
                     questions[i].isMatching = true;
-                    for(var i = 0; i < questions[i].answers; i++) {
-                        //questions[i].answers.id = Math.random();
-                    }
+                    questions[i].id = Math.random();
                     break;
                 default:
                     // don't add any booleans
@@ -224,6 +220,7 @@
 
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
+            console.log("Hello");
             $('#right-pane').html( templates.renderQuizForm() );
         });
 
@@ -945,7 +942,37 @@
                         // do nothing
             }
         } else if ( event.target.value === "Submit" ) {
-            // let's pause for a second
+            var questions = getQuizToTake().questions;
+            var numberOfPoints = 0;
+            var numberCorrect = 0;
+            var totalScore;
+
+            for(var i = 0; i < questions.length; i++) {
+                if ( questions[i].type === "Picture" ||
+                    questions[i].type === "Response" ) {
+                    numberOfPoints++;
+                    var idString = questions[i].id;
+                    var answer = document.getElementById(idString).value;
+                    var listOfAnswers = questions[i].answers;
+                    console.log( listOfAnswers );
+                    if(  listOfAnswers[0].indexOf( answer ) != -1 ) {
+                        numberCorrect++;
+                    }
+                } else if ( questions[i].type === "Multiple_Choice" ) {
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    console.log( thisQuestion );
+                    for(var i = 0; i < array.length; i++ ) {
+                        console.log( array[i].name );
+                        console.log( thisQuestion.answers[array[i].name] );
+                    }
+                }
+            }
+
+            console.log( numberCorrect );
+            console.log( numberOfPoints );
+
         }
            
     });
