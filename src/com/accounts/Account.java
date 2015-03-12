@@ -431,7 +431,7 @@ public class Account implements Constants {
 				userName, DATE, true);
 		
 		// Nothing on record.
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		// Get all records.
 		if (numRecords == 0) {

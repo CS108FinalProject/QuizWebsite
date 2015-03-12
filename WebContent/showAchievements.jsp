@@ -53,20 +53,6 @@ String name = (String)getServletContext().getAttribute("session_user");
 			</tr>
 	</table>
 
-
-<div id="achievements">Achievements
-				<%if (achievements != null) { 
-					out.println("<ul>");
-					for (String achievement : achievements.keySet()) { 
-						out.println("<li>"+achievement+"</li>");
-					} 
-					out.println("</ul>");
-				} else {
-					out.println("<br></br>Hello, no new achievements.");
-				}
-				%>	
-</div>
-
 	<table id="achievements">
 		<tr>
 			<th>Achievement Earned</th>
