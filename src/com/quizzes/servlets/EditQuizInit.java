@@ -35,6 +35,8 @@ public class EditQuizInit extends HttpServlet implements Constants {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=UTF-8");
+		
 		// get quiz Json
 		String quizName = (String)request.getParameter(QUIZ_NAME);
 		Util.validateString(quizName);

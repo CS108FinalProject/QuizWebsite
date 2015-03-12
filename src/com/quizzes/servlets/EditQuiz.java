@@ -33,7 +33,8 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Re-purposed for HTMP/JSP.
+		// Re-purposed for HTML/JSP.
+		response.setContentType("text/html; charset=UTF-8");
 		
 		String requestType = (String) request.getParameter(REQUEST);
 		Util.validateString(requestType);
