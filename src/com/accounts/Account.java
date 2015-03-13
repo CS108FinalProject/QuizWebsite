@@ -583,12 +583,12 @@ public class Account implements Constants {
 			}
 			
 			// Iterate over recently created quizzes.
-			for (Quiz quiz : this.getRecentlyCreated(0)) {
+			for (Quiz quiz : friend.getRecentlyCreated(0)) {
 				result.add(new Activity(friend, "created quiz", quiz.getName(), quiz.getCreationDate()));
 			}
 			
 			// Iterate over recently taken quizzes.
-			for (Record record : this.getPastPerformance(0)) {
+			for (Record record : friend.getPastPerformance(0)) {
 				Quiz quiz = QuizManager.getQuiz(record.getQuizName());
 				result.add(new Activity(friend, "took quiz", quiz.getName(), record.getDate()));
 			}
