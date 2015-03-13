@@ -417,7 +417,24 @@
                 $('#right-pane').html( render( { curQuestion: questions[MPIndex] } ) );
                 console.log( questions[MPIndex]);
             } else {
-                $('#right-pane').html("SUBMIT ADDRESS");
+                watch.stop();
+                var minutes = watch.getMinutes();
+                watch.clear();
+
+                var questions = getQuizToTake().questions;
+                var totalScore;
+                
+                // information to send back
+                var percentageScore = ( numberCorrect / numberOfPoints ) * 100.0;
+                var score = percentageScore.toFixed(2);
+                var elapsed_time = minutes.toFixed(2);
+                var date =  moment().format('YYYY/MM/DD HH:mm');
+                var quiz_name = quizName;
+                var user = getUrlVar('user');
+                
+                var renderQuickSummary = Handlebars.compile( document.getElementById('results-preview-template').innerHTML );
+                $('#right-pane').html( renderQuickSummary( {score: score, user: user, quiz_name: quiz_name, 
+                elapsed_time: elapsed_time, date: date}) );
             }
 
         });
@@ -439,7 +456,9 @@
                     } 
                 }
 
-                if ( isAnswer ) { numberCorrect++; };
+                if ( isAnswer ) { 
+                    numberCorrect++; 
+                };
             } else if ( question.type === "Multiple_Choice" ) {
                 // Multiple Choice Question Works
                 numberOfPoints++;
