@@ -488,13 +488,12 @@ public class Account implements Constants {
 				DATE_CREATED, true);
 		
 		// No results.
-		if (rows == null) return null;
+		if (rows == null) return result;
 		
 		for (Map<String, Object> row : rows) {
 			result.add(QuizManager.getQuiz((String) row.get(QUIZ_NAME)));
 		}
 		
-		if (result.size() == 0) return null; 
 		return result;
 	}
 	
@@ -583,31 +582,25 @@ public class Account implements Constants {
 			}
 			
 			// Iterate over recently created quizzes.
-			List<Quiz> friend_created_list = friend.getRecentlyCreated(0);
-			if (friend_created_list != null) {
-				for (Quiz quiz : friend.getRecentlyCreated(0)) {
-					result.add(new Activity(friend, "created quiz", quiz.getName(), quiz.getCreationDate()));
-				}
+			for (Quiz quiz : friend.getRecentlyCreated(0)) {
+				result.add(new Activity(friend, "created quiz", quiz.getName(), quiz.getCreationDate()));
 			}
 			
 			// Iterate over recently taken quizzes.
-			List<Record> friend_taken_list = friend.getPastPerformance(0);
-			if (friend_taken_list != null) {
-				for (Record record : friend.getPastPerformance(0)) {
-					Quiz quiz = QuizManager.getQuiz(record.getQuizName());
-					result.add(new Activity(friend, "took quiz", quiz.getName(), record.getDate()));
-				}
+			for (Record record : friend.getPastPerformance(0)) {
+				Quiz quiz = QuizManager.getQuiz(record.getQuizName());
+				result.add(new Activity(friend, "took quiz", quiz.getName(), record.getDate()));
 			}
-			
-			// Sort from most recent.
-			Collections.sort(result);
-			if (numRecords == 0) return result;
-			
-			// Only return requested amount of values.
-			for (int i = result.size() - 1; i > numRecords - 1; i--) {
-				result.remove(i);
-			}
-			return result;
+		}
+		
+		// Sort from most recent.
+		Collections.sort(result);
+
+		if (numRecords == 0) return result;
+		
+		// Only return requested amount of values.
+		for (int i = result.size() - 1; i > numRecords - 1; i--) {
+			result.remove(i);
 		}
 		return result;
 	}
