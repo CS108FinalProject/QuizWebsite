@@ -50,12 +50,13 @@
 		
 		// remove quiz if it has no questions
 		questions = quiz.getQuestions();
+		if (questions.size() == 0) QuizManager.removeQuiz(quiz);
 	%>
 	<ul>
 	<% 
 		// print all remaining questions 
 		if (questions != null) {
-			for (int i=0; i< questions.size(); i++) {
+			for (int i=0; i<questions.size(); i++) {
 				int question_num = i+1;
 				out.println("<li>" + question_num + ". " + questions.get(i).getQuestion() + "    <a href = \"removeQuestions.jsp?quizName=" + quizName + "&index=" + i + "\">Remove</a>");
 			}
