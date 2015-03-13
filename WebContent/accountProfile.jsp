@@ -11,7 +11,7 @@
 <body>
 	
 	<%
-		String sender_name = (String) getServletContext().getAttribute("session_user");
+		String sender_name = (String)request.getSession().getAttribute("session_user");
 		String friend_name;
 		Account acct = AccountManager.getAccount(sender_name);
 		if (request.getParameter("friend_id") != null) {
@@ -31,11 +31,9 @@
 		<table id="header">
 			<tr>
 				<%
-				if(acct.isAdmin()) {
-					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
+
 					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-				}
+				
 				%> 	
 				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
 
