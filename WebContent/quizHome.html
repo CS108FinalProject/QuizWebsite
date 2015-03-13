@@ -407,10 +407,10 @@
                 <p>Date: {{date}}</p>
                 <p>Elapsed Time: {{elapsed_time}}</p>
 
-                <input type="hidden" name="quiz_name" value={{quiz_name}}>
-                <input type="hidden" name="user" value={{user}}>
-                <input type="hidden" name="score" value={{score}}>
-                <input type="hidden" name="elapsed_time" value={{elapsed_time}}>
+                <input type="hidden" name="quiz_name" value='{{quiz_name}}'>
+                <input type="hidden" name="user" value='{{user}}'>
+                <input type="hidden" name="score" value='{{score}}'>
+                <input type="hidden" name="elapsed_time" value='{{elapsed_time}}'>
                 <input type="hidden" name="date" value='{{date}}'>
                 <input type="submit" value="Show Details"/>
             </form>
@@ -435,7 +435,7 @@
                 <div id="multiple_choice_page">
                         <h2>MULTIPLE CHOICE</h2>
                         <p>{{curQuestion.question}}</p>
-                        {{#each this.answers}}
+                        {{#each curQuestion.answers}}
                             <input class={{../curQuestion.id}} type="checkbox" name='{{@key}}' placeholder="Enter your answer" value>{{@key}}
 
                         {{/each}}

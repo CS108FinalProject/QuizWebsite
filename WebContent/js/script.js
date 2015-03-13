@@ -354,7 +354,7 @@
             if ( (quizName === null || quizName === "")) {
                 alert("You must enter a quiz name");
             } else if ( (description === null || description == "") ) {
-                alert("You must enter a password");
+                alert("You must enter a description");
             } else {
 
                 // adds user information
@@ -591,7 +591,7 @@
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
                 // a question, answer and a blank obtained from the client interface
-            var question = $('#fill_in_the_blank_question').val();
+            var question = $('#fill_in_the_blank_question').val().trim().toLowerCase();
             var answer = $('#enter_answer').val();
             var blank = $('#enter_blank').val();
             
@@ -1013,7 +1013,7 @@
         // record main question information such as type and question string
         var questionInfo = {};
         questionInfo.type = type;
-        questionInfo.question = question;
+        questionInfo.question = question.trim().toLowerCase();
         
         // object for blank and set of answers
         var blanksAndAnswers = {};
