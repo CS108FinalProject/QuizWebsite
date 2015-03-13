@@ -29,7 +29,6 @@ public class FillBlank extends Question implements Constants {
 		
 		super(quizName, question);
 		Util.validateObject(blanksAndAnswers);
-		validateBlanksAndAnswers(blanksAndAnswers);
 		this.blanksAndAnswers = blanksAndAnswers;
 	}
 
