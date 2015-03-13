@@ -436,7 +436,7 @@
                         <h2>MULTIPLE CHOICE</h2>
                         <p>{{curQuestion.question}}</p>
                         {{#each this.answers}}
-                            <input class={{../../id}} type="checkbox" name='{{@key}}' placeholder="Enter your answer" value>{{@key}}
+                            <input class={{../curQuestion.id}} type="checkbox" name='{{@key}}' placeholder="Enter your answer" value>{{@key}}
 
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
@@ -451,7 +451,7 @@
                         <h2>Question MULTI-RESPONSE</h2>
                         <p>{{curQuestion.question}}</p>
                         {{#each curQuestion.answers}}
-                            <input class={{../../id}} type="text" placeholder="Enter your answer">
+                            <input class={{../curQuestion.id}} type="text" placeholder="Enter your answer">
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>
@@ -478,7 +478,7 @@
                         <h2>Question MATCHING</h2>
                         <p>{{curQuestion.question}}</p>
                         {{#each curQuestion.answers}}
-                            {{@key}}<input  class={{../../id}} type="text">{{this}}<br/>
+                            {{@key}}<input  class={{../curQuestion.id}} type="text">{{this}}<br/>
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>
