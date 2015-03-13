@@ -11,8 +11,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Quiz Summary</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <style>
@@ -45,9 +44,30 @@ Util.validateString(loggedInUser);
 Account user = AccountManager.getAccount(loggedInUser);
 DecimalFormat formatter = new DecimalFormat("0.00");
 %>
-
+<header>
+	<table id="header">
+			<tr>			
+				<%
+				String name = (String)getServletContext().getAttribute("session_user");
+				Account acct = AccountManager.getAccount(name);
+				if(acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+				%> 
+				<th class = "btn"><a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>">Take Quiz</a></th>
+				<%
+				if (loggedInUser.equals(quiz.getCreator().getUserName()) || acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"EditQuizInit?quiz=" + quizName + "\">Edit Quiz</a></th>");
+				}
+				%>
+			</tr>
+	</table>
+</header>
 
 <!-- Print Page title and quiz name -->
+<br>
 <h1>Quiz Profile</h1>
 <h2><%= quiz.getName() %></h2>
 
@@ -190,17 +210,5 @@ Map<String, Double> average = quiz.getAveragePerformance();
 </table>
 <br/>
 
-
-<!-- Button to take quiz -->
-<a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>"><button type="button">Take Quiz</button></a>
-
-<!-- Button to Edit Quiz -->
-<form action="EditQuizInit" method="POST">
-<input type="hidden" name="quiz" value="<%=quizName%>">
-<input type="submit" value="Edit Quiz">
-</form>
-
-<!-- Button to go back to Homepage -->
-<a href="homepage.jsp"><button type="button">Back Home</button></a>
 </body>
 </html>

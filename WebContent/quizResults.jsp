@@ -20,6 +20,7 @@ String quizName = (String)request.getParameter(Constants.QUIZ_NAME);
 Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
+
 // Get logged in user.
 String loggedInUser = (String)getServletContext().getAttribute("session_user");
 Util.validateString(loggedInUser);
@@ -37,7 +38,7 @@ Account user = AccountManager.getAccount(loggedInUser);
 <%
 // Get Record Parameters
 String date = request.getParameter(Constants.DATE);
-double score = Double.parseDouble(request.getParameter(Constants.DATE));
+double score = Double.parseDouble(request.getParameter(Constants.SCORE));
 double elapsedTime = Double.parseDouble(request.getParameter(Constants.ELAPSED_TIME));
 %>
 

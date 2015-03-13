@@ -70,7 +70,7 @@ if (name != null) {
 							</form>
 						</th>
 						<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
-						<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
+						<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Create Quiz</a></th>
 						<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>						 
 					</tr>
 			</table>
@@ -170,10 +170,14 @@ if (name != null) {
 								</div>
 								<div id="read_messages">
 									<form action = <%="\"homepage.jsp?id="+name+"\""%>>
+
+
 										<select name = "choice">
 											<option >Received Messages</option>
 											<option>Sent Messages</option>
 										</select>
+										<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+										<input name="id" type="hidden" value=<%=name%>>
 										<input type = "submit" value = "Display Messages">
 									</form>
 									<%	

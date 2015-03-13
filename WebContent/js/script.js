@@ -1,5 +1,10 @@
 (function(window, document, undefined) {
+
+    // start time & end time
+    var startTime;
+    var endTime;
     // pane elementss
+    var quizName = getUrlVar("quiz"); 
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
 
@@ -41,6 +46,10 @@
         renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML ),
         renderEditQuizOptions: Handlebars.compile( editQuizOptionsTemplate.innerHTML )
     };
+
+    if ( quizName === "" ) {
+        rightPane.innerHTML = templates.renderQuizForm();
+    }
 
     // HELPER FUNCTIONS 
 
@@ -141,10 +150,9 @@
                     questions[i].id = Math.random();
                     break;
                 case "Fill_Blank":
-                    console.log( "Check" );
                     questions[i].isFillInTheBlank = true;
-                    questions[i].blankedQuestion = formatBlankedQuestion( questions[i] );
                     questions[i].id = Math.random();
+                    questions[i].blankedQuestion = formatBlankedQuestion( questions[i] );
                     break;
                 case "Multiple_Choice":
                     questions[i].isMultipleChoice = true;
@@ -155,15 +163,12 @@
                     questions[i].id = Math.random();
                     break;
                 case "Multi_Response":
-                    console.log( questions[i ]);
                     questions[i].isMultiResponse = true;
                     questions[i].id = Math.random();
                     break;
                 case "Matching":
                     questions[i].isMatching = true;
-                    for(var i = 0; i < questions[i].answers; i++) {
-                        //questions[i].answers.id = Math.random();
-                    }
+                    questions[i].id = Math.random();
                     break;
                 default:
                     // don't add any booleans
@@ -175,14 +180,16 @@
     }
 
     function formatBlankedQuestion( data ) {
-
+        console.log( data );
+        console.log( data.id );
+        var idString = data.id;
         var question = data.question;
+        var answers = data.answers;
+        console.log( answers );
         var modifiedQuestion = question;
-        console.log( data.answers );
-        for( var i = 0; i <  data.answers[blank].length; i++ ) {
-            modifiedQuestion = modifiedQuestion.replace( data.answers[blank][i], "<input type=\"text\" />");
+        for(var obj in answers) {
+            modifiedQuestion = modifiedQuestion.replace(obj, '<input class=' + idString + ' type=\"text\">')
         }
-        console.log( modifiedQuestion );
         return modifiedQuestion;
     }
 
@@ -224,6 +231,7 @@
 
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
+            console.log("Hello");
             $('#right-pane').html( templates.renderQuizForm() );
         });
 
@@ -936,7 +944,12 @@
                         contentType: 'application/x-www-form-urlencoded',
 
                         success: function(data, textStatus, jqXHR) {
-                            console.log( data );
+                            if ( data.status.success ) {
+                                $('#right-pane').html('Quiz Added Successfully');
+                            } else {
+                                $('#right-pane').html('An Error Occurred While Attempting to Create Your Quiz');
+                            }
+                            
                         }
                     }); 
 
@@ -945,7 +958,116 @@
                         // do nothing
             }
         } else if ( event.target.value === "Submit" ) {
-            // let's pause for a second
+            endTime = new Date();
+            var timeDiff = endTime - startTime;
+            
+            timeDiff/1000;
+            
+            var seconds = Math.round(timeDiff % 60);
+            
+            timeDiff = Math.floor(timeDiff / 60);
+            
+            var minutes =  Math.round(timeDiff % 60);
+        
+            var questions = getQuizToTake().questions;
+            var numberOfPoints = 0;
+            var numberCorrect = 0;
+            var totalScore;
+           
+            for(var i = 0; i < questions.length; i++) {
+                // Picture and Multiple Choice Scoring Work
+                if ( questions[i].type === "Picture" ||
+                    questions[i].type === "Response" ) {
+                    var questionIndex = i;
+                    numberOfPoints++;
+                    var isAnswer = false;
+                    var idString = questions[i].id;
+                    var answer = document.getElementById(idString).value;
+
+                    var listOfAnswers = questions[questionIndex].answers;
+                    if ( answer != "" ) {
+                        if ( listOfAnswers.indexOf(answer) != -1 ) {
+                            isAnswer = true;
+                        } 
+                    }
+
+                    if ( isAnswer ) { numberCorrect++; };
+                } else if ( questions[i].type === "Multiple_Choice" ) {
+                    // Multiple Choice Question Works
+                    numberOfPoints++;
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    var theSame = true;
+                    for(var j = 0; j < array.length; j++ ) {
+                        if ( !(thisQuestion.answers[array[j].name] === array[j].checked ) ) {
+                            theSame = false;
+                        }
+                    }
+
+                    if ( theSame ) {
+                        numberCorrect++;
+                    } 
+                } else if ( questions[i].type === "Multi_Response" ) {
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    var inOrder = true;
+
+                    if ( thisQuestion.isOrdered ) {
+                        for(var j = 0; j < array.length; j++ ) {
+                            numberOfPoints++;
+                            if(  thisQuestion.answers.indexOf( array[j].value ) != j ) {
+                                inOrder = false;
+                            }
+                        }
+                        if (inOrder) { numberCorrect += array.length; }
+                    } else {
+                        for(var j = 0; j < array.length; j++ ) {
+                            numberOfPoints++;
+                            if(  thisQuestion.answers.indexOf( array[j].value ) != -1 ) {
+                                numberCorrect++;
+                            }
+                        }
+                    }
+                } else if ( questions[i].type === "Matching" ) {
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    console.log( array );
+                    console.log( thisQuestion.answers );
+                    var count = 0;
+                    var MatchAnswers = thisQuestion.answers;
+                    for(var key in MatchAnswers ) {
+                        if ( array[count].value === MatchAnswers[key] ) {
+                            numberCorrect++;
+                            numberOfPoints++;
+                            count++;
+                        } else {
+                            numberOfPoints++;
+                            count++;
+                        }
+
+                    }
+                }
+            }
+
+            console.log( numberCorrect );
+            console.log( numberOfPoints );
+
+            console.log( minutes );
+            // information to send back
+            var score = numberCorrect / numberOfPoints;
+            var elapsed_time = minutes + (1.0/60)*seconds;
+            var date =  moment().format('YYYY/MM/DD HH:mm');
+            var quiz_name = quizName;
+            var user = getUrlVar('user');
+
+
+
+            var renderQuickSummary = Handlebars.compile( document.getElementById('results-preview-template').innerHTML );
+            $('#right-pane').html( renderQuickSummary( {score: score, user: user, quiz_name: quiz_name, 
+                elapsed_time: elapsed_time, date: date}) );
         }
            
     });
@@ -962,9 +1084,8 @@
      /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
 
      //request database for the quiz
-     var quizName = getUrlVar("quiz"); // tested and works
-     console.log( quizName );
      if ( quizName != "") {
+            startTime = new Date();
             var URL = "/QuizWebsite/GetData";
             var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
             $.ajax({

@@ -127,7 +127,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			}
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-
+			System.out.println("popular quizzes");
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
 			//	System.out.println(popular_quizzes.size());
@@ -152,6 +152,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display",result_list);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
 				//request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");

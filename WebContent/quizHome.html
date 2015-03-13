@@ -12,37 +12,14 @@
     <body>
         <header>
             
-            <h1><a href="homepage.jsp">Home</a><a href="/">Quizzes</a></h1>
+            <h1><a href="homepage.jsp">Home</a><a id="new-quiz-button">New Quiz</a></h1>
 
         </header>
 
         <div id="wrapper">
-            <div id="navigation">
-                <div class ="cf" id="interactors">
-                    <!-- buttons and search -->
-                    <div class="cf quiz-nav" id="quiz-nav">
-                        <div class="cf" id="quiz-create-container">
-                            <input type="button" id="my-quizzes" class="nav_btns" value="My Quizzes" />
-                            <input type="button" id="new-quiz-button" class="nav_btns" value="Create New Quiz" />
-                            <select id="quiz_selection">
-                                <option id="popular_quizzes" value="mostPopularQuizzes">Popular Quizzes</option>
-                                <option id="recently_created_quizzes" value="recentlyCreatedQuizzes">Recently Created Quizzes</option>
-                                <option id="all_quizzes" value="allQuizzes">All Quizzes</option>
-                                <option id="my_recently_created_quizzes" value="audi">My Recently Created Quizzes</option>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div id="left-pane">
-                    <!-- add questions to this container -->
-                </div>
-            </div>
-
                 <div id="right-pane">
-             
-        </div>
+
+                </div>
 
         <!-- Handlebars Templates to Render various views -->
         <!-- template to display QUIZ CREATION FORM in #main-panel tag -->
@@ -185,7 +162,6 @@
                 <h2>Create Picture Question</h2>
 
                 <h3>Picture URL</h3>
-                <p>Enter a tiny URL. Here is a <a href="http://tiny.cc/">URL shortener</a></p>
                 <div>
                     <textarea rows="1" cols="40" name="description"
                         id="pic_url" placeholder="Enter Picture URL (ex. www.flickr.com/barack_obama.jpg)"></textarea>
@@ -383,7 +359,7 @@
                                 <h2>Question {{@index }}</h2>
                                 <p>{{this.question}}</p>
                                 {{#each this.answers}}
-                                    <input id={{this.id}} type="text" placeholder="Enter your answer">
+                                    <input class={{../../id}} type="text" placeholder="Enter your answer">
                                 {{/each}}
                             </div>
                         {{/if}}
@@ -393,15 +369,18 @@
                                 <h2>Question {{@index }}</h2>
                                 <p>{{this.question}}</p>
                                 {{#each this.answers}}
-                                    <input id={{this.id}} type="checkbox" name={{@key}} placeholder="Enter your answer" value>{{@key}}
+                                    <input class={{../../id}} type="checkbox" name='{{@key}}' placeholder="Enter your answer" value>{{@key}}
 
                                 {{/each}}
                             </div>
                         {{/if}}
 
                         {{#if this.isMatching }} 
+                            <div id="matching_page">
+                                <h2>Question {{@index }}</h2>
+                                <p>{{this.question}}</p>
                                 {{#each this.answers}}
-                                    {{@key}}<input id={{this.id}} type="text">{{this}}<br/>
+                                    {{@key}}<input  class={{../../id}} type="text">{{this}}<br/>
                                 {{/each}}
                             </div>
                         {{/if}}
@@ -418,6 +397,25 @@
 
                 <input id="quiz-submission" type="button" value="Submit"/>
             </form>
+        </script>
+
+        <script type="text/x-handlebars-template" id="results-preview-template">
+            <form action="quizResults.jsp" class="cf"   id="results-preview-template">
+                <p>You received a {{score }} for quiz {{ quiz_name }}</p>
+                <p>Quiz: {{quiz_name}}</p>
+                <p>Date: {{date}}</p>
+                <p>Elapsed Time: {{elapsed_time}}</p>
+
+                <input type="hidden" name="quiz_name" value={{quiz_name}}>
+                <input type="hidden" name="user" value={{user}}>
+                <input type="hidden" name="score" value={{score}}>
+                <input type="hidden" name="elapsed_time" value={{elapsed_time}}>
+                <input type="hidden" name="date" value={{date}}>
+                <input type="submit" value="Show Details"/>
+            </form>
+                
+                
+                
         </script>
 
         <!-- Libraries: JQuery -->

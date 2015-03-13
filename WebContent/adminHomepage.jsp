@@ -146,11 +146,13 @@ String sel_type = (String)request.getParameter("choice");
 							<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
 						</div>
 						<div id="read_messages">
-							<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+							<form action = <%="\"showMessage.jsp?id="+name+"\""%>>
 								<select name = "choice">
 									<option>Received Messages</option>
 									<option>Sent Messages</option>
 								</select>
+								<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
+								<input name="id" type="hidden" value=<%=name%>>
 								<input type = "submit" value = "Display Messages">
 							</form>
 							<%		

@@ -30,8 +30,14 @@
 <header>	
 		<table id="header">
 			<tr>
-				<th><a href = "homepage.jsp">Homepage</a></th>
-				<th><a href = "showAnnouncements.jsp">Announcements</a></th>
+				<%
+				if(acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+				%> 	
+				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
 
 				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
@@ -76,6 +82,8 @@
 		<input type="submit" name=message_type value="Unfriend">
 	</form>
 	<BR>
+	<br/>
+	<p>Enter a quiz name to send a challenge to this user.</p>
 	<form action="SendMessageServlet" method="post"> 
 		<input type = "hidden" name = "id" value = <%="\""+sender_name+"\""%>>
 		<input type = "hidden" name = "friend_id" value = <%="\""+friend_name+"\""%>>

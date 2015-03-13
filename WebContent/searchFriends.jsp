@@ -47,7 +47,7 @@
 	
 	<form action="SearchFriendServlet" method="post"> 
 		<input type="text" value="" name="friend_id">
-		<input type="submit" value="Search Friend">
+		<input type="submit" value="Search">
 	</form>
 	<br>
 	
@@ -63,7 +63,7 @@
 			out.println("<p><a href=\"accountProfile.jsp?friend_id=" + friend 
 					+ "&username=" + sender2 + "\">" + friend + "</a></p>");
 		} else {
-			out.println("<p> Friend Not found: </p><br>");
+			out.println("<p> Friend Not found </p><br>");
 		}
 	} 
 	
