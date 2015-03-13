@@ -89,7 +89,8 @@ List<Record> pastPerformance = user.getPastPerformance(0);
 		
 		<%
 			for (Record record : pastPerformance) {
-				out.println("<tr><td>" + record.getQuizName() + "</td>" 
+				out.println("<tr><td><a href=\"quizSummary.jsp?quiz_name=" +  record.getQuizName() + "\">" 
+				+ record.getQuizName() + "</td>" 
 				+ "<td>" + record.getDate() + "</td>" 
 				+ "<td>" + formatter.format(record.getScore()) + "</td>" 
 				+ "<td>" + formatter.format(record.getElapsedTime()) + "</td></tr>");
