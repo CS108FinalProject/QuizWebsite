@@ -36,7 +36,7 @@ public class RegistrationServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");	
 		
-		String username = request.getParameter("user");
+		String username = request.getParameter("user").toLowerCase();
 		String password = request.getParameter("password");
 		
 		//Redirect if username not valid

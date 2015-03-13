@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");	
-		String username = request.getParameter("username");
+		String username = request.getParameter("username").toLowerCase();
 		String password = request.getParameter("password");
 
 		if (AccountManager.accountExists(username)) {
