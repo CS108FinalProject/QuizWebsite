@@ -563,7 +563,7 @@ public class Account implements Constants {
 			for (String achievement : achievements.keySet()) {
 				Record record = achievements.get(achievement);
 				
-				result.add(new Activity(friend, "earned achievement " + achievement, 
+				result.add(new Activity(friend, "earned achievement " + achievement + " on ", 
 						QuizManager.getQuiz(record.getQuizName()), record.getDate()));
 			}
 			

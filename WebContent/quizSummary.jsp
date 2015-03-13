@@ -88,7 +88,7 @@ List<Record> pastPerformance = quiz.getPastUserPerformance(user, 0);
 %>
 
 <!--  Past performance table -->
-<h4>Your Past Performance:</h4>
+<h4>Your Past Performance for this Quiz:</h4>
 <table id="pastPerformanceTable" class="statTable">
 		<tr>
 			<th>Date</th>
