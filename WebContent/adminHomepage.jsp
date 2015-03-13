@@ -14,7 +14,7 @@
  <link rel="stylesheet" href="homepage.css" ></link>
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%String name = (String)getServletContext().getAttribute("session_user");
+<%String name = (String)request.getSession().getAttribute("session_user");
 Account acct = AccountManager.getAccount(name);
 String sel_type = (String)request.getParameter("choice");
 %>

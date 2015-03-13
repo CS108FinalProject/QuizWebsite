@@ -39,7 +39,7 @@ Quiz quiz = QuizManager.getQuiz(quizName);
 
 
 // Get logged in user.
-String loggedInUser = (String)getServletContext().getAttribute("session_user");
+String loggedInUser = (String)request.getSession().getAttribute("session_user");
 Util.validateString(loggedInUser);
 Account user = AccountManager.getAccount(loggedInUser);
 %>

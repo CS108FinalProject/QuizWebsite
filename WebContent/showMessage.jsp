@@ -40,10 +40,8 @@ td {
 	<table id="header">
 			<tr>
 				<%
-				Account acct = AccountManager.getAccount(name);
-
+					Account acct = AccountManager.getAccount(name);
 					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-				
 				%> 			
 					
 				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>

@@ -8,7 +8,7 @@
 </head>
 
 <%
-String userName = (String)getServletContext().getAttribute("session_user");
+String userName = (String)request.getSession().getAttribute("session_user");
 %>
 
 <body>
