@@ -59,7 +59,7 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 				<th class = "btn"><a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>">Take Quiz</a></th>
 				<%
 				if (loggedInUser.equals(quiz.getCreator().getUserName()) || acct.isAdmin()) {
-					out.println("<th class = \"btn\"><a href = \\\"EditQuizInit?quiz=" + quizName + "\\\">Edit Quiz</a></th>");
+					out.println("<th class = \"btn\"><a href = \"EditQuizInit?quiz=" + quizName + "\">Edit Quiz</a></th>");
 				}
 				%>
 			</tr>
