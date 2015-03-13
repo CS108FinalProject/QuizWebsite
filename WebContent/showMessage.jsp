@@ -28,6 +28,7 @@ td {
 
 <body>
 	<%
+		String pain;
 		String name;
 		if (request.getParameter("id") != null) {
 			name = request.getParameter("id");
