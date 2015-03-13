@@ -62,9 +62,11 @@ public class Achievement implements com.util.Constants{
 		Util.validateString(quizName);
 		
 		Quiz quiz = QuizManager.getQuiz(quizName);
-		if (score > quiz.getTopPerformers(1).get(0).getScore()) {
+		List<Record> topPerformers = quiz.getTopPerformers(1);
+		if (topPerformers.isEmpty() || score > topPerformers.get(0).getScore()) {
 			Achievement.add(record,I_AM_THE_GREATEST);
 		}
+		
 		if (user.getNumQuizzesTaken() == 10) {
 			Achievement.add(record,QUIZ_MACHINE);
 		}
