@@ -39,9 +39,7 @@ public class ReturnToHomepage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = (String)request.getSession().getAttribute("session_user");
 		RequestDispatcher dispatch = null;
-		if ((AccountManager.getAccount(username)).isAdmin()) {
-			dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
-		} else dispatch = request.getRequestDispatcher("homepage.jsp"); 	
+		dispatch = request.getRequestDispatcher("homepage.jsp"); 	
 		dispatch.forward(request, response);
 	}
 
