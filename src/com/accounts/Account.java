@@ -86,6 +86,26 @@ public class Account implements Constants {
 		if (removed != 1) {
 			throw new RuntimeException("Problem removing rows. Removed " + removed + " rows");
 		}
+		
+		// Remove user quizzes.
+		List<Quiz> quizzes = QuizManager.getQuizzes(this);
+		for (Quiz quiz : quizzes) {
+			quiz.removeQuiz();
+		}
+		
+		// Unfriend everyone.
+		List<Account> friends = getFriends();
+		for (Account friend : friends) {
+			unfriend(friend);
+		}
+		
+		// Remove user from Messages.
+		Database.removeRows(HISTORY, USERNAME, userName);
+		Database.removeRows(MESSAGES, SENDER, userName);
+		Database.removeRows(MESSAGES, RECIPIENT, userName);
+		Database.removeRows(ANNOUNCEMENTS, USERNAME, userName);
+		Database.removeRows(ACHIEVEMENTS, USERNAME, userName);
+		
 		userName = null;
 	}
 
