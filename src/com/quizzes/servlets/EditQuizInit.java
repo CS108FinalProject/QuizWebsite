@@ -29,7 +29,11 @@ public class EditQuizInit extends HttpServlet implements Constants {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String quiz = (String)request.getParameter("quiz");
+		request.setAttribute("quiz", quiz);
+		doPost(request,response);
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +43,7 @@ public class EditQuizInit extends HttpServlet implements Constants {
 		
 		// get quiz Json
 		String quizName = (String)request.getParameter("quiz");
+		if (quizName == null) quizName = (String)request.getAttribute("quiz");
 		Util.validateString(quizName);
 		
 		request.setAttribute(QUIZ_NAME, quizName);

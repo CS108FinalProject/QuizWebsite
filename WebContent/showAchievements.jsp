@@ -22,6 +22,10 @@ th {
     background-color: #34495E;
     color: white;
 }
+
+td {
+    padding: 7px;
+}
 </style>
 <body>
 
