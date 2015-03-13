@@ -422,11 +422,15 @@ public class Quiz implements Constants {
 		}
 		
 		Database.removeRows(HISTORY, QUIZ_NAME, name);
-		
-		
-		
-		
 		name = null;
+	}
+	
+	
+	/**
+	 * Clears all History for this quiz.
+	 */
+	public void clearHistory() {
+		Database.removeRows(HISTORY, QUIZ_NAME, name);
 	}
 	
 	
