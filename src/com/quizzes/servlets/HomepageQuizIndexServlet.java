@@ -122,8 +122,9 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			
 				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
 				/*If usr_quizzes is not null then we know that the size is at least one*/
-				if (usr_quizzes != null ) {
+			
 					int num_quizzes = usr_quizzes.size();
+				if (num_quizzes > 0) {
 					/*Iterate through usr_quizzes backwards so that we have newest quiz first */
 					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = usr_quizzes.get(i);
@@ -178,7 +179,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				int rec_quiz_len = recent_quizzes.size();
 				/*For each Recent Quiz print the quiz data and a link to the quiz Summary page*/
 
-				for (int i = 0; i < rec_quiz_len;i++ ) {
+				for (int i = rec_quiz_len = 1; i <= 0;i--) {
 					Quiz curr = recent_quizzes.get(i);
 					String creator = curr.getCreator().getUserName();
 					String birthdate = curr.getCreationDate();

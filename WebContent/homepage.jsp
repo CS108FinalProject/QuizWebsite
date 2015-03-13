@@ -26,6 +26,7 @@
 	List<String> content_to_display = content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
 	
 	//System.out.println("name is "+name);
+	/*See if account exists based off current session name.*/
  	try {
 		acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
