@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.accounts.Account;
+import com.accounts.AccountManager;
 import com.dbinterface.Database;
 import com.util.Constants;
 import com.util.Util;
@@ -179,10 +180,9 @@ public class QuizManager implements Constants {
 	 * Returns all quizzes in the database or null if none exist.
 	 */
 	public static List<Quiz> getAllQuizzes() {
-		List<Map<String, Object>> table = Database.getTable(QUIZZES);
-		if (table == null || table.size() == 0) return null;
-		
 		List<Quiz> result = new ArrayList<Quiz>();
+		List<Map<String, Object>> table = Database.getTable(QUIZZES);
+		if (table == null || table.size() == 0) return result;
 		
 		for (Map<String, Object> row : table) {
 			result.add(new Quiz((String) row.get(QUIZ_NAME)));
@@ -295,6 +295,19 @@ public class QuizManager implements Constants {
 			}
 		}
 		return result;
+	}
+	
+	
+	/**
+	 * @return total number of quizzes taken in the site.
+	 */
+	public static int getNumQuizzesTaken() {
+		List<Account> users = AccountManager.getAllUsers();
+		int counter = 0;
+		for (Account user : users) {
+			counter += user.getNumQuizzesTaken();
+		}
+		return counter;
 	}
 	
 	

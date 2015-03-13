@@ -138,7 +138,7 @@ public class AccountManager implements Constants {
 		List<Account> users = new ArrayList<Account>();
 		
 		List<Map<String, Object>> table = Database.getTable(ACCOUNTS);
-		if (table == null) return null;
+		if (table == null) return users;
 		
 		for (Map<String, Object> account : table) {
 			Util.validateObjectType(account.get(USERNAME), STRING);
