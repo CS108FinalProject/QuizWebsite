@@ -1420,13 +1420,7 @@ public class Database implements Constants {
 	// To be used for testing purposes only.
 	public static void main( String [] args ) {
 		new Database();
-		Map<String, Object> columns = new HashMap<String, Object>();
-		columns.put(QUIZ_NAME, "AllQuizzes3");
-		columns.put(USERNAME, "notadmin");
-		columns.put(SCORE, 70.00);
-		columns.put(DATE, "2015/3/12 10:07"); 
-		columns.put(ELAPSED_TIME, 40.00); 
-		Database.addRow(HISTORY, columns);
+		//Database.removeTable(ANNOUNCEMENTS);
 		Database.close();
 	}
 }
