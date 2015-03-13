@@ -330,12 +330,8 @@ public class Account implements Constants {
 	 */
 	public void readMessage(Message message) {
 		String recipientName = message.getRecipient();
-		int modified = Database.setValues(MESSAGES, RECIPIENT, recipientName, 
+		Database.setValues(MESSAGES, RECIPIENT, recipientName, 
 				DATE, message.getDate(), SEEN, true);
-		
-		if (modified != 1) {
-			throw new RuntimeException("Problem modifying rows. Modified " + modified + " rows");
-		}
 	}
 	
 	

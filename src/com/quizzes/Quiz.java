@@ -671,8 +671,8 @@ public class Quiz implements Constants {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		String cut = format.format(date);
 		
-		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
-				true, cut, SCORE, true);
+		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, QUIZ_NAME, 
+				name, DATE, true, cut, SCORE, true);
 		
 		if (rows == null) return result;
 		
@@ -737,7 +737,7 @@ public class Quiz implements Constants {
 	 */
 	public Map<String, Double> getAveragePerformance() {
 		Map<String, Double> result = new HashMap<String, Double>();
-		List<Map<String, Object>> rows = Database.getTable(HISTORY);
+		List<Map<String, Object>> rows = Database.getRows(HISTORY, QUIZ_NAME, name);
 		if (rows == null || rows.size() == 0) {
 			result.put(SCORE, 0.0);
 			result.put(ELAPSED_TIME, 0.0);
