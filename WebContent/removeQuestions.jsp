@@ -9,22 +9,45 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
 	<ul>
 	<nav>
+	
+		<header>
+			<table id="header">
+				<tr>			
+					<%
+						// get questions
+				      	String quizName;
+						if (request.getAttribute(Constants.QUIZ_NAME) != null) {
+							quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
+						} else {
+							quizName = request.getParameter("quizName");	
+						}
+						Quiz quiz = QuizManager.getQuiz(quizName);
+						String name = (String)getServletContext().getAttribute("session_user");
+						Account acct = AccountManager.getAccount(name);
+						if (acct.isAdmin()) {
+							out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+						} else {
+							out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+						}
+						
+						out.println("<th class = \"btn\"><a href = \"EditQuizInit?quiz=" + quizName + "\">Edit Quiz</a></th>");
+					%>
+				</tr>
+			</table>
+		</header>
+    	
+		<br>
+    	<h2>Remove Questions</h2>
+    	<br>
     
       <%
    		// get questions
-      	String quizName;
-		if (request.getAttribute(Constants.QUIZ_NAME) != null) {
-			quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
-		} else {
-			quizName = request.getParameter("quizName");	
-		}
-		Quiz quiz = QuizManager.getQuiz(quizName);
 		List<Question> questions = quiz.getQuestions();
 
 		// remove question
@@ -36,17 +59,10 @@
 		
 		// remove quiz if it has no questions
 		questions = quiz.getQuestions();
-		if (questions.size() == 0) {
-			QuizManager.getQuiz(quizName).removeQuiz();
-			out.println("<form action=\"RemoveQuiz\" method=\"POST\">");
-			out.println("<input type=\"submit\" value=\"Return to Homepage\">");
-			out.println("</form>");
-		}
 	%>
 	<ul>
 	<% 
 		// print all remaining questions 
-		if (questions.size() != 0) out.println("<a href = \"editQuiz.jsp\">Edit Questions</a>");
 		if (questions != null) {
 			for (int i=0; i< questions.size(); i++) {
 				int question_num = i+1;
