@@ -30,7 +30,7 @@
 				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
 				<th class = "btn">My Messages 
-					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
+					<form action = <%="\"showMessage.jsp?id="+(String)request.getSession().getAttribute("session_user")+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
