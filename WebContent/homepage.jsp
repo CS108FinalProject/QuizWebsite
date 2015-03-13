@@ -33,11 +33,10 @@
  		request.getSession().setAttribute("session_user", null);
  		/*set Error*/
 		request.setAttribute("errMsg", "<h1>Sorry, an account couldn't be found.</h1>");
-		RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+		RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 		dispatch.forward(request, response);
  		//System.out.println("The account for "+name+" was not found.");
  	}
-
 
 %>
 <title>Welcome <%=name%></title>
@@ -81,7 +80,7 @@
 						<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
 						<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Create Quiz</a></th>
 						<th class = "btn"><a href = "history.jsp"> History</a></th>
-						<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>						 
+						<th class = "btn"><a href = <%="\"index.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>						 
 					</tr>
 			</table>
 		</header>
