@@ -1092,11 +1092,13 @@
                     var array = document.getElementsByClassName(idString);
                     var possibleAnswers = thisQuestion.answers;
 
+                    console.log( possibleAnswers );
                     var count = 0;
-                    var isClean = true;
-                    console.log( array );
+                    console.log( array ); // represents inputs (or answers to each blank)
                     for(var key in possibleAnswers) {
-                        console.log( possibleAnswers[key] );
+                        for(var i = 0; i <  possibleAnswers[key].length; i++ ) {
+                            console.log( possibleAnswers[key].indexOf( array[count]) );
+                        }
                     }
 
                 }
