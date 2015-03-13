@@ -88,7 +88,7 @@ public class SendMessageServlet extends HttpServlet {
 			}	
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 			String quizName = request.getParameter("quizName");
-			if (quizName == null) {
+			if (quizName == null || quizName.isEmpty()) {
 				request.setAttribute("errMsg", "Please enter a non-empty quiz.");
 			} else if (QuizManager.quizNameInUse(quizName)) {
 				Message msg = new Message(sender_name, friend_name, quizName, Constants.MESSAGE_CHALLENGE, date, false);
