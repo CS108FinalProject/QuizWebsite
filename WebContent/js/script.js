@@ -1,4 +1,8 @@
 (function(window, document, undefined) {
+
+    // start time & end time
+    var startTime;
+    var endTime;
     // pane elementss
     var quizName = getUrlVar("quiz"); 
     var rightPane = document.getElementById('right-pane');
@@ -954,6 +958,17 @@
                         // do nothing
             }
         } else if ( event.target.value === "Submit" ) {
+            endTime = new Date();
+            var timeDiff = endTime - startTime;
+            
+            timeDiff/1000;
+            
+            var seconds = Math.round(timeDiff % 60);
+            
+            timeDiff = Math.floor(timeDiff / 60);
+            
+            var minutes =  Math.round(timeDiff % 60);
+        
             var questions = getQuizToTake().questions;
             var numberOfPoints = 0;
             var numberCorrect = 0;
@@ -1040,7 +1055,19 @@
             console.log( numberCorrect );
             console.log( numberOfPoints );
 
-            $('#right-pane').html("You got " + numberCorrect + " out of " + numberOfPoints + "points" );
+            console.log( minutes );
+            // information to send back
+            var score = numberCorrect / numberOfPoints;
+            var elapsed_time = minutes + (1.0/60)*seconds;
+            var date =  moment().format('YYYY/MM/DD HH:mm');
+            var quiz_name = quizName;
+            var user = getUrlVar('user');
+
+
+
+            var renderQuickSummary = Handlebars.compile( document.getElementById('results-preview-template').innerHTML );
+            $('#right-pane').html( renderQuickSummary( {score: score, user: user, quiz_name: quiz_name, 
+                elapsed_time: elapsed_time, date: date}) );
         }
            
     });
@@ -1058,6 +1085,7 @@
 
      //request database for the quiz
      if ( quizName != "") {
+            startTime = new Date();
             var URL = "/QuizWebsite/GetData";
             var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
             $.ajax({
