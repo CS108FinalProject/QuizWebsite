@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%@ page import = "com.accounts.*"%>
+	<%@ page import = "com.quizzes.*"%>
 	<%@ page import = "java.util.*"%>
 	<%@ page import = "com.util.*" %>
 	<%@ page import = "javax.swing.*" %>
@@ -107,7 +108,10 @@ if (name != null) {
 			
 			<%/*Begin siteStats div*/ %>
 			<%out.println("<div id = \"siteStats\">");%>
-			<%out.println("\"Site Statistics\"<br></br></div></td></tr><tr><td>");%>
+			<%out.println("Site Statistics<br><br>");%>
+			<label> Number of users: </label> <%= "" + AccountManager.getAllUsers().size() %>
+			<label> Number of quizzes taken: </label> <%= "" + QuizManager.getNumQuizzesTaken() %>
+			</div>
 			<%/*End siteStats div*/ %>
 			
 			<%/*Begin removeAcct div*/ %>
@@ -123,9 +127,12 @@ if (name != null) {
 						out.println("\"No Account Removed\"");
 					}
 			%>
+			<br><br><br>
 			<%out.println("</input>");%>	
-			<%out.println("Re-enter account id:<input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
+			<%out.println("Re-enter account id: <input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
+			<br>
 			<%out.println("<input type = \"hidden\" name = \"id\" value = \""+name+"\" >");%>
+			<br>
 			<%out.println("<input type = \"submit\"></input></form>");%>				
 			
 			<%/*End removeAcct div*/ %>

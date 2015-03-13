@@ -35,6 +35,7 @@ th {
 <%
 // Get quiz name and instantiate a Quiz object.
 String quizName = (String)request.getParameter(Constants.QUIZ_NAME);
+if (quizName == null) quizName = (String)request.getAttribute(Constants.QUIZ_NAME);
 Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
@@ -50,15 +51,15 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 				<%
 				String name = (String)request.getSession().getAttribute("session_user");
 				Account acct = AccountManager.getAccount(name);
-
-
-					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-				
+				out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				%> 
 				<th class = "btn"><a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>">Take Quiz</a></th>
 				<%
 				if (loggedInUser.equals(quiz.getCreator().getUserName()) || acct.isAdmin()) {
 					out.println("<th class = \"btn\"><a href = \"EditQuizInit?quiz=" + quizName + "\">Edit Quiz</a></th>");
+				}
+				if (acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"ClearHistory?quiz_name=" + quizName + "\">Clear History</a></th>");
 				}
 				%>
 			</tr>
