@@ -1090,22 +1090,25 @@
                     var thisQuestion = questions[i];
                     var idString = questions[i].id;
                     var array = document.getElementsByClassName(idString);
-                    var possibleAnswers = thisQuestion.answers;
-
-                    console.log( possibleAnswers );
+                    var possibleAnswers = thisQuestion.answers;     // a key value pairs from string to array of possiblities
+                                                                    // string represents a blank (w/ its possible values)
+                    var isCorrect = true;
                     var count = 0;
-                    console.log( array ); // represents inputs (or answers to each blank)
-                    for(var key in possibleAnswers) {
-                        for(var i = 0; i <  possibleAnswers[key].length; i++ ) {
-                            console.log( possibleAnswers[key].indexOf( array[count]) );
+                    for( var key in possibleAnswers) {
+                        numberOfPoints++;
+                        if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
+                            isCorrect = false;
+                        } else {
+                            numberCorrect++;
                         }
+                        count++;
                     }
 
                 }
             }
 
-            //console.log( numberCorrect );
-            //console.log( numberOfPoints );
+            console.log( numberCorrect );
+            console.log( numberOfPoints );
             // information to send back
             var percentageScore = ( numberCorrect / numberCorrect ) * 100.0;
             var score = percentageScore.toFixed(2);
