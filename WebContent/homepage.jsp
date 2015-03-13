@@ -17,29 +17,27 @@
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-String name = (String)request.getSession().getAttribute("session_user");
+	String name = (String)request.getSession().getAttribute("session_user");
+	
+	/*Temp hack while we solve the session_user servletcontext issue*/
+	Account acct = null;
+	String sel_type = (String)request.getParameter("choice");
 
-/*Temp hack while we solve the session_user servletcontext issue*/
-Account acct = null;
-String sel_type = null;
-List<String> content_to_display = null;
-if (name != null) {
+	List<String> content_to_display = content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
+	
 	//System.out.println("name is "+name);
  	try {
-	 acct = AccountManager.getAccount(name);
+		acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
+ 		/*Clear session*/
+ 		request.getSession().setAttribute("session_user", null);
+ 		/*set Error*/
+		request.setAttribute("errMsg", "<h1>Sorry, an account couldn't be found.</h1>");
+		RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+		dispatch.forward(request, response);
  		//System.out.println("The account for "+name+" was not found.");
  	}
-	sel_type = (String)request.getParameter("choice");
-	content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
-} else {
-	/*This will be deleted soon...Used for testing purposes*/
-	response.setContentType("text/html; charset=UTF-8");	
-	request.setAttribute("errMsg", "<h1>You must be logged in to access homepage.</h1>");
 
-	RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
-	dispatch.forward(request, response);	
-}
 
 %>
 <title>Welcome <%=name%></title>
