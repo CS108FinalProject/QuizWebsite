@@ -1001,12 +1001,9 @@
         } else if ( event.target.value === "Submit" ) {
             watch.stop();
             
-            var seconds = watch.getSeconds();
             var minutes = watch.getMinutes();
             watch.clear();
 
-            var elapsed_time = minutes + (seconds / 60.0);
-            console.log( elapsed_time );       
             var questions = getQuizToTake().questions;
             var numberOfPoints = 0;
             var numberCorrect = 0;
@@ -1114,7 +1111,7 @@
             console.log( numberOfPoints );
             // information to send back
             var score = numberCorrect / numberOfPoints;
-            var elapsed_time = minutes;
+            var elapsed_time = minutes.toFixed(2);
             var date =  moment().format('YYYY/MM/DD HH:mm');
             var quiz_name = quizName;
             var user = getUrlVar('user');
