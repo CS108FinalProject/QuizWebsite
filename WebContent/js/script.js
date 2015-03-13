@@ -1110,7 +1110,7 @@
             console.log( numberCorrect );
             console.log( numberOfPoints );
             // information to send back
-            var percentageScore = ( numberCorrect / numberCorrect ) * 100.0;
+            var percentageScore = ( numberCorrect / numberOfPoints ) * 100.0;
             var score = percentageScore.toFixed(2);
             var elapsed_time = minutes.toFixed(2);
             var date =  moment().format('YYYY/MM/DD HH:mm');
