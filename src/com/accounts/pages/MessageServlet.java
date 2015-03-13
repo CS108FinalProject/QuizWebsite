@@ -47,14 +47,6 @@ public class MessageServlet extends HttpServlet {
 		Account receiver_account = AccountManager.getAccount(recipient);
 		Account sender_account = AccountManager.getAccount(sender);
 		
-		// read message
-		List<Message> messages = receiver_account.getReceivedMessages();
-		for (Message msg : messages) {
-			if (msg.getSender().equals(sender) && msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
-				receiver_account.readMessage(msg);
-			}
-		}
-		
 		// case of friend request confirmation
 		if (msg_type.equals("Confirm")) {
 			try {
@@ -62,12 +54,25 @@ public class MessageServlet extends HttpServlet {
 			} catch (RuntimeException e) {
 				return;
 			}
+			// read message
+	  		List<Message> messages = receiver_account.getReceivedMessages();
+			for (Message msg : messages) {
+				if (msg.getSender().equals(sender) && msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
+					receiver_account.readMessage(msg);
+				}
+			}
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 			
 		// case of friend request decline
 		} else if (msg_type.equals("Decline")) {
-			// do nothing
+			// read message
+	  		List<Message> messages = receiver_account.getReceivedMessages();
+			for (Message msg : messages) {
+				if (msg.getSender().equals(sender) && msg.getType().equals(Constants.MESSAGE_FRIEND_REQUEST)) {
+					receiver_account.readMessage(msg);
+				}
+			}
 			RequestDispatcher dispatch = request.getRequestDispatcher("showMessage.jsp");
 			dispatch.forward(request, response);
 		

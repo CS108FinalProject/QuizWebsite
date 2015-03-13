@@ -664,13 +664,14 @@ public class Database implements Constants {
 	 * criteria.
 	 */
 	public static List<Map<String, Object>> getSortedRowsWithComparison(String tableName, 
-			String columnGuide, boolean isGreater, Object value, String sortBy, 
-			boolean descending) {
+			String columnGuide1, Object value1, String columnGuide2, boolean isGreater, 
+			Object value2, String sortBy, boolean descending) {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		Util.validateString(tableName);
-		Util.validateString(columnGuide);
+		Util.validateString(columnGuide1);
+		Util.validateString(columnGuide2);
 		Util.validateString(sortBy);
 		
 		if (!tableExists(tableName)) { 
@@ -678,18 +679,23 @@ public class Database implements Constants {
 		}
 		
 		// validate object type
-		String type = getColumnType(tableName, columnGuide);
-		Util.validateObjectType(value, type);
+		String type = getColumnType(tableName, columnGuide1);
+		Util.validateObjectType(value1, type);
+		
+		type = getColumnType(tableName, columnGuide2);
+		Util.validateObjectType(value2, type);
 		
 		// Interface boolean.
-		if (type.equals(BOOLEAN)) value = getIntFromBoolean((Boolean) value);
+		if (type.equals(BOOLEAN)) value1 = getIntFromBoolean((Boolean) value1);
+		if (type.equals(BOOLEAN)) value2 = getIntFromBoolean((Boolean) value2);
 
 		// Determine comparison.
 		String comparison = (isGreater) ? " > " : " < ";
 		
 		// Define query
 		String query = "SELECT * FROM " + tableName + " WHERE " + 
-						columnGuide + comparison + "\"" + value + "\" ORDER BY " + sortBy;
+						columnGuide1 + " = \"" + value1 + "\" AND " + 
+						columnGuide2 + comparison + "\"" + value2 + "\" ORDER BY " + sortBy;
 		
 		if (descending) {
 			query += " DESC";
