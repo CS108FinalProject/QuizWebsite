@@ -49,19 +49,19 @@ public class LoginServlet extends HttpServlet {
 				} else {
 					/*Needed for the case that the Account Exists but the Password Fails*/
 					request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
-					RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+					RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 					dispatch.forward(request, response);
 				}
 			} catch (NoSuchAlgorithmException e) {
 				/*Needed for the case that the Password hashing can not be done.*/
 				request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
-				RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+				RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 				dispatch.forward(request, response);
 			}
 		} else {
 			/*Needed for the case that the Account fails to exist */
 			request.setAttribute("errMsg", "<h1>Sorry, the username or password was invalid.</h1>");
-			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+			RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 			dispatch.forward(request, response);
 		}
 	}

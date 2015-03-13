@@ -51,7 +51,7 @@ public class RegistrationServlet extends HttpServlet {
 			} catch (NoSuchAlgorithmException e) {
 				//Need to redirect to site homepage(login.jsp) if our password can not be saved correctly
 				request.setAttribute("errMsg", "<h1>We are currently updating our security systems. To ensure your safety, accounts can not be created at this time.</h1>");
-				RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp"); 
+				RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 				dispatch.forward(request, response);
 			}
 			

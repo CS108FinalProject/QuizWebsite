@@ -22,7 +22,7 @@
 		<input type = "submit" class="btn" value="sign up" />
 		</div>
 	</form>
-	<p>Already have an Account? <a href = "login.jsp">Login here!</a></p>
+	<p>Already have an Account? <a href = "index.jsp">Login here!</a></p>
 	
 </body>
 </html>
