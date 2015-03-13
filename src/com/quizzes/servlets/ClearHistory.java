@@ -33,13 +33,6 @@ public class ClearHistory extends HttpServlet implements Constants {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String quizName = (String) request.getParameter(QUIZ_NAME);
 		Util.validateString(quizName);
 		Quiz quiz = QuizManager.getQuiz(quizName);
@@ -49,4 +42,9 @@ public class ClearHistory extends HttpServlet implements Constants {
 		RequestDispatcher dispatch = request.getRequestDispatcher("quizSummary.jsp"); 
 		dispatch.forward(request, response);
 	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
 }
