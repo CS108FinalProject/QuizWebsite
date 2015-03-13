@@ -13,9 +13,6 @@
 <link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
-	<ul>
-	<nav>
-	
 		<header>
 			<table id="header">
 				<tr>			
@@ -44,7 +41,6 @@
     	
 		<br>
     	<h2>Remove Questions</h2>
-    	<br>
     
       <%
    		// get questions
