@@ -47,7 +47,7 @@
 	
 	<form action="SearchFriendServlet" method="post"> 
 		<input type="text" value="" name="friend_id">
-		<input type="submit" value="Search Friend">
+		<input type="submit" value="Search">
 	</form>
 	<br>
 	
