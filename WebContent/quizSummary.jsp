@@ -84,11 +84,11 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 
 <%
 // Get Past Performance.
-List<Record> pastPerformance = user.getPastPerformance(0);
+List<Record> pastPerformance = quiz.getPastUserPerformance(user, 0);
 %>
 
 <!--  Past performance table -->
-<h4>Your Past Performance:</h4>
+<h4>Your Past Performance for this Quiz:</h4>
 <table id="pastPerformanceTable" class="statTable">
 		<tr>
 			<th>Date</th>

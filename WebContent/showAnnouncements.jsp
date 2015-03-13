@@ -35,8 +35,8 @@ td {
 </style>
 
 <body>
-<header>
-	<table id="header">
+	<header>
+		<table id="header">
 			<tr>
 				<%
 				Account acct = AccountManager.getAccount(name);
@@ -57,10 +57,11 @@ td {
 					</form>
 				</th>
 				<th class = "btn"> <a href="searchFriends.jsp?id=<%=name%>"> Lookup Users</a> </th>
-				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Create Quiz</a></th>
+				<th class = "btn"><a href = "history.jsp"> History</a></th>
 			</tr>
-	</table>
-</header>
+		</table>
+	</header>
 <BR>
 <h2>Announcements</h2>
 <div id="announcements">

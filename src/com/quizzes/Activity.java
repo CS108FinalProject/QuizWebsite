@@ -13,7 +13,7 @@ public class Activity implements Comparable<Activity> {
 	
 	private Account user;
 	private String activity;
-	private Quiz quiz;
+	private String quizName;
 	private String date;
 	
 	/**
@@ -22,17 +22,17 @@ public class Activity implements Comparable<Activity> {
 	 * @param quiz what quiz was the activity performed on
 	 * @param date when was the activity performed
 	 */
-	public Activity(Account user, String activity, Quiz quiz, String date) {
+	public Activity(Account user, String activity, String quizName, String date) {
 		super();
 		
 		Util.validateObject(user);
 		Util.validateString(activity);
-		Util.validateObject(quiz);
+		Util.validateString(quizName);
 		Util.validateString(date);
 		
 		this.user = user;
 		this.activity = activity;
-		this.quiz = quiz;
+		this.quizName = quizName;
 		this.date = date;
 	}
 
@@ -69,17 +69,10 @@ public class Activity implements Comparable<Activity> {
 	/**
 	 * @return the quiz
 	 */
-	public Quiz getQuiz() {
-		return quiz;
+	public String getQuizName() {
+		return quizName;
 	}
 
-	/**
-	 * @param quiz the quiz to set
-	 */
-	public void setQuiz(Quiz quiz) {
-		Util.validateObject(quiz);
-		this.quiz = quiz;
-	}
 
 	/**
 	 * @return the date

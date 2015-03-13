@@ -47,18 +47,11 @@
   	%>
 	
 	<form action="EditQuiz" method="post"> 
-<<<<<<< HEAD
-		<label> Title</label>
-		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR><BR>
-		<label> Description</label>
-		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
-=======
 		<label> Title</label><br/>
 		<textarea rows = "1" cols = "30"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR>
 		<br/>
 		<label> Description</label><br/>
 		<textarea rows = "4" cols = "30"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
->>>>>>> branch 'master' of https://github.com/CS108FinalProject/QuizWebsite.git
 		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%> <%=isImmediate %>> Is Immediate<BR>
 		<input type="checkbox" name=<%=Constants.IS_RANDOM%> <%=isRandom %>> Is Random<BR>
 		<input type="checkbox" name=<%=Constants.IS_ONE_PAGE%> <%=isOnePage %>> Is One Page<BR><BR>

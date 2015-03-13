@@ -53,6 +53,47 @@
 
     // HELPER FUNCTIONS 
 
+    // StopWatch
+    function Stopwatch(){
+      var startTime, endTime, instance = this;
+
+      this.start = function (){
+        startTime = new Date();
+      };
+
+      this.stop = function (){
+        endTime = new Date();
+      }
+
+      this.clear = function (){
+        startTime = null;
+        endTime = null;
+      }
+
+      this.getSeconds = function(){
+        if (!endTime){
+        return 0;
+        }
+        return Math.round((endTime.getTime() - startTime.getTime()) / 1000);
+      }
+
+      this.getMinutes = function(){
+        return instance.getSeconds() / 60;
+      }      
+      this.getHours = function(){
+        return instance.getSeconds() / 60 / 60;
+      }    
+      this.getDays = function(){
+        return instance.getHours() / 24;
+      }   
+    }
+    
+
+    var watch = new Stopwatch();
+    
+
+    /****End of Stopwatch ****/
+
     /* Returns the pendingQuiz stored in localStorage. */
     function getPendingQuiz() {
         if (!localStorage.pendingQuiz) {
@@ -958,17 +999,11 @@
                         // do nothing
             }
         } else if ( event.target.value === "Submit" ) {
-            endTime = new Date();
-            var timeDiff = endTime - startTime;
+            watch.stop();
             
-            timeDiff/1000;
-            
-            var seconds = Math.round(timeDiff % 60);
-            
-            timeDiff = Math.floor(timeDiff / 60);
-            
-            var minutes =  Math.round(timeDiff % 60);
-        
+            var minutes = watch.getMinutes();
+            watch.clear();
+
             var questions = getQuizToTake().questions;
             var numberOfPoints = 0;
             var numberCorrect = 0;
@@ -1049,16 +1084,35 @@
                         }
 
                     }
+                } else if ( questions[i].type === "Fill_Blank") {
+
+                    // Paused on fill in the blank question
+                    var thisQuestion = questions[i];
+                    var idString = questions[i].id;
+                    var array = document.getElementsByClassName(idString);
+                    var possibleAnswers = thisQuestion.answers;     // a key value pairs from string to array of possiblities
+                                                                    // string represents a blank (w/ its possible values)
+                    var isCorrect = true;
+                    var count = 0;
+                    for( var key in possibleAnswers) {
+                        numberOfPoints++;
+                        if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
+                            isCorrect = false;
+                        } else {
+                            numberCorrect++;
+                        }
+                        count++;
+                    }
+
                 }
             }
 
             console.log( numberCorrect );
             console.log( numberOfPoints );
-
-            console.log( minutes );
             // information to send back
-            var score = numberCorrect / numberOfPoints;
-            var elapsed_time = minutes + (1.0/60)*seconds;
+            var percentageScore = ( numberCorrect / numberOfPoints ) * 100.0;
+            var score = percentageScore.toFixed(2);
+            var elapsed_time = minutes.toFixed(2);
             var date =  moment().format('YYYY/MM/DD HH:mm');
             var quiz_name = quizName;
             var user = getUrlVar('user');
@@ -1085,7 +1139,7 @@
 
      //request database for the quiz
      if ( quizName != "") {
-            startTime = new Date();
+            watch.start();
             var URL = "/QuizWebsite/GetData";
             var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
             $.ajax({
@@ -1100,6 +1154,7 @@
                        if ( response.status.success ) {
                            storeBooleanTypeForQuestion( response );
                        }
+                       startTime = new Date();
                        // tested -> works proper way to obtain booleans
                        console.log( getQuizToTake() );
                        var onePage = getQuizToTake().quizMetaData.is_one_page;

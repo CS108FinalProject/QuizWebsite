@@ -27,7 +27,7 @@
 		<%= errMsg%>
 	<%}%>
 
-<header>	
+	<header>	
 		<table id="header">
 			<tr>
 				<%
@@ -53,10 +53,11 @@
 					</form>
 				</th>
 				<th class = "btn"> <a href="searchFriends.jsp?id=<%=sender_name%>"> Lookup Users</a> </th>
-				<th class = "btn"><a href = <%="\"quizHome.html?user="+sender_name+"\""%>> Quizzes</a></th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+sender_name+"\""%>> Create Quiz</a></th>
+				<th class = "btn"><a href = "history.jsp"> History</a></th>
 			</tr>
-	</table>
-</header>
+		</table>
+	</header>
 
 	<BR>
 	<h2><%=friend_name %>'s Profile</h2>

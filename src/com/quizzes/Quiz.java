@@ -667,9 +667,9 @@ public class Quiz implements Constants {
 		long interval = (long) (hours * 60 * 60 * 1000);
 		long timeCut = System.currentTimeMillis() - interval;
 		Date date = new Date(timeCut);
+		//-------------------------------------
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		format.format(date);
-		String cut = format.toString();
+		String cut = format.format(date);
 		
 		List<Map<String, Object>> rows = Database.getSortedRowsWithComparison(HISTORY, DATE, 
 				true, cut, SCORE, true);

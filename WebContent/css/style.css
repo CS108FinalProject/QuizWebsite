@@ -96,6 +96,7 @@ header {
 header h1 a {
     color: #fff;
     padding-left: 25px;
+    cursor: pointer;
 }
 
  th p {
@@ -411,7 +412,7 @@ header a.btn {
     border: none;
 }
 
-#new_quiz_button {
+header h1 #new_quiz_button {
     float: right;
     cursor: pointer;
 }

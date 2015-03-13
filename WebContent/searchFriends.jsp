@@ -38,7 +38,8 @@
 					</form>
 				</th>
 				<th class = "btn"> <a href="searchFriends.jsp?id=<%=(String) request.getAttribute("sender")%>"> Lookup Users</a> </th>
-				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Quizzes</a></th>
+				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Create Quiz</a></th>
+				<th class = "btn"><a href = "history.jsp"> History</a></th>
 			</tr>
 	</table>
 </header>
