@@ -81,17 +81,28 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		} else if (type_to_display.equals("friendActivities")) {
 			try {
 				Account account = AccountManager.getAccount(username);
+
 				List<Activity> acts = account.getRecentFriendActivity(num_records);
+
 				/*If acts has some entry*/
 				if (acts != null ) {
+
 					int num_acts = acts.size();
+
 					for (int i = 0; i < num_acts;i++) {
 						Activity curr = acts.get(i);
 						String activity = curr.getActivity();
-						String quizName = curr.getQuiz().getName();
+						String quizName = curr.getQuizName();
 						String date = curr.getDate();
 						String user = curr.getUser().getUserName();
-						String str = user+" "+activity+": <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> on "+date;
+						String str;
+						if (QuizManager.quizNameInUse(quizName)) {
+							str = user+" "+activity+": <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> on "+date;
+
+						} else {
+							str = user+" "+activity+": "+quizName+"on "+date;
+
+						}
 						result_list.add(str);
 					}
 
@@ -130,7 +141,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				}			
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-			System.out.println("popular quizzes");
+			//System.out.println("popular quizzes");
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
 			//	System.out.println(popular_quizzes.size());
