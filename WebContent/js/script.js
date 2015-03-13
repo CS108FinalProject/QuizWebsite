@@ -593,8 +593,8 @@
             var questionInfo = questions[questions.length - 1];
                 // a question, answer and a blank obtained from the client interface
             var question = $('#fill_in_the_blank_question').val().trim().toLowerCase();
-            var answer = $('#enter_answer').val();
-            var blank = $('#enter_blank').val();
+            var answer = $('#enter_answer').val().trim().toLowerCase();
+            var blank = $('#enter_blank').val().trim().toLowerCase();
             
             if ( validateForm(type, question, answer, blank) ) {
                 if ( typeof questionInfo === 'undefined' ) {
