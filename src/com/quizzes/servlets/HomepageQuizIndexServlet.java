@@ -131,7 +131,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			}
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-
+			System.out.println("popular quizzes");
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
 				System.out.println(popular_quizzes.size());

@@ -63,7 +63,7 @@
 			out.println("<p><a href=\"accountProfile.jsp?friend_id=" + friend 
 					+ "&username=" + sender2 + "\">" + friend + "</a></p>");
 		} else {
-			out.println("<p> Friend Not found: </p><br>");
+			out.println("<p> Friend Not found </p><br>");
 		}
 	} 
 	
