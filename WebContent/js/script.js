@@ -1,5 +1,6 @@
 (function(window, document, undefined) {
     // pane elementss
+    var quizName = getUrlVar("quiz"); 
     var rightPane = document.getElementById('right-pane');
     var leftPane = document.getElementById('left-pane');
 
@@ -41,6 +42,10 @@
         renderLeftPaneQuizzes: Handlebars.compile(leftPaneQuizzesTemplate.innerHTML ),
         renderEditQuizOptions: Handlebars.compile( editQuizOptionsTemplate.innerHTML )
     };
+
+    if ( quizName === "" ) {
+        rightPane.innerHTML = templates.renderQuizForm();
+    }
 
     // HELPER FUNCTIONS 
 
@@ -1052,8 +1057,6 @@
      /*************************TAKE SINGLE PAGE QUIZ LOGIC****************************/
 
      //request database for the quiz
-     var quizName = getUrlVar("quiz"); // tested and works
-     console.log( quizName );
      if ( quizName != "") {
             var URL = "/QuizWebsite/GetData";
             var request = {request: { type: "quiz", quiz_name: quizName}} // tested works
