@@ -47,9 +47,21 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 <header>
 	<table id="header">
 			<tr>			
+				<%
+				String name = (String)getServletContext().getAttribute("session_user");
+				Account acct = AccountManager.getAccount(name);
+				if(acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+				} else {
+					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				}
+				%> 
 				<th class = "btn"><a href="quizHome.html?user=<%=loggedInUser%>&quiz=<%=quizName%>">Take Quiz</a></th>
-				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
-				<th class = "btn"><a href = "EditQuizInit?quiz=<%=quizName %>">Edit Quiz</a></th>
+				<%
+				if (loggedInUser.equals(quiz.getCreator().getUserName()) || acct.isAdmin()) {
+					out.println("<th class = \"btn\"><a href = \\\"EditQuizInit?quiz=" + quizName + "\\\">Edit Quiz</a></th>");
+				}
+				%>
 			</tr>
 	</table>
 </header>
