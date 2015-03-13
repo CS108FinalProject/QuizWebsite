@@ -550,13 +550,14 @@
                     }
                 }
             } else if ( question.type === "Fill_Blank") {
-
                 // Paused on fill in the blank question
                 var thisQuestion = question;
+                console.log( thisQuestion );
                 var idString = question.id;
                 var array = document.getElementsByClassName(idString);
                 var possibleAnswers = thisQuestion.answers;     // a key value pairs from string to array of possiblities
-                                                                // string represents a blank (w/ its possible values)
+                
+                console.log( array );                                                // string represents a blank (w/ its possible values)
                 var isCorrect = true;
                 var count = 0;
                 for( var key in possibleAnswers) {
@@ -1146,6 +1147,10 @@
                 case "Create Question":
                     rightPane.innerHTML = templates.renderSubmissionForm();
                     break;
+                case "Cancel Quiz":
+                    clearPendingQuiz();
+                    rightPane.innerHTML = templates.renderQuizForm();
+                    break;
                 case "Add Another Quesiton":
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
@@ -1267,17 +1272,23 @@
 
                     }
                 } else if ( questions[i].type === "Fill_Blank") {
-
+                    
                     // Paused on fill in the blank question
                     var thisQuestion = questions[i];
+                    console.log( thisQuestion );
                     var idString = questions[i].id;
                     var array = document.getElementsByClassName(idString);
                     var possibleAnswers = thisQuestion.answers;     // a key value pairs from string to array of possiblities
                                                                     // string represents a blank (w/ its possible values)
+                        
+                    console.log( array );  
                     var isCorrect = true;
                     var count = 0;
                     for( var key in possibleAnswers) {
                         numberOfPoints++;
+                        console.log( possibleAnswers[key] ) ;
+                        console.log( array[count].value );
+                        console.log( possibleAnswers[key].indexOf( array[count].value ));
                         if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
                             isCorrect = false;
                         } else {

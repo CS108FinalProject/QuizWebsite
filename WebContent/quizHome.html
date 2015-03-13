@@ -407,10 +407,10 @@
                 <p>Date: {{date}}</p>
                 <p>Elapsed Time: {{elapsed_time}}</p>
 
-                <input type="hidden" name="quiz_name" value={{quiz_name}}>
-                <input type="hidden" name="user" value={{user}}>
-                <input type="hidden" name="score" value={{score}}>
-                <input type="hidden" name="elapsed_time" value={{elapsed_time}}>
+                <input type="hidden" name="quiz_name" value='{{quiz_name}}'>
+                <input type="hidden" name="user" value='{{user}}'>
+                <input type="hidden" name="score" value='{{score}}'>
+                <input type="hidden" name="elapsed_time" value='{{elapsed_time}}'>
                 <input type="hidden" name="date" value='{{date}}'>
                 <input type="submit" value="Show Details"/>
             </form>
@@ -478,7 +478,7 @@
                         <h2>Question MATCHING</h2>
                         <p>{{curQuestion.question}}</p>
                         {{#each curQuestion.answers}}
-                            {{@key}}<input  class={{../curQuestion.id}} type="text">{{this}}<br/>
+                            {{@key}}<input  class={{../curQuestion.id}} type="text"><br/>
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>

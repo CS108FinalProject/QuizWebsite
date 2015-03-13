@@ -128,8 +128,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = usr_quizzes.get(i);
 						String quizName = curr.getName();
-						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;
-						result_list.add(str);
+						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;						
 						//if (i == num_records- 1) i = num_records;
 					}
 						request.setAttribute("content_to_display",result_list);

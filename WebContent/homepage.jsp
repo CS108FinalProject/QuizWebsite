@@ -130,7 +130,7 @@
 			<%out.println("Re-enter account id: <input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
 			<br>
 			<%out.println("<input type = \"hidden\" name = \"id\" value = \""+name+"\" >");%>
-			<br>
+			<br> 
 			<%out.println("<input type = \"submit\"></input></form>");%>				
 			
 			<%/*End removeAcct div*/ %>
