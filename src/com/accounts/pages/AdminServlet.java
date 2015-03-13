@@ -46,7 +46,6 @@ public class AdminServlet extends HttpServlet {
 		/*Checks for empty string/null parameters
 		 * for all the cases of the admin servlet's purposes.
 		 */
-		//ArrayList<String> announcements = (ArrayList<String>)getServletContext().getAttribute("announcements");
 		if (new_ancmnt != null) { 
 			// create a new announcement
 			AccountManager.getAccount(user_id).createAnnouncement(new_ancmnt);

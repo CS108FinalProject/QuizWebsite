@@ -82,7 +82,6 @@ if (msgToDisplay.equals("Received Messages")) {
 
 %>
 
-
 	<br>
 	<table>
 		<tr>

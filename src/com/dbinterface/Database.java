@@ -1177,7 +1177,6 @@ public class Database implements Constants {
 				rs.next();
 				row = rs.getInt("COUNT(*)"); 
 			} catch (SQLException e) {
-				System.out.println( "Unable to count rows in table");
 				e.printStackTrace();
 			}
 		}

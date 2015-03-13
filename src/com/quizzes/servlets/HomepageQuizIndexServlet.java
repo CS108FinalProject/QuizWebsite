@@ -129,7 +129,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 						Quiz curr = usr_quizzes.get(i);
 						String quizName = curr.getName();
 						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;						
-						//if (i == num_records- 1) i = num_records;
 					}
 						request.setAttribute("content_to_display",result_list);
 					
@@ -139,10 +138,8 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				}			
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-			//System.out.println("popular quizzes");
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-			//	System.out.println(popular_quizzes.size());
 	
 				/*Construct a brief message for each popular quiz*/
 				int pop_quizzes_len = popular_quizzes.size();
@@ -168,7 +165,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				e.printStackTrace();
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
-				//request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
 			}
 			/*All recently created quizzes*/
 		} else if ( type_to_display.equals("recentQuizzes")) {
@@ -185,7 +181,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
 				}
 				if (result_list.size() > 0) {
-				//	System.out.println("This is the recently created quizzes "+result_list);
 					request.setAttribute("content_to_display",result_list);
 				} else {
 
@@ -196,8 +191,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		
 			}catch (Exception e) {
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
-
-				//request.setAttribute("errMsg", "<h1>There are no recently created Quizzes.</h1>");
 			}
 		
 			/*My Recently Taken Quizzes */
@@ -224,8 +217,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			} catch (Exception e) {
 				/*The case that an exception is thrown. */
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
-
-				//request.setAttribute("errMsg", "<h1>You have not taken any quizzes lately..</h1>");
 			}
 			
 		} else {
