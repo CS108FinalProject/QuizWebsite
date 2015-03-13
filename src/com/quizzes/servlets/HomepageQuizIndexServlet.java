@@ -46,7 +46,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		response.setContentType("text/html; charset=UTF-8");	
 
 		String type_to_display = (String)request.getParameter("type_to_display");
-		String username = (String)getServletContext().getAttribute("session_user");
+		String username = (String)request.getSession().getAttribute("session_user");
 		
 		List<String> result_list = new ArrayList<String>();
 		int num_records = 5;
@@ -81,7 +81,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		} else if (type_to_display.equals("friendActivities")) {
 			try {
 				Account account = AccountManager.getAccount(username);
-
+				
 				List<Activity> acts = account.getRecentFriendActivity(num_records);
 
 				/*If acts has some entry*/

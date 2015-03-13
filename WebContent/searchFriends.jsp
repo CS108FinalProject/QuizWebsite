@@ -14,13 +14,11 @@
 	<table id="header">
 			<tr>
 				<%
-				String name = (String)getServletContext().getAttribute("session_user");
+				String name = (String)request.getSession().getAttribute("session_user");
 				Account acct = AccountManager.getAccount(name);
-				if(acct.isAdmin()) {
-					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
-					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-				}
+				
+				out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+				
 				%> 
 					
 				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
@@ -33,13 +31,15 @@
 							<option>Sent Messages</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
-						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
 				<th class = "btn"> <a href="searchFriends.jsp?id=<%=(String) request.getAttribute("sender")%>"> Lookup Users</a> </th>
 				<th class = "btn"><a href = <%="\"quizHome.html?user="+name+"\""%>> Create Quiz</a></th>
 				<th class = "btn"><a href = "history.jsp"> History</a></th>
+				<th class = "btn"><a href = <%="\"login.jsp?errMsg=\"LoggedOut\""%>>Logout</a></th>						 
+				
 			</tr>
 	</table>
 </header>
