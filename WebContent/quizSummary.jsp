@@ -84,7 +84,7 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 
 <%
 // Get Past Performance.
-List<Record> pastPerformance = user.getPastPerformance(0);
+List<Record> pastPerformance = quiz.getPastUserPerformance(user, 0);
 %>
 
 <!--  Past performance table -->
