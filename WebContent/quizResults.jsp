@@ -37,7 +37,7 @@ Account user = AccountManager.getAccount(loggedInUser);
 <%
 // Get Record Parameters
 String date = request.getParameter(Constants.DATE);
-double score = Double.parseDouble(request.getParameter(Constants.DATE));
+double score = Double.parseDouble(request.getParameter(Constants.SCORE));
 double elapsedTime = Double.parseDouble(request.getParameter(Constants.ELAPSED_TIME));
 %>
 

@@ -10,16 +10,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="css//style.css" ></link>
 </head>
 <body>
-
-	<%
-		String quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
-		Quiz quiz = QuizManager.getQuiz(quizName);
-	%>
 	
+	<header>
+		<table id="header">
+			<tr>			
+				<%
+					String quizName = (String) request.getAttribute(Constants.QUIZ_NAME);
+					Quiz quiz = QuizManager.getQuiz(quizName);
+					String name = (String)getServletContext().getAttribute("session_user");
+					Account acct = AccountManager.getAccount(name);
+					if (acct.isAdmin()) {
+						out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
+					} else {
+						out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+					}
+				%>
+			</tr>
+		</table>
+	</header>
+	
+	<br>
 	<h1>Edit Quiz <%=quizName%></h1>
 	
 	<%
@@ -34,7 +48,7 @@
 	
 	<form action="EditQuiz" method="post"> 
 		<label> Title</label>
-		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR>
+		<textarea rows = "1" cols = "20"  name=<%=Constants.MODIFIED_QUIZ_NAME%>><%=quizName%></textarea><BR><BR>
 		<label> Description</label>
 		<textarea rows = "4" cols = "20"  name=<%=Constants.DESCRIPTION%> ><%=QuizManager.getQuiz(quizName).getDescription() %></textarea><BR><BR>
 		<input type="checkbox" name=<%=Constants.IS_IMMEDIATE%> <%=isImmediate %>> Is Immediate<BR>
@@ -44,7 +58,6 @@
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Quiz">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Remove Questions">
 		<input type="submit" name=<%=Constants.REQUEST%> value="Save Changes">
-		<input type="submit" name=<%=Constants.REQUEST%> value="Return to Homepage">
 	</form>
 
 </body>
