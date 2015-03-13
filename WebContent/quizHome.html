@@ -423,9 +423,7 @@
                 <div id="fill_in_the_page">
                         <h2>Question FITB</h2>
                         <p>{{curQuestion.question}}</p>
-                        {{#each curQuestion.answers}}
-                            {{@key}}<input  class= type="text"><br/>
-                        {{/each}}
+                        {{{curQuestion.blankedQuestion}}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>
             </form>

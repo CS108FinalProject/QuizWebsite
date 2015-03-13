@@ -1,5 +1,9 @@
 (function(window, document, undefined) {
 
+    // got it
+    var numberOfPoints = 0;
+    var numberCorrect = 0;
+
     // start time & end time
     var startTime;
     var endTime;
@@ -378,9 +382,17 @@
             console.log("Next Question");
             console.log( getQuizToTake() );
             var questions = getQuizToTake().questions;
-            console.log( questions.length );
+            var quizMetaData = getQuizToTake().quizMetaData;
+            
+            keepTrackOfScore( questions[MPIndex] );
             if ( MPIndex < questions.length - 1 ) {
+                
+                if ( quizMetaData.is_immediate ) {
+                    // giveFeedBack( questions[MPIndex] );
+                }
+                
                 MPIndex++;
+
 
                 if ( questions[MPIndex].type === "Fill_Blank" ) {
                     template = document.getElementById('multiple-page-FITB-template');
@@ -409,6 +421,106 @@
             }
 
         });
+
+        function keepTrackOfScore( question ) {
+         // Picture and Multiple Choice Scoring Work
+            if ( question.type === "Picture" ||
+                question.type === "Response" ) {
+                var questionIndex = i;
+                numberOfPoints++;
+                var isAnswer = false;
+                var idString = question.id;
+                var answer = document.getElementById(idString).value;
+
+                var listOfAnswers = question.answers;
+                if ( answer != "" ) {
+                    if ( listOfAnswers.indexOf(answer) != -1 ) {
+                        isAnswer = true;
+                    } 
+                }
+
+                if ( isAnswer ) { numberCorrect++; };
+            } else if ( question.type === "Multiple_Choice" ) {
+                // Multiple Choice Question Works
+                numberOfPoints++;
+                var thisQuestion = question;
+                var idString = question.id;
+                var array = document.getElementsByClassName(idString);
+                var theSame = true;
+                for(var j = 0; j < array.length; j++ ) {
+                    if ( !(thisQuestion.answers[array[j].name] === array[j].checked ) ) {
+                        theSame = false;
+                    }
+                }
+
+                if ( theSame ) {
+                    numberCorrect++;
+                } 
+            } else if ( question.type === "Multi_Response" ) {
+                var thisQuestion = question;
+                var idString = question.id;
+                var array = document.getElementsByClassName(idString);
+                var inOrder = true;
+
+                if ( thisQuestion.isOrdered ) {
+                    for(var j = 0; j < array.length; j++ ) {
+                        numberOfPoints++;
+                        if(  thisQuestion.answers.indexOf( array[j].value ) != j ) {
+                            inOrder = false;
+                        }
+                    }
+                    if (inOrder) { numberCorrect += array.length; }
+                } else {
+                    for(var j = 0; j < array.length; j++ ) {
+                        numberOfPoints++;
+                        if(  thisQuestion.answers.indexOf( array[j].value ) != -1 ) {
+                            numberCorrect++;
+                        }
+                    }
+                }
+            } else if ( question.type === "Matching" ) {
+                var thisQuestion = question;
+                var idString = question.id;
+                var array = document.getElementsByClassName(idString);
+                var count = 0;
+                var MatchAnswers = thisQuestion.answers;
+                for(var key in MatchAnswers ) {
+                    if ( array[count].value === MatchAnswers[key] ) {
+                        numberCorrect++;
+                        numberOfPoints++;
+                        count++;
+                    } else {
+                        numberOfPoints++;
+                        count++;
+                    }
+
+                }
+            } else if ( question.type === "Fill_Blank") {
+
+                // Paused on fill in the blank question
+                var thisQuestion = question;
+                var idString = question.id;
+                var array = document.getElementsByClassName(idString);
+                var possibleAnswers = thisQuestion.answers;     // a key value pairs from string to array of possiblities
+                                                                // string represents a blank (w/ its possible values)
+                var isCorrect = true;
+                var count = 0;
+                for( var key in possibleAnswers) {
+                    numberOfPoints++;
+                    if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
+                        isCorrect = false;
+                    } else {
+                        numberCorrect++;
+                    }
+                    count++;
+                }
+
+            }
+
+            console.log( numberCorrect );
+            console.log( numberOfPoints );
+
+        }
 
         // Listen to FILL IN THE BLANK QUESTION
         $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
@@ -1016,8 +1128,8 @@
             watch.clear();
 
             var questions = getQuizToTake().questions;
-            var numberOfPoints = 0;
-            var numberCorrect = 0;
+            // var numberOfPoints = 0;
+            // var numberCorrect = 0;
             var totalScore;
            
             for(var i = 0; i < questions.length; i++) {
