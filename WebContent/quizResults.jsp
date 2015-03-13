@@ -20,6 +20,7 @@ String quizName = (String)request.getParameter(Constants.QUIZ_NAME);
 Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
+
 // Get logged in user.
 String loggedInUser = (String)getServletContext().getAttribute("session_user");
 Util.validateString(loggedInUser);

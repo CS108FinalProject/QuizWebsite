@@ -248,7 +248,8 @@ header a.btn {
  }
  
  #result-quiz-content {
- height: 200px;
+ 	height: 200px;
+   overflow: scroll;
  }
   
 	#quiz-index {
@@ -260,9 +261,15 @@ header a.btn {
 	width: 500px;
 }
 
+.homepage-content-headers {
+	color: #3498db;
+}
+#table-result-quiz-content {
+	width: 100%
+}
 
-table-result-quiz-content {
-	
+#table-result-quiz-content td {
+	display: inline-flex;
 }
 
 /******************		END 	************/

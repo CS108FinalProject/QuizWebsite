@@ -7,7 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//style.css" ></link>
 </head>
+
 <style>
+
 table, th, td {
     border: 1px solid black;
     text-align: center;
@@ -17,7 +19,13 @@ th {
     background-color: #34495E;
     color: white;
 }
+
+td {
+    padding: 7px;
+}
+
 </style>
+
 <body>
 	<%
 		String name;
@@ -59,7 +67,24 @@ th {
 	</table>
 </header>	
 <br><br>
-	<h1>Here are your messages, <%=name%></h1>
+
+<%
+//Check which messages to receive based on the Select tag in the homepage.jsp
+Account account = AccountManager.getAccount(name);
+List<Message> messages;
+String msgToDisplay = request.getParameter("choice");
+if (msgToDisplay == null) msgToDisplay = "Received Messages"; // redirected from MessageServlet
+
+//Get messages
+if (msgToDisplay.equals("Received Messages")) { 
+	out.println("<h1>Here are your received messages, " + name + "</h1>");		
+} else {
+	out.println("<h1>Here are your sent messages, " + name + "</h1>");
+}
+
+%>
+
+
 	<br>
 	<table>
 		<tr>
@@ -68,12 +93,6 @@ th {
 			<th>Action</th>
 		</tr>
 		<%
-			// Check which messages to receive based on the Select tag in the homepage.jsp
-			Account account = AccountManager.getAccount(name);
-			List<Message> messages;
-			String msgToDisplay = request.getParameter("choice");
-			if (msgToDisplay == null) msgToDisplay = "Received Messages"; // redirected from MessageServlet
-			
 			// Get messages
 			if (msgToDisplay.equals("Received Messages")) { 
 				messages = account.getReceivedMessages();		
@@ -131,11 +150,11 @@ th {
 					if (msgToDisplay.equals("Received Messages")) {
 						out.println("<td><a href=\"accountProfile.jsp?friend_id=" + msg.getSender() 
 								+ "&username=" + msg.getRecipient() + "\">" + msg.getSender() + 
-								"</a> sent you a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> quiz" + "</a></td>");
+								"</a> sent you a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> " + msg.getContent() + "</a></td>");
 					} else {
 						out.print("<td>You sent <a href=\"accountProfile.jsp?friend_id=" + msg.getRecipient() 
 								+ "&username=" + msg.getSender() + "\">" + msg.getRecipient() + 
-								"</a> a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> quiz" + "</a></td>");
+								"</a> a challenge for <a href=\"quizHome.html?user=" + name + "&quiz=" + msg.getContent() + "\"> " + msg.getContent() + "</a></td>");
 						}
 				} else if (msg.getType().equals(Constants.MESSAGE_NOTE)) { // case of note
 					if (msgToDisplay.equals("Received Messages")) { 
