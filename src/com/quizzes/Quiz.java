@@ -421,6 +421,11 @@ public class Quiz implements Constants {
 			Database.removeRows(tableName, QUIZ_NAME, name);
 		}
 		
+		Database.removeRows(HISTORY, QUIZ_NAME, name);
+		
+		
+		
+		
 		name = null;
 	}
 	
