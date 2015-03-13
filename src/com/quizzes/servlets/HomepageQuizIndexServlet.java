@@ -122,8 +122,9 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			
 				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
 				/*If usr_quizzes is not null then we know that the size is at least one*/
-				if (usr_quizzes != null ) {
+			
 					int num_quizzes = usr_quizzes.size();
+				if (num_quizzes > 0) {
 					/*Iterate through usr_quizzes backwards so that we have newest quiz first */
 					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = usr_quizzes.get(i);
@@ -140,10 +141,8 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				}			
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
-			//System.out.println("popular quizzes");
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-			//	System.out.println(popular_quizzes.size());
 	
 				/*Construct a brief message for each popular quiz*/
 				int pop_quizzes_len = popular_quizzes.size();
@@ -169,7 +168,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				e.printStackTrace();
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
-				//request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
 			}
 			/*All recently created quizzes*/
 		} else if ( type_to_display.equals("recentQuizzes")) {
@@ -178,7 +176,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				int rec_quiz_len = recent_quizzes.size();
 				/*For each Recent Quiz print the quiz data and a link to the quiz Summary page*/
 
-				for (int i = 0; i < rec_quiz_len;i++ ) {
+				for (int i = rec_quiz_len = 1; i <= 0;i--) {
 					Quiz curr = recent_quizzes.get(i);
 					String creator = curr.getCreator().getUserName();
 					String birthdate = curr.getCreationDate();
@@ -186,7 +184,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
 				}
 				if (result_list.size() > 0) {
-				//	System.out.println("This is the recently created quizzes "+result_list);
 					request.setAttribute("content_to_display",result_list);
 				} else {
 
@@ -197,8 +194,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		
 			}catch (Exception e) {
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
-
-				//request.setAttribute("errMsg", "<h1>There are no recently created Quizzes.</h1>");
 			}
 		
 			/*My Recently Taken Quizzes */
@@ -225,8 +220,6 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			} catch (Exception e) {
 				/*The case that an exception is thrown. */
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
-
-				//request.setAttribute("errMsg", "<h1>You have not taken any quizzes lately..</h1>");
 			}
 			
 		} else {

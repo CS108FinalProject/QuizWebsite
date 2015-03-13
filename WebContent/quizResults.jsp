@@ -97,9 +97,7 @@ double elapsedTime = Double.parseDouble(request.getParameter(Constants.ELAPSED_T
 		</tr>
 		
 		<%
-			
-			//System.out.println("date: " + date + ", score: " + score + ", time: " + elapsedTime + ", quiz: " + quizName + ", user: " + loggedInUser);
-		
+					
 			out.println("<td>" + date + "</td>" + "<td>" + score + "</td>" + "<td>" + elapsedTime + "</td>");			
 			
 			// create record

@@ -24,8 +24,8 @@
 	String sel_type = (String)request.getParameter("choice");
 
 	List<String> content_to_display = content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
-	
-	//System.out.println("name is "+name);
+
+	/*See if account exists based off current session name.*/
  	try {
 		acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
@@ -35,7 +35,6 @@
 		request.setAttribute("errMsg", "<h1>Sorry, an account couldn't be found.</h1>");
 		RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
 		dispatch.forward(request, response);
- 		//System.out.println("The account for "+name+" was not found.");
  	}
 
 %>
@@ -258,14 +257,11 @@
 							out.println("<table id = \"table-result-quiz-content\"> ");
 							for (int i = cont_size - 1; i >= 0;i-- ) {	
 								out.println("<tr>");
-							//	System.out.println("To test "+content_to_display.get(i));
 								out.println("<td>"+content_to_display.get(i)+"</td>");
 								out.println("</tr>");
 							}
 							out.println("</table>");			
-						} else {
-							//System.out.println("content is null");
-						}
+						} 
 						%>											
 					</div>
 				</div>
