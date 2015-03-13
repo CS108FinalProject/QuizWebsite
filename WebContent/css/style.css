@@ -262,6 +262,10 @@ header a.btn {
 	width: 500px;
 }
 
+#siteStats {
+	display: inline-grid;
+}
+
 .homepage-content-headers {
 	color: #3498db;
 }
