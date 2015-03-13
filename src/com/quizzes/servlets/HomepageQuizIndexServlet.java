@@ -156,6 +156,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display",result_list);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
 				//request.setAttribute("errMsg", "<h1>There are no popular quizzes at this time.</h1>");
