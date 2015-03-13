@@ -171,13 +171,24 @@ if (name != null) {
 								<div id="read_messages">
 									<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 										<select name = "choice">
-											<option>Received Messages</option>
+											<option >Received Messages</option>
 											<option>Sent Messages</option>
 										</select>
 										<input type = "submit" value = "Display Messages">
 									</form>
-									<%			
-										List<Message> messages = acct.getReceivedMessages();	
+									<%	
+									List<Message> messages;
+									/* If no choice of messages are specified*/
+									if (sel_type != null) {
+										if (sel_type.equals("Sent Messages")) {
+											 messages = acct.getSentMessages();
+										} else {
+											messages = acct.getReceivedMessages();	
+										}
+									} else {
+										messages = acct.getReceivedMessages();	
+
+									}
 										if (messages.size() > 0) {
 											out.println("<table>");
 												out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
