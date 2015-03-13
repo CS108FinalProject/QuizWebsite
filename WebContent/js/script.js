@@ -562,7 +562,8 @@
                 var count = 0;
                 for( var key in possibleAnswers) {
                     numberOfPoints++;
-                    if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
+                    var trimmed = array[count].value.trim().toLowerCase();
+                    if ( possibleAnswers[key].indexOf( trimmed ) == -1 ) {
                         isCorrect = false;
                     } else {
                         if ( isImmediate ) {
@@ -1288,8 +1289,9 @@
                         numberOfPoints++;
                         console.log( possibleAnswers[key] ) ;
                         console.log( array[count].value );
-                        console.log( possibleAnswers[key].indexOf( array[count].value ));
-                        if ( possibleAnswers[key].indexOf( array[count].value ) == -1) {
+                        var trimmed = array[count].value.trim().toLowerCase();
+                        console.log( possibleAnswers[key].indexOf( trimmed));
+                        if ( possibleAnswers[key].indexOf( trimmed ) == -1) {
                             isCorrect = false;
                         } else {
                             numberCorrect++;
