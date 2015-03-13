@@ -34,7 +34,7 @@ th {
 				<%
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
-					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
+					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
 				} else {
 					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				}
