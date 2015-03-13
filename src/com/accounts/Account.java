@@ -508,7 +508,7 @@ public class Account implements Constants {
 		
 		if (this.isAdmin()) {
 			// get date
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(Calendar.getInstance().getTime());
 			String date = timeStamp.toString();
 			
 			// create and add row to announcements table 

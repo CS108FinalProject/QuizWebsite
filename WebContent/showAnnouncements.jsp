@@ -10,24 +10,37 @@
 <head>
 <%
 	String name = (String)getServletContext().getAttribute("session_user");
-	ArrayList<String> admin_anmts = (ArrayList<String>)AccountManager.getAnnouncements();
+	List<Announcement> announcements = AccountManager.getAnnouncementObjects();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="css//style.css" ></link>
 
 <title>Announcements</title>
 </head>
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+th {
+    background-color: #34495E;
+    color: white;
+}
+
+td {
+    padding: 7px;
+}
+</style>
+
 <body>
 <header>
 	<table id="header">
 			<tr>
 				<%
 				Account acct = AccountManager.getAccount(name);
-				if(acct.isAdmin()) {
-					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
-				} else {
-					out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
-				}
+				out.println("<th class = \"btn\"><a href = \"homepage.jsp\">Homepage</a></th>");
 				%> 
 				<th class = "btn"><a href = "showAnnouncements.jsp">Announcements</a></th>
 				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
@@ -51,17 +64,22 @@
 <BR>
 <h2>Announcements</h2>
 <div id="announcements">
-				<%if (admin_anmts != null) { 
-					out.println("<ul>");
-					int anmts_len = admin_anmts.size();
-					for (int i = 0; i < anmts_len; i++) { 
-						out.println("<li>"+admin_anmts.get(i)+"</li>");
-					} 
-					out.println("</ul>");
-				} else {
-					out.println("<br></br>Hello, no new announcements.");
-				}
-				%>	
+	<!-- Top Scorers table -->
+	<table id="Announcements">
+			<tr>
+				<th>Announcement</th>
+				<th>Posted by</th>
+				<th>Date</th>
+			</tr>
+			
+			<%
+				for (Announcement announcement : announcements) {
+					out.println("<tr><td>" + announcement.getContent() + "</td>"
+					+ "<td>" + announcement.getUsername() + "</td>" 
+					+ "<td>" + announcement.getDate() + "</td></tr>"); 
+				}		
+			%>
+	</table>
 </div>
 </body>
 </html>
