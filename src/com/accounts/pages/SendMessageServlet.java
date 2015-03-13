@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.accounts.Message;
+import com.quizzes.QuizManager;
 import com.util.Constants;
 
 /**
@@ -87,8 +88,10 @@ public class SendMessageServlet extends HttpServlet {
 			}	
 		} else if (request.getParameter("message_type").equals("Challenge")) {
 			String quizName = request.getParameter("quizName");
-			Message msg = new Message(sender_name, friend_name, quizName, Constants.MESSAGE_CHALLENGE, date, false);
-			sender.sendMessage(msg);
+			if (QuizManager.quizNameInUse(quizName)) {
+				Message msg = new Message(sender_name, friend_name, quizName, Constants.MESSAGE_CHALLENGE, date, false);
+				sender.sendMessage(msg);
+			}
 		} else if (request.getParameter("message_type").equals("Send Note") && !msg_content.equals("")) {
 			Message msg = new Message(sender_name, friend_name,msg_content , Constants.MESSAGE_NOTE, date, false);
 			sender.sendMessage(msg);
