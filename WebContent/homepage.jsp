@@ -126,9 +126,12 @@ if (name != null) {
 						out.println("\"No Account Removed\"");
 					}
 			%>
+			<br><br><br>
 			<%out.println("</input>");%>	
-			<%out.println("Re-enter account id:<input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
+			<%out.println("Re-enter account id: <input type = \"text\" name = \"conf_remove_acct\"></input>");%>	
+			<br>
 			<%out.println("<input type = \"hidden\" name = \"id\" value = \""+name+"\" >");%>
+			<br>
 			<%out.println("<input type = \"submit\"></input></form>");%>				
 			
 			<%/*End removeAcct div*/ %>
