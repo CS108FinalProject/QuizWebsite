@@ -168,12 +168,11 @@ public class Account implements Constants {
 	 * @return a list of Account objects for the friends of this user, or null if there are non.
 	 */
 	public List<Account> getFriends() {
+		List<Account> friends = new ArrayList<Account>();
 		List<Object> friendNames = Database.getValues(FRIENDS, USERNAME, userName, STATUS, 
 				"friends", FRIEND);
 		
-		if (friendNames == null) return null;
-
-		List<Account> friends = new ArrayList<Account>();
+		if (friendNames == null) return friends;
 		for (Object friendName : friendNames) {
 			Util.validateObjectType(friendName, "String");
 			friends.add(new Account((String) friendName));
