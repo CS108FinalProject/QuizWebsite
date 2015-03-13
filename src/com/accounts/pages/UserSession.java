@@ -23,6 +23,7 @@ public class UserSession implements HttpSessionListener {
      */
     public void sessionCreated(HttpSessionEvent arg0)  { 
     	arg0.getSession().setAttribute("session_user", "");
+    	
     }
 
 	/**

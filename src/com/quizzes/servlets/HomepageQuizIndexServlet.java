@@ -54,6 +54,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		
 		/*Field for User Achievements*/
 		if (type_to_display.equals("allQuizzes")) {
+			try { 
 				List<Quiz> quizzes = QuizManager.getAllQuizzes();
 				if (quizzes != null) {
 					int num_quizzes = quizzes.size();
@@ -72,25 +73,32 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display",result_list);
 
 				}
+			} catch (Exception e) {
+				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
+			}
 							
 			/*Field for Friends' Activities*/
 		} else if (type_to_display.equals("friendActivities")) {
 			try {
 				Account account = AccountManager.getAccount(username);
 				List<Activity> acts = account.getRecentFriendActivity(num_records);
-				int num_acts = acts.size();
-				for (int i = 0; i < num_acts;i++) {
-					Activity curr = acts.get(i);
-					String activity = curr.getActivity();
-					String date = curr.getDate();
-					String user = curr.getUser().getUserName();
-					String str = user+" "+activity+" at "+date;
-					result_list.add(str);
-				}
-		    	if (result_list.size() > 0) {
-					request.setAttribute("content_to_display", result_list);
+				/*If acts has some entry*/
+				if (acts != null ) {
+					int num_acts = acts.size();
+					for (int i = 0; i < num_acts;i++) {
+						Activity curr = acts.get(i);
+						String activity = curr.getActivity();
+						String quizName = curr.getQuiz().getName();
+						String date = curr.getDate();
+						String user = curr.getUser().getUserName();
+						String str = user+" "+activity+": <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> on "+date;
+						result_list.add(str);
+					}
 
-		    	} else {
+						request.setAttribute("content_to_display", result_list);
+						
+						/*If acts has no entries*/
+				} else {
 		    		result_list.add("<h1>There are no recent activities.</h1>");
 					request.setAttribute("content_to_display",result_list);
 		    	}			
@@ -99,32 +107,27 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			}
 			/*My recently created quizzes*/
 		} else if (type_to_display.equals("createdQuizzes")) {
-			try {
+			
 				List<Quiz> usr_quizzes = QuizManager.getQuizzes(AccountManager.getAccount(username));
-				int num_quizzes = usr_quizzes.size();
-				int counter = 0;
-				/*Iterate through usr_quizzes backwards so that we have newest quiz first */
-				for (int i = num_quizzes - 1; i >= 0;i--) {
-					Quiz curr = usr_quizzes.get(i);
-					String quizName = curr.getName();
-					String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;
-					result_list.add(str);
-					counter++;
-					if (counter == num_records) i = -1;
-				}
-				if (result_list.size() > 0 ) {
-					request.setAttribute("content_to_display",result_list);
-
+				/*If usr_quizzes is not null then we know that the size is at least one*/
+				if (usr_quizzes != null ) {
+					int num_quizzes = usr_quizzes.size();
+					int counter = 0;
+					/*Iterate through usr_quizzes backwards so that we have newest quiz first */
+					for (int i = num_quizzes - 1; i >= 0;i--) {
+						Quiz curr = usr_quizzes.get(i);
+						String quizName = curr.getName();
+						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;
+						result_list.add(str);
+						counter++;
+						if (counter == num_records) i = -1;
+					}
+						request.setAttribute("content_to_display",result_list);
+					
 				} else {
 					result_list.add("You haven't created any new quizzes");
 					request.setAttribute("content_to_display",result_list);
-
-				}
-			} catch (Exception e) {
-				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
-
-				//request.setAttribute("errMsg", "<h1> The current user, "+username+" could not be found.  </h1>");
-			}
+				}			
 			/*All popular quizzes*/
 		} else if  (type_to_display.equals("popularQuizzes")) {
 			System.out.println("popular quizzes");
@@ -140,7 +143,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					double avg_score = perf_map.get("score");
 					double elapsed_time = perf_map.get("elapsed_time");
 					String quizName =curr.getName();
-					String to_insert = "The popular quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> has an average score of "+avg_score+" and average time taken of "+elapsed_time;
+					String to_insert = "The popular quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> has an average score of "+avg_score+" and average time taken of "+elapsed_time+" mins.";
 					result_list.add(to_insert);
 					if ( i == num_records - 1) i = pop_quizzes_len;
 				}

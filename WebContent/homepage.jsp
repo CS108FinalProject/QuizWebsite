@@ -15,7 +15,8 @@
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-String name = (String)getServletContext().getAttribute("session_user");
+//String name = (String)getServletContext().getAttribute("session_user");
+String name = (String)request.getSession().getAttribute("session_user");
 
 /*Temp hack while we solve the session_user servletcontext issue*/
 Account acct = null;

@@ -35,7 +35,6 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");	
-
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
@@ -43,7 +42,10 @@ public class LoginServlet extends HttpServlet {
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
 					Account acct = AccountManager.getAccount(username);
+					request.getSession().setAttribute("session_user", username);
+
 					getServletContext().setAttribute("session_user",username);
+					
 					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
 					dispatch.forward(request, response);
 				} else {
