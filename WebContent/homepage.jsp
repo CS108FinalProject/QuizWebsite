@@ -182,6 +182,7 @@ if (name != null) {
 									</form>
 									<%	
 									List<Message> messages;
+									String hn;
 									/* If no choice of messages are specified*/
 									if (sel_type != null) {
 										if (sel_type.equals("Sent Messages")) {
