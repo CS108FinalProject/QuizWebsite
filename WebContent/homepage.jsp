@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import = "com.accounts.*"%>
 	<%@ page import = "java.util.*"%>
+	<%@ page import = "com.util.*" %>
 	<%@ page import = "javax.swing.*" %>
 
 	
@@ -179,9 +180,11 @@ if (name != null) {
 									<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
 								</div>
 								<div id="read_messages">
+									<% 
+										out.println("<div><a  href = \"showMessage.jsp?id="+name+"&choice=Sent+Messages\">View ALL Sent Messages</a></div>");
+										out.println("<div><a  href = \"showMessage.jsp?id="+name+"&choice=Received+Messages\">View ALL Received Messages</a></div>");
+									%>
 									<form action = <%="\"homepage.jsp?id="+name+"\""%>>
-
-
 										<select name = "choice">
 											<option >Received Messages</option>
 											<option>Sent Messages</option>
@@ -192,7 +195,8 @@ if (name != null) {
 									</form>
 									<%	
 									List<Message> messages;
-									String hn;
+								
+
 									/* If no choice of messages are specified*/
 									if (sel_type != null) {
 										if (sel_type.equals("Sent Messages")) {
@@ -205,8 +209,8 @@ if (name != null) {
 
 									}
 										if (messages.size() > 0) {
-											out.println("<table id=\"messagesTable\">");
-												out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
+											out.println("<table id=\"messagesTable\">");											
+											out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
 											for ( int i = messages.size() -1; i > -1;i-- ) {
 												out.println("<tr>");
 												Message msg = messages.get(i);

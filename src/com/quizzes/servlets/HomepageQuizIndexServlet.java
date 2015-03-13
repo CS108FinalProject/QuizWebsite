@@ -49,7 +49,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		String username = (String)request.getSession().getAttribute("session_user");
 		
 		List<String> result_list = new ArrayList<String>();
-		int num_records = 5;
+		int num_records = 0;
 		/*Default num records to put in the result_list*/
 		
 		/*Field for User Achievements*/
@@ -59,7 +59,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				if (quizzes != null) {
 					int num_quizzes = quizzes.size();
 					/*Iterate through usr_quizzes backwards so that we have newest quiz first */					
-					for (int i = num_quizzes - 1; i >= 0;i--) {
+					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = quizzes.get(i);
 						String quizName = curr.getName();
 						String desc = curr.getDescription();
@@ -123,15 +123,13 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				/*If usr_quizzes is not null then we know that the size is at least one*/
 				if (usr_quizzes != null ) {
 					int num_quizzes = usr_quizzes.size();
-					int counter = 0;
 					/*Iterate through usr_quizzes backwards so that we have newest quiz first */
-					for (int i = num_quizzes - 1; i >= 0;i--) {
+					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = usr_quizzes.get(i);
 						String quizName = curr.getName();
 						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;
 						result_list.add(str);
-						counter++;
-						if (counter == num_records) i = -1;
+						if (i == num_records- 1) i = num_records;
 					}
 						request.setAttribute("content_to_display",result_list);
 					
@@ -207,7 +205,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				Account acct = AccountManager.getAccount(username);
 				List<Record> quizzes_taken = acct.getPastPerformance(num_records);
 				int quizzes_taken_len = quizzes_taken.size();
-				for (int i = quizzes_taken_len - 1;i >= 0;i--) {
+				for (int i = 0;i < quizzes_taken_len;i++) {
 					Record rec = quizzes_taken.get(i);
 					String quizName = rec.getQuizName();
 					String date = rec.getDate();
