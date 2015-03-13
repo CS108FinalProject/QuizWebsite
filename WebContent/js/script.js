@@ -1094,23 +1094,19 @@
 
                     var count = 0;
                     var isClean = true;
+                    console.log( array );
                     for(var key in possibleAnswers) {
-                        if ( possibleAnswers[key].indexOf( array[i].value ) == -1 ) {
-                            console.log("Value from element array " + array[i].value );
-                            console.log("Key of object" +  key);
-                            isClean = false;
-                            count++;
-                        }
+                        console.log( possibleAnswers[key] );
                     }
 
-                    console.log( "Is clean " + isClean);
                 }
             }
 
-            console.log( numberCorrect );
-            console.log( numberOfPoints );
+            //console.log( numberCorrect );
+            //console.log( numberOfPoints );
             // information to send back
-            var score = numberCorrect / numberOfPoints;
+            var percentageScore = ( numberCorrect / numberCorrect ) * 100.0;
+            var score = percentageScore.toFixed(2);
             var elapsed_time = minutes.toFixed(2);
             var date =  moment().format('YYYY/MM/DD HH:mm');
             var quiz_name = quizName;
