@@ -478,7 +478,7 @@
                         <h2>Question MATCHING</h2>
                         <p>{{curQuestion.question}}</p>
                         {{#each curQuestion.answers}}
-                            {{@key}}<input  class={{../curQuestion.id}} type="text">{{this}}<br/>
+                            {{@key}}<input  class={{../curQuestion.id}} type="text"><br/>
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>
