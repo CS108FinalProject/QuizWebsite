@@ -17,6 +17,7 @@ import com.accounts.Account;
 import com.accounts.AccountManager;
 import com.quizzes.*;
 import com.util.Constants;
+import java.text.DecimalFormat;
 /**
  * Servlet implementation class HomepageQuizIndexServlet
  */
@@ -151,10 +152,11 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				for (int i = 0 ; i < pop_quizzes_len;i++) {
 					Quiz curr = popular_quizzes.get(i);
 					Map<String, Double> perf_map = curr.getAveragePerformance();
+					DecimalFormat formatter = new DecimalFormat("0.00");
 					double avg_score = perf_map.get("score");
-					double elapsed_time = perf_map.get("elapsed_time");
+					double elapsed_time = perf_map.get("elapsed_time");	
 					String quizName =curr.getName();
-					String to_insert = "The popular quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> has an average score of "+avg_score+" and average time taken of "+elapsed_time+" mins.";
+					String to_insert = "The popular quiz " + "<a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a>" + "  has an average score of "+formatter.format(avg_score)+" and average time taken of "+formatter.format(elapsed_time)+" mins.";
 					result_list.add(to_insert);
 					if ( i == num_records - 1) i = pop_quizzes_len;
 				}
