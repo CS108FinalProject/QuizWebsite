@@ -55,16 +55,14 @@ public class RegistrationServlet extends HttpServlet {
 				dispatch.forward(request, response);
 			}
 			
-			getServletContext().setAttribute("session_user",username);
 			// case of new administrative account
 			if (request.getParameter("isAdministrator") != null) { 
 				AccountManager.getAccount(username).setAdmin(true);
-				RequestDispatcher dispatch = request.getRequestDispatcher("adminHomepage.jsp?id="+username);
-				dispatch.forward(request, response);
-			} else {
-				RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp?id="+username);
-				dispatch.forward(request, response);
 			}
+			request.getSession().setAttribute("session_user", username);				
+			RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp");
+			dispatch.forward(request, response);
+			
 		}
 	}
 

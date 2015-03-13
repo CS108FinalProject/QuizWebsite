@@ -36,7 +36,7 @@ th {
 <body>
 <%
 // Get logged in user.
-String name = (String)getServletContext().getAttribute("session_user");
+String name = (String)request.getSession().getAttribute("session_user");
 Util.validateString(name);
 Account user = AccountManager.getAccount(name);
 DecimalFormat formatter = new DecimalFormat("0.00");

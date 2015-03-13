@@ -39,7 +39,7 @@ Util.validateString(quizName);
 Quiz quiz = QuizManager.getQuiz(quizName);
 
 // Get logged in user.
-String loggedInUser = (String)getServletContext().getAttribute("session_user");
+String loggedInUser = (String)request.getSession().getAttribute("session_user");
 Util.validateString(loggedInUser);
 Account user = AccountManager.getAccount(loggedInUser);
 DecimalFormat formatter = new DecimalFormat("0.00");
@@ -48,7 +48,7 @@ DecimalFormat formatter = new DecimalFormat("0.00");
 	<table id="header">
 			<tr>			
 				<%
-				String name = (String)getServletContext().getAttribute("session_user");
+				String name = (String)request.getSession().getAttribute("session_user");
 				Account acct = AccountManager.getAccount(name);
 
 

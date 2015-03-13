@@ -9,7 +9,7 @@
 <html>
 <head>
 <%
-	String name = (String)getServletContext().getAttribute("session_user");
+	String name = (String)request.getSession().getAttribute("session_user");
 	List<Announcement> announcements = AccountManager.getAnnouncementObjects();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

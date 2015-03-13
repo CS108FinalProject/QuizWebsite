@@ -25,7 +25,7 @@
 							quizName = request.getParameter("quizName");	
 						}
 						Quiz quiz = QuizManager.getQuiz(quizName);
-						String name = (String)getServletContext().getAttribute("session_user");
+						String name = (String)request.getSession().getAttribute("session_user");
 						Account acct = AccountManager.getAccount(name);
 						if (acct.isAdmin()) {
 							out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");

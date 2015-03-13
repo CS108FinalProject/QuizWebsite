@@ -15,7 +15,7 @@
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-String name = (String)getServletContext().getAttribute("session_user");
+String name = (String)request.getSession().getAttribute("session_user");
 
 /*Temp hack while we solve the session_user servletcontext issue*/
 Account acct = null;
@@ -41,6 +41,15 @@ if (name != null) {
 
 %>
 <title>Welcome <%=name%></title>
+
+<style>
+#messagesTable th, #messagesTable td {
+    text-align: center;
+    padding: 5px;
+}
+
+</style>
+
 </head>
 	
 	
@@ -196,7 +205,7 @@ if (name != null) {
 
 									}
 										if (messages.size() > 0) {
-											out.println("<table>");
+											out.println("<table id=\"messagesTable\">");
 												out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
 											for ( int i = messages.size() -1; i > -1;i-- ) {
 												out.println("<tr>");

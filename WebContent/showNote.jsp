@@ -18,7 +18,7 @@
 	<table id="header">
 			<tr>
 				<%
-				String name = (String)getServletContext().getAttribute("session_user");
+				String name = (String)request.getSession().getAttribute("session_user");
 				Account acct = AccountManager.getAccount(name);
 				if(acct.isAdmin()) {
 					out.println("<th class = \"btn\"><a href = \"adminHomepage.jsp\">Homepage</a></th>");
@@ -30,13 +30,13 @@
 				<th class = "btn"><a href = "showAchievements.jsp">My Achievements</a></th>
 
 				<th class = "btn">My Messages 
-					<form action = <%="\"showMessage.jsp?id="+(String) getServletContext().getAttribute("session_user")+"\""%>>					
+					<form action = <%="\"showMessage.jsp?id="+(String)request.getSession().getAttribute("session_user")+"\""%>>					
 						<select name = "choice">
 							<option>Received Messages</option>
 							<option>Sent Messages</option>
 						</select>
 						<input name="choice" type="hidden" value=<%=(String)request.getParameter("choice")%>>
-						<input name="id" type="hidden" value=<%=(String) getServletContext().getAttribute("session_user")%>>
+						<input name="id" type="hidden" value=<%=name%>>
 						<input type = "submit" value = "Go">
 					</form>
 				</th>
