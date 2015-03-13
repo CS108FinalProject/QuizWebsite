@@ -346,6 +346,8 @@
             clearPendingQuiz();
             var creator = getUrlVar("user");
             var quizName = $('#quiz_name').val();
+
+
             var description = $('#quiz_description').val();
             var isImmediate = $('#quiz_immediate').is(':checked');
             var isRandom = $('#quiz_random').is(':checked');
@@ -440,7 +442,7 @@
                 numberOfPoints++;
                 var isAnswer = false;
                 var idString = question.id;
-                var answer = document.getElementById(idString).value;
+                var answer = document.getElementById(idString).value.trim().toLowerCase();
 
                 var listOfAnswers = question.answers;
                 if ( answer != "" ) {
@@ -493,6 +495,7 @@
                 if ( thisQuestion.isOrdered ) {
                     for(var j = 0; j < array.length; j++ ) {
                         numberOfPoints++;
+                        var trimmed = array[j].value.trim().toLowerCase();
                         if(  thisQuestion.answers.indexOf( array[j].value ) != j ) {
                             inOrder = false;
                         }
@@ -515,6 +518,7 @@
                     for(var j = 0; j < array.length; j++ ) {
                         numberOfPoints++;
                         var isValid = true;
+                        var trimmed = array[j].value.trim().toLowerCase();
                         if(  thisQuestion.answers.indexOf( array[j].value ) == -1 ) {
                             isValid = false;
                         }
@@ -539,8 +543,9 @@
                 var array = document.getElementsByClassName(idString);
                 var count = 0;
                 var MatchAnswers = thisQuestion.answers;
+                var trimmed = array[count].value.trim().toLowerCase();
                 for(var key in MatchAnswers ) {
-                    if ( array[count].value === MatchAnswers[key] ) {
+                    if ( trimmed === MatchAnswers[key] ) {
                         numberCorrect++;
                         numberOfPoints++;
                         count++;
@@ -596,6 +601,15 @@
             var question = $('#fill_in_the_blank_question').val().trim().toLowerCase();
             var answer = $('#enter_answer').val().trim().toLowerCase();
             var blank = $('#enter_blank').val().trim().toLowerCase();
+
+            var currentQuiz = getPendingQuiz();   // an array
+
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
             
             if ( validateForm(type, question, answer, blank) ) {
                 if ( typeof questionInfo === 'undefined' ) {
@@ -616,9 +630,17 @@
             var questionInfo = questions[questions.length - 1];
             // a question, answer and a blank obtained from the client interface
             
-            var question = $('#mc_question').val();
-            var option = $('#mc_option').val();
+            var question = $('#mc_question').val().trim().toLowerCase();
+            var option = $('#mc_option').val().trim().toLowerCase();
             var isAnswer = $('#is_mc_answer').is(':checked');
+
+            var currentQuiz = getPendingQuiz();   // an array
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
 
 
             if ( typeof questionInfo === 'undefined' ) {
@@ -637,9 +659,17 @@
             var questionInfo = questions[questions.length - 1];
             // a question, answer and a blank obtained from the client interface
             
-            var question = $('#pic_question').val();
-            var answer = $('#pic_answer').val();
-            var pictureURL = $('#pic_url').val();
+            var question = $('#pic_question').val().trim().toLowerCase();
+            var answer = $('#pic_answer').val().trim().toLowerCase();
+            var pictureURL = $('#pic_url').val().trim().toLowerCase();
+
+            var currentQuiz = getPendingQuiz();   // an array
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
 
 
             if ( typeof questionInfo === 'undefined' ) {
@@ -657,9 +687,19 @@
             var questions = quiz.questions;
             var questionInfo = questions[questions.length - 1];
             // a question, answer and a blank obtained from the client interface
+
+
             
-            var question = $('#res_question').val();
-            var answer = $('#res_answer').val();
+            var question = $('#res_question').val().trim().toLowerCase();
+            var answer = $('#res_answer').val().trim().toLowerCase();
+
+            var currentQuiz = getPendingQuiz();   // an array
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeResQuestionInfo(type, question, answer);
@@ -677,9 +717,17 @@
             var questionInfo = questions[questions.length - 1];
             // a question, answer and a blank obtained from the client interface
             
-            var question = $('#mr_question').val();
-            var answer = $('#mr_answer').val();
+            var question = $('#mr_question').val().trim().toLowerCase();
+            var answer = $('#mr_answer').val().trim().toLowerCase();
             var isOrdered = $('#mr_in_order').is(':checked');
+
+            var currentQuiz = getPendingQuiz();   // an array
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMRQuestionInfo(type, question, answer, isOrdered);
@@ -697,9 +745,17 @@
             var questionInfo = questions[questions.length - 1];
             // a question, answer and a blank obtained from the client interface
             
-            var question_header = $('#match_question_header').val();
-            var left_question = $('#match_question').val();
-            var right_answer = $('#match_answer').val();
+            var question_header = $('#match_question_header').val().trim().toLowerCase();
+            var left_question = $('#match_question').val().trim().toLowerCase();
+            var right_answer = $('#match_answer').val().trim().toLowerCase();
+
+            var currentQuiz = getPendingQuiz();   // an array
+            for(var i =0; i < currentQuiz.questions.length; i++) {
+                if ( currentQuiz.questions[i].question === question_header ) {
+                    alert("You cannot have a duplicate question");
+                    return;
+                }
+            }
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
