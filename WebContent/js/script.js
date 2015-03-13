@@ -142,8 +142,8 @@
                     break;
                 case "Fill_Blank":
                     questions[i].isFillInTheBlank = true;
-                    questions[i].blankedQuestion = formatBlankedQuestion( questions[i] );
                     questions[i].id = Math.random();
+                    questions[i].blankedQuestion = formatBlankedQuestion( questions[i] );
                     break;
                 case "Multiple_Choice":
                     questions[i].isMultipleChoice = true;
@@ -171,14 +171,16 @@
     }
 
     function formatBlankedQuestion( data ) {
-
+        console.log( data );
+        console.log( data.id );
+        var idString = data.id;
         var question = data.question;
+        var answers = data.answers;
+        console.log( answers );
         var modifiedQuestion = question;
-        console.log( data.answers );
-        for( var i = 0; i <  data.answers[blank].length; i++ ) {
-            modifiedQuestion = modifiedQuestion.replace( data.answers[blank][i], "<input type=\"text\" />");
+        for(var obj in answers) {
+            modifiedQuestion = modifiedQuestion.replace(obj, '<input class=' + idString + ' type=\"text\">')
         }
-        console.log( modifiedQuestion );
         return modifiedQuestion;
     }
 
