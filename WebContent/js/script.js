@@ -172,18 +172,48 @@
 
     // TO DO
     function generateMultiplePageQuizWithFeedBack() {
-
+        console.log("Hello");
     }
 
-    // TO DO
+    var MPIndex = 0;
     function generateMultiplePageQuizWithNoFeedBack() {
+        var template;
+        var render;
+        console.log("No feedback yet");
+        console.log( getQuizToTake() );
+        var questions = getQuizToTake().questions;
+
+        if ( questions[MPIndex].type === "Fill_Blank" ) {
+            template = document.getElementById('multiple-page-FITB-template');
+            render = Handlebars.compile( template.innerHTML );
+        } else if ( questions[MPIndex].type === "Response"  ) {
+            template = document.getElementById('multiple-page-RES-template');
+            render = Handlebars.compile( template.innerHTML );
+        } else if ( questions[MPIndex].type === "Multiple_Choice" ) {
+            template = document.getElementById('multiple-page-MC-template');
+            render = Handlebars.compile( template.innerHTML );
+        } else if ( questions[MPIndex].type === "Picture"  ) {
+            template = document.getElementById('multiple-page-PIC-template');
+            render = Handlebars.compile( template.innerHTML );
+        } else if ( questions[MPIndex].type === "Multi_Response"  ) {
+            template = document.getElementById('multiple-page-MR-template');
+            render = Handlebars.compile( template.innerHTML );
+        } else if ( questions[MPIndex].type === "Matching" ) {
+            template = document.getElementById('multiple-page-MATCH-template');
+            render = Handlebars.compile( template.innerHTML );
+        }
+
+        $('#right-pane').html( render( {curQuestion: questions[MPIndex]} ) );
+
+        // listen to next question button
+        
 
     }
+
 
     function storeBooleanTypeForQuestion( response ) { 
         // store boolean types of question types
         var questions = response.data.questions;
-        console.log(  questions );
         for(var i = 0; i < questions.length; i++) {
             switch( questions[i].type ) {
                 case "Response":
@@ -216,17 +246,13 @@
             }
         }
         response.data.questions = questions;
-        console.log( response.data );
         storeQuizToTake( response.data )
     }
 
     function formatBlankedQuestion( data ) {
-        console.log( data );
-        console.log( data.id );
         var idString = data.id;
         var question = data.question;
         var answers = data.answers;
-        console.log( answers );
         var modifiedQuestion = question;
         for(var obj in answers) {
             modifiedQuestion = modifiedQuestion.replace(obj, '<input class=' + idString + ' type=\"text\">')
@@ -237,42 +263,9 @@
     // LISTENERS
      $(document).ready(function() {
 
-        /*************************LEFT PANE EVENT LISTENERS**************************/
-
-        // $('#left-pane').on('click', '#lp-quiz-name', function(event) {
-        //     event.preventDefault();
-        //     console.log( "I am checked");
-        //     $('#lp-quiz-edit').prop("disabled",true);
-        //     var quizName = $('#lp-quiz-name').text();
-        //     var myQuizzes = getMyQuizzes();
-        //     var quizzes = myQuizzes.data; // array of quiz objects
-        //     var questionsArr;
-        //     var success = myQuizzes.status.success;
-        //     for(var i = 0; i < quizzes.length; i++ ) {
-        //         if ( quizzes[i].quizMetaData.quiz_name === quizName ) {
-        //             questionsArr = quizzes[i].questions
-        //         }
-        //     }
-        //     console.log( questionsArr );
-        //     $('#lp-quiz-').prop("disabled",false);
-        //     $('#right-pane').html( templates.renderEditQuizOptions( 
-        //                     {questions: questionsArr, success: success}) );
- 
-
-        // });
-
-        // $('#left-pane').on('click', '#lp-quiz-edit', function(event) {
-        //     event.preventDefault();
-        //     console.log( "I am checked");
-        //     var URL = "/QuizWebsite/EditQuizInit";
-        //     var quizName = $('#lp-quiz-name').text();
-        //     console.log()
-
-        // });
 
         // Create new Quiz Form on click
         $('#new-quiz-button').click(function() {
-            console.log("Hello");
             $('#right-pane').html( templates.renderQuizForm() );
         });
 
@@ -291,7 +284,6 @@
 
                     success: function(data, textStatus, jqXHR) {
                         $('#my-quizzes').prop("disabled",false);
-                        console.log( data );
                         storeMyQuizzes(data);
                         displayOnLeftPane(data);
                     }
@@ -378,6 +370,45 @@
             }
 
         });
+        
+        $('#right-pane').on('click', '#next-question', function(event) {
+            event.preventDefault();
+            var template;
+            var render;
+            console.log("Next Question");
+            console.log( getQuizToTake() );
+            var questions = getQuizToTake().questions;
+            console.log( questions.length );
+            if ( MPIndex < questions.length - 1 ) {
+                MPIndex++;
+
+                if ( questions[MPIndex].type === "Fill_Blank" ) {
+                    template = document.getElementById('multiple-page-FITB-template');
+                    render = Handlebars.compile( template.innerHTML );
+                } else if ( questions[MPIndex].type === "Response"  ) {
+                    template = document.getElementById('multiple-page-RES-template');
+                    render = Handlebars.compile( template.innerHTML );
+                } else if ( questions[MPIndex].type === "Multiple_Choice" ) {
+                    template = document.getElementById('multiple-page-MC-template');
+                    render = Handlebars.compile( template.innerHTML );
+                } else if ( questions[MPIndex].type === "Picture"  ) {
+                    template = document.getElementById('multiple-page-PIC-template');
+                    render = Handlebars.compile( template.innerHTML );
+                } else if ( questions[MPIndex].type === "Multi_Response"  ) {
+                    template = document.getElementById('multiple-page-MR-template');
+                    render = Handlebars.compile( template.innerHTML );
+                } else if ( questions[MPIndex].type === "Matching" ) {
+                    template = document.getElementById('multiple-page-MATCH-template');
+                    render = Handlebars.compile( template.innerHTML );
+                }
+                
+                $('#right-pane').html( render( { curQuestion: questions[MPIndex] } ) );
+                console.log( questions[MPIndex]);
+            } else {
+                $('#right-pane').html("SUBMIT ADDRESS");
+            }
+
+        });
 
         // Listen to FILL IN THE BLANK QUESTION
         $('#right-pane').on('click', '#add_fandb_blank_answer', function(event) {
@@ -414,7 +445,6 @@
             var option = $('#mc_option').val();
             var isAnswer = $('#is_mc_answer').is(':checked');
 
-            console.log( question + " " + isAnswer + " " + option);
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMCQuestionInfo(type, question, option, isAnswer);
@@ -436,7 +466,6 @@
             var answer = $('#pic_answer').val();
             var pictureURL = $('#pic_url').val();
 
-            console.log( question + " " + answer + " " + pictureURL );
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializePicQuestionInfo(type, question, answer, pictureURL);
@@ -456,8 +485,6 @@
             
             var question = $('#res_question').val();
             var answer = $('#res_answer').val();
-
-            console.log( question + " " + answer  );
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeResQuestionInfo(type, question, answer);
@@ -509,7 +536,6 @@
         // Listen to quiz submission
         $('#right-pane').on('click', '#add_match_answer', function(event) {
             event.preventDefault();
-            console.log( "Hello");
         });
 
     });
@@ -523,8 +549,6 @@
     // Slightly more concise and improved version based on http://www.jquery4u.com/snippets/url-parameters-jquery/
 
     function displayOnLeftPane(quizzes) {
-        console.log( quizzes );
-        console.log( quizzes.status.success );
         $('#left-pane').html( templates.renderLeftPaneQuizzes( { success: quizzes.status.success, quizzes: quizzes.data} ) );
     }
 
@@ -566,7 +590,7 @@
         clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
-        console.log( quiz.questions );
+
         updatePendingQuiz(quiz);
         $('#match_question').val('');
         $('#match_answer').val('');
@@ -592,7 +616,6 @@
 
             questions.push( questionInfo );
             quiz.questions = questions;
-            console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
             initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
@@ -617,7 +640,6 @@
         clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
-        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#mr_answer').val('');
         $('#add_mr_answer').prop('value', 'Add Another Answer');
@@ -630,7 +652,6 @@
 
         if ( questionInfo.question === question && (questionInfo.isOrdered === isOrdered) ) {
             questionInfo.question = question;
-            console.log("hello");
             // listen to add more button
             var answers = questionInfo.answers;
             if ( answers.indexOf(answer) === -1 ) {
@@ -646,7 +667,6 @@
             
             questions.push( questionInfo );
             quiz.questions = questions;
-            console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
             initializeMRQuestionInfo(type, question, answer, isOrdered);
@@ -669,7 +689,6 @@
         clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
-        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#res_answer').val('');
         $('#add_res_answer').prop('value', 'Add Another Answer');
@@ -698,7 +717,6 @@
             
             questions.push( questionInfo );
             quiz.questions = questions;
-            console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
             initializeResQuestionInfo(type, question, answer);
@@ -723,7 +741,6 @@
         clearLastSelectedQuestionType();
         questions.push( questionInfo );
         quiz.questions = questions;
-        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#pic_answer').val('');
         $('#add_p_answer').prop('value', 'Add Another Answer');
@@ -752,7 +769,6 @@
             
             questions.push( questionInfo );
             quiz.questions = questions;
-            console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
             initializePicQuestionInfo(type, question, answer, pictureURL);
@@ -838,7 +854,6 @@
         questions.push( questionInfo );
         quiz.questions = questions;
 
-        console.log( quiz.questions );
         updatePendingQuiz(quiz);
         $('#enter_answer').val('');
         $('#add_fandb_blank_answer').prop('value', 'Add Another Answer');
@@ -876,7 +891,6 @@
 
             questions.push( questionInfo );
             quiz.questions = questions;
-            console.log( quiz.questions );
             updatePendingQuiz(quiz);
         } else {
             clearLastSelectedQuestionType();
@@ -954,7 +968,6 @@
                 case "Return to Question Type":
                     // Indicates user changed mind on question type 
                     clearLastSelectedQuestionType();
-                    console.log( getPendingQuiz() );
                     rightPane.innerHTML = templates.renderQuestionType();
                     break;
                 case "Create Question":
@@ -965,12 +978,10 @@
                     break;
                 case "Finish and Create Quiz":  
                     var date = moment().format('YYYY/MM/DD HH:mm');
-                    console.log( date );
                     var quiz = getPendingQuiz();
                     var quizMetaData = quiz.quizMetaData;
                     quizMetaData.date_created = date;
                     quiz.quizMetaData = quizMetaData;
-                    console.log( quiz );
                     updatePendingQuiz(quiz);    
 
                     var URL = "/QuizWebsite/CreateQuiz";
@@ -1069,8 +1080,6 @@
                     var thisQuestion = questions[i];
                     var idString = questions[i].id;
                     var array = document.getElementsByClassName(idString);
-                    console.log( array );
-                    console.log( thisQuestion.answers );
                     var count = 0;
                     var MatchAnswers = thisQuestion.answers;
                     for(var key in MatchAnswers ) {
@@ -1107,8 +1116,6 @@
                 }
             }
 
-            console.log( numberCorrect );
-            console.log( numberOfPoints );
             // information to send back
             var percentageScore = ( numberCorrect / numberOfPoints ) * 100.0;
             var score = percentageScore.toFixed(2);
@@ -1156,11 +1163,9 @@
                        }
                        startTime = new Date();
                        // tested -> works proper way to obtain booleans
-                       console.log( getQuizToTake() );
                        var onePage = getQuizToTake().quizMetaData.is_one_page;
                        var isImmediate = getQuizToTake().quizMetaData.is_immediate;
                        if ( onePage ) {           // checked works
-                            console.log( "One page clicked");
                            generateOnePageQuiz();
                        } else {
                            // test all values

@@ -12,7 +12,7 @@
     <body>
         <header>
             
-            <h1><a href="homepage.jsp">Home</a><a id="new-quiz-button">New Quiz</a></h1>
+            <h1><a href="homepage.jsp">Home</a></h1>
 
         </header>
 
@@ -332,7 +332,7 @@
             </form>
         </script>
 
-        <!-- template to display SUBMISSION FORM in right pane -->
+        <!-- template ONE PAGE questions-->
         <script type="text/x-handlebars-template" id="one-page-display-template">
             <form class="cf" id="edit-quiz-options">
                 {{#if onepage}}
@@ -399,9 +399,10 @@
             </form>
         </script>
 
+        <!-- Renders results preview page after user submits answers-->
         <script type="text/x-handlebars-template" id="results-preview-template">
             <form action="quizResults.jsp" class="cf"   id="results-preview-template">
-                <p>You received a {{score }} for quiz {{ quiz_name }}</p>
+                <p>You received a {{score }}% for quiz {{ quiz_name }}</p>
                 <p>Quiz: {{quiz_name}}</p>
                 <p>Date: {{date}}</p>
                 <p>Elapsed Time: {{elapsed_time}}</p>
@@ -413,10 +414,92 @@
                 <input type="hidden" name="date" value='{{date}}'>
                 <input type="submit" value="Show Details"/>
             </form>
-                
-                
-                
         </script>
+
+        <!-- MULTIPLE PAGE LISTENERS -->
+        <!-- Render FITB in the blank question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-FITB-template">
+            <form class="cf" id="FITB-multiple-pages">
+                <div id="fill_in_the_page">
+                        <h2>Question FITB</h2>
+                        <p>{{curQuestion.question}}</p>
+                        {{#each curQuestion.answers}}
+                            {{@key}}<input  class= type="text"><br/>
+                        {{/each}}
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+        <!-- Render MULTIPLE CHOICE question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-MC-template">
+            <form class="cf" id="MC-multiple-pages">
+                <div id="multiple_choice_page">
+                        <h2>MULTIPLE CHOICE</h2>
+                        <p>{{curQuestion.question}}</p>
+                        {{#each this.answers}}
+                            <input class={{../../id}} type="checkbox" name='{{@key}}' placeholder="Enter your answer" value>{{@key}}
+
+                        {{/each}}
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+        <!-- Render MULTIPLE RESPONSE question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-MR-template">
+            <form class="cf" id="MR-multiple-pages">
+                <div id="multi_response_page">
+                        <h2>Question MULTI-RESPONSE</h2>
+                        <p>{{curQuestion.question}}</p>
+                        {{#each curQuestion.answers}}
+                            <input class={{../../id}} type="text" placeholder="Enter your answer">
+                        {{/each}}
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+        <!-- Render PICTURE question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-PIC-template">
+            <form class="cf" id="PIC-multiple-pages">
+                <div id="picture_single_page">
+                        <h2>Question PICTURE</h2>
+                        <p>{{curQuestion.question}}</p>
+                        <img src={{curQuestion.pictureURL}}  height="200" width="200">
+                        <input id={{curQuestion.id}} type="text" placeholder="Enter your answer">
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+        <!-- Render MATCHING question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-MATCH-template">
+            <form class="cf" id="MATCH-multiple-pages">
+                <div id="matching_page">
+                        <h2>Question MATCHING</h2>
+                        <p>{{curQuestion.question}}</p>
+                        {{#each curQuestion.answers}}
+                            {{@key}}<input  class={{../../id}} type="text">{{this}}<br/>
+                        {{/each}}
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+        <!-- Render RESPONSE question for multiple pages-->
+        <script type="text/x-handlebars-template" id="multiple-page-RES-template">
+            <form class="cf" id="RES-multiple-pages">
+                <div id="response_single_page">
+                        <h2>Question MC</h2>
+                        <p>{{curQuestion.question}}</p>
+                        <input id={{curQuestion.id}} type="text" placeholder="Enter your answer">
+                        <input id="next-question" type="button" value="Next Question"/>
+                    </div>
+            </form>
+        </script>
+
+
 
         <!-- Libraries: JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
