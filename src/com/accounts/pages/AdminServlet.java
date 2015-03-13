@@ -40,7 +40,7 @@ public class AdminServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String new_ancmnt =  (String)request.getParameter("new_ancmnt");
-		String user_id = (String)getServletContext().getAttribute("session_user");
+		String user_id = (String)request.getSession().getAttribute("session_user");
 		String acct_to_remove = (String)request.getParameter("remove_acct");
 		String acct_to_promote = (String)request.getParameter("promote_acct");
 		/*Checks for empty string/null parameters

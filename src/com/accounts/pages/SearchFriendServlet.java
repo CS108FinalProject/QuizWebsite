@@ -33,7 +33,7 @@ public class SearchFriendServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String friend_id = request.getParameter("friend_id");
-		String sender = (String) getServletContext().getAttribute("session_user");
+		String sender = (String)request.getSession().getAttribute("session_user");
 		request.setAttribute("sender", sender);
 		
 			request.setAttribute("account", friend_id);
