@@ -22,11 +22,11 @@ Account acct = null;
 String sel_type = null;
 List<String> content_to_display = null;
 if (name != null) {
-	System.out.println("name is "+name);
+	//System.out.println("name is "+name);
  	try {
 	 acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
- 		System.out.println("The account for "+name+" was not found.");
+ 		//System.out.println("The account for "+name+" was not found.");
  	}
 	sel_type = (String)request.getParameter("choice");
 	content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
@@ -169,7 +169,7 @@ if (name != null) {
 									<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
 								</div>
 								<div id="read_messages">
-									<form action = <%="\"adminHomepage.jsp?id="+name+"\""%>>
+									<form action = <%="\"homepage.jsp?id="+name+"\""%>>
 										<select name = "choice">
 											<option>Received Messages</option>
 											<option>Sent Messages</option>
@@ -178,9 +178,9 @@ if (name != null) {
 									</form>
 									<%			
 										List<Message> messages = acct.getReceivedMessages();	
-										out.println("<a href =\"showMessage.jsp?choice="+sel_type+"&id="+name+"\""+">View All Messages</a>");
 										if (messages.size() > 0) {
 											out.println("<table>");
+												out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
 											for ( int i = messages.size() -1; i > -1;i-- ) {
 												out.println("<tr>");
 												Message msg = messages.get(i);
@@ -202,7 +202,7 @@ if (name != null) {
 								<table id = "quiz-index">	
 									<tr><th>Quiz Index</th></tr>				
 									<tr>
-										<td><a href = "HomepageQuizIndexServlet?type_to_display=myAchievements"  class = "btn" id="myAchievements">My Achievements</a></td>
+										<td><a href = "HomepageQuizIndexServlet?type_to_display=allQuizzes"  class = "btn" id="allQuizzes">View All Quizzes</a></td>
 										<td><a  href = "HomepageQuizIndexServlet?type_to_display=myTakenQuizzes" class = "btn" id="myTakenQuizzes">My Recently Taken Quizzes</a></td>					
 									</tr>
 									<tr>
@@ -224,13 +224,13 @@ if (name != null) {
 							out.println("<table id = \"table-result-quiz-content\"> ");
 							for (int i = cont_size - 1; i >= 0;i-- ) {	
 								out.println("<tr>");
-								System.out.println("To test "+content_to_display.get(i));
+							//	System.out.println("To test "+content_to_display.get(i));
 								out.println("<td>"+content_to_display.get(i)+"</td>");
 								out.println("</tr>");
 							}
 							out.println("</table>");			
 						} else {
-							System.out.println("content is null");
+							//System.out.println("content is null");
 						}
 						%>											
 					</div>

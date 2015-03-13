@@ -53,33 +53,26 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 		/*Default num records to put in the result_list*/
 		
 		/*Field for User Achievements*/
-		if (type_to_display.equals("myAchievements")) {
-			try {
-				/*Loop through the map based of the keys(Strings of Achievement Type)*/
-				Account acct = AccountManager.getAccount(username);
-				Map<String , Record> map =  acct.getAchievements();
-				Set<String> keys = map.keySet();
-				for (String key: keys) {
-					Record rec = map.get(key);
-					String date = rec.getDate();
-					String to_insert = "The achievement: "+key+" was earned "+date;
-					result_list.add(to_insert);
-					System.out.print("Got this foar in myAchiev.");
-				}
-		    	
-		    	if (result_list.size() > 0) {
-					request.setAttribute("content_to_display", result_list);
-
-		    	} else {
-		    		result_list.add("<h1>You have no achievements</h1>");
+		if (type_to_display.equals("allQuizzes")) {
+				List<Quiz> quizzes = QuizManager.getAllQuizzes();
+				if (quizzes != null) {
+					int num_quizzes = quizzes.size();
+					/*Iterate through usr_quizzes backwards so that we have newest quiz first */					
+					for (int i = num_quizzes - 1; i >= 0;i--) {
+						Quiz curr = quizzes.get(i);
+						String quizName = curr.getName();
+						String desc = curr.getDescription();
+						String creator = curr.getCreator().getUserName();
+						String str = "</td><td class = \"homepage-content-headers\">Quiz:</td><td><a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a></td><td class = \"homepage-content-headers\">Created By:</td><td>"+creator+"</td><td></td><td class = \"homepage-content-headers\">Description:</td><td>"+desc+"</td><td>" ;
+						result_list.add(str);
+					}
+					request.setAttribute("content_to_display",result_list);		
+				} else {
+					result_list.add("There are no quizzes.");
 					request.setAttribute("content_to_display",result_list);
-		    	}
-					
-			} catch (Exception e) {
-				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 
-			}
-			
+				}
+							
 			/*Field for Friends' Activities*/
 		} else if (type_to_display.equals("friendActivities")) {
 			try {
@@ -98,8 +91,10 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display", result_list);
 
 		    	} else {
-					request.setAttribute("content_to_display", "<h1>There are no recent activities.</h1>");
-		    	}			} catch (Exception e) {
+		    		result_list.add("<h1>There are no recent activities.</h1>");
+					request.setAttribute("content_to_display",result_list);
+		    	}			
+		    } catch (Exception e) {
 				request.setAttribute("errMsg", "<h1> The query returned the error: "+e.getMessage()+" .</h1>");
 			}
 			/*My recently created quizzes*/
@@ -121,7 +116,8 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display",result_list);
 
 				} else {
-					request.setAttribute("content_to_display","You haven't created any new quizzes");
+					result_list.add("You haven't created any new quizzes");
+					request.setAttribute("content_to_display",result_list);
 
 				}
 			} catch (Exception e) {
@@ -134,7 +130,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 
 			try {
 				List<Quiz> popular_quizzes =  QuizManager.getMostPopularQuizzes(num_records);
-				System.out.println(popular_quizzes.size());
+			//	System.out.println(popular_quizzes.size());
 	
 				/*Construct a brief message for each popular quiz*/
 				int pop_quizzes_len = popular_quizzes.size();
@@ -175,7 +171,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
 				}
 				if (result_list.size() > 0) {
-					System.out.println("This is the recently created quizzes "+result_list);
+				//	System.out.println("This is the recently created quizzes "+result_list);
 					request.setAttribute("content_to_display",result_list);
 				} else {
 
