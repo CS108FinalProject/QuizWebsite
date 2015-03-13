@@ -378,9 +378,19 @@
                         {{#if this.isMatching }} 
                             <div id="matching_page">
                                 <h2>Question {{@index }}</h2>
+                                <h2>Enter the bold words into the appropriate blank</h2>
                                 <p>{{this.question}}</p>
+                                <table>
+                                    <tr>
                                 {{#each this.answers}}
-                                    {{@key}}<input  class={{../../id}} type="text">{{this}}<br/>
+                                        <th>
+                                            {{this}}
+                                        </th>
+                                {{/each}}
+                                    </tr>
+                                </table>
+                                {{#each this.answers}}
+                                    {{@key}}<input  class={{../../id}} type="text"><br/>
                                 {{/each}}
                             </div>
                         {{/if}}
@@ -422,7 +432,7 @@
             <form class="cf" id="FITB-multiple-pages">
                 <div id="fill_in_the_page">
                         <h2>Question FITB</h2>
-                        <p>{{curQuestion.question}}</p>
+                       
                         {{{curQuestion.blankedQuestion}}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>
@@ -475,10 +485,19 @@
         <script type="text/x-handlebars-template" id="multiple-page-MATCH-template">
             <form class="cf" id="MATCH-multiple-pages">
                 <div id="matching_page">
-                        <h2>Question MATCHING</h2>
+                        <h2>Place the bold words in the correct input field.</h2>
                         <p>{{curQuestion.question}}</p>
+                        <table>
+                                    <tr>
+                                {{#each curQuestion.answers}}
+                                        <th>
+                                            <h4>{{this}}</h4>
+                                        </th>
+                                {{/each}}
+                                    </tr>
+                        </table>
                         {{#each curQuestion.answers}}
-                            {{@key}}<input  class={{../curQuestion.id}} type="text">{{this}}<br/>
+                            {{@key}}<input  class={{../curQuestion.id}} type="text"><br/>
                         {{/each}}
                         <input id="next-question" type="button" value="Next Question"/>
                     </div>

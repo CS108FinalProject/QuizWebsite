@@ -3,6 +3,7 @@
 	<%@ page import = "com.accounts.*"%>
 	<%@ page import = "com.quizzes.*"%>
 	<%@ page import = "java.util.*"%>
+	<%@ page import = "com.util.*" %>
 	<%@ page import = "javax.swing.*" %>
 
 	
@@ -16,29 +17,26 @@
  -->
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%
-String name = (String)request.getSession().getAttribute("session_user");
+	String name = (String)request.getSession().getAttribute("session_user");
+	
+	/*Temp hack while we solve the session_user servletcontext issue*/
+	Account acct = null;
+	String sel_type = (String)request.getParameter("choice");
 
-/*Temp hack while we solve the session_user servletcontext issue*/
-Account acct = null;
-String sel_type = null;
-List<String> content_to_display = null;
-if (name != null) {
+	List<String> content_to_display = content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
+	
 	//System.out.println("name is "+name);
  	try {
-	 acct = AccountManager.getAccount(name);
+		acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
+ 		/*Clear session*/
+ 		request.getSession().setAttribute("session_user", null);
+ 		/*set Error*/
+		request.setAttribute("errMsg", "<h1>Sorry, an account couldn't be found.</h1>");
+		RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
+		dispatch.forward(request, response);
  		//System.out.println("The account for "+name+" was not found.");
  	}
-	sel_type = (String)request.getParameter("choice");
-	content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
-} else {
-	/*This will be deleted soon...Used for testing purposes*/
-	response.setContentType("text/html; charset=UTF-8");	
-	request.setAttribute("errMsg", "<h1>You must be logged in to access homepage.</h1>");
-
-	RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp"); 
-	dispatch.forward(request, response);	
-}
 
 %>
 <title>Welcome <%=name%></title>
@@ -186,9 +184,11 @@ if (name != null) {
 									<a href = "searchFriends.jsp?id=<%=name%>">Lookup User</a>
 								</div>
 								<div id="read_messages">
+									<% 
+										out.println("<div><a  href = \"showMessage.jsp?id="+name+"&choice=Sent+Messages\">View ALL Sent Messages</a></div>");
+										out.println("<div><a  href = \"showMessage.jsp?id="+name+"&choice=Received+Messages\">View ALL Received Messages</a></div>");
+									%>
 									<form action = <%="\"homepage.jsp?id="+name+"\""%>>
-
-
 										<select name = "choice">
 											<option >Received Messages</option>
 											<option>Sent Messages</option>
@@ -199,7 +199,8 @@ if (name != null) {
 									</form>
 									<%	
 									List<Message> messages;
-									String hn;
+								
+
 									/* If no choice of messages are specified*/
 									if (sel_type != null) {
 										if (sel_type.equals("Sent Messages")) {
@@ -212,8 +213,8 @@ if (name != null) {
 
 									}
 										if (messages.size() > 0) {
-											out.println("<table id=\"messagesTable\">");
-												out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
+											out.println("<table id=\"messagesTable\">");											
+											out.println("<tr class = \"homepage-content-headers\"><td>Sender</td><td>Date Sent</td><td>Type</td></tr>");
 											for ( int i = messages.size() -1; i > -1;i-- ) {
 												out.println("<tr>");
 												Message msg = messages.get(i);
