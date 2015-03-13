@@ -104,9 +104,7 @@ public class EditQuiz extends HttpServlet implements com.util.Constants {
 		} else if (requestType.equals("Return to Homepage")) {
 			String username = (String)getServletContext().getAttribute("session_user");
 			RequestDispatcher dispatch = null;
-			if ((AccountManager.getAccount(username)).isAdmin()) {
-				dispatch = request.getRequestDispatcher("adminHomepage.jsp"); 
-			} else dispatch = request.getRequestDispatcher("homepage.jsp"); 	
+			dispatch = request.getRequestDispatcher("homepage.jsp"); 	
 			dispatch.forward(request, response);
 			
 		} else {
