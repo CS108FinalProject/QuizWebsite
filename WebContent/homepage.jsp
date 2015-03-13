@@ -24,7 +24,8 @@
 	String sel_type = (String)request.getParameter("choice");
 
 	List<String> content_to_display = content_to_display = (ArrayList<String>)request.getAttribute("content_to_display");
-	
+
+	/*See if account exists based off current session name.*/
  	try {
 		acct = AccountManager.getAccount(name);
  	} catch(Exception e ) {
