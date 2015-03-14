@@ -31,13 +31,13 @@
 	<%} else {%>
 		<%= errMsg%>
 	<%}%>
-	<form class="login_form" action = "LoginServlet" method = "POST"
-	onsubmit="return validateForm();">
-		<p>Username<input class="usr" id="username" type = "text" name = "username"/></p>
-		<p>Password<input class="pw" id="password" type = "password" name = "password"/></p>
-		<input class="btn" type = "submit" value="Login"/>
-	</form>
-	<p>New User? <a href = "registration.jsp">Register here!</a></p>
+		<form class="login_form" action = "LoginServlet" method = "POST"
+		onsubmit="return validateForm();">
+			<p>Username<input class="usr" id="username" type = "text" name = "username"/></p>
+			<p>Password<input class="pw" id="password" type = "password" name = "password"/></p>
+			<input class="btn" type = "submit" value="Login"/>
+		</form>
+		<p>New User? <a href = "registration.jsp">Register here!</a></p>
 	
 </body>
 </html>

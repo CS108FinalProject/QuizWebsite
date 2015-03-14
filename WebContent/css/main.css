@@ -50,6 +50,10 @@ table {
   border-spacing: 0;
 }
 
+#main-entry {
+	margin-top: 30%;
+}
+
 /*
   ========================================
   Custom styles

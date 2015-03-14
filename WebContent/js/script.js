@@ -603,13 +603,6 @@
             var blank = $('#enter_blank').val().trim().toLowerCase();
 
             var currentQuiz = getPendingQuiz();   // an array
-
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
             
             if ( validateForm(type, question, answer, blank) ) {
                 if ( typeof questionInfo === 'undefined' ) {
@@ -634,15 +627,6 @@
             var option = $('#mc_option').val().trim().toLowerCase();
             var isAnswer = $('#is_mc_answer').is(':checked');
 
-            var currentQuiz = getPendingQuiz();   // an array
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
-
-
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMCQuestionInfo(type, question, option, isAnswer);
             } else {
@@ -662,15 +646,6 @@
             var question = $('#pic_question').val().trim().toLowerCase();
             var answer = $('#pic_answer').val().trim().toLowerCase();
             var pictureURL = $('#pic_url').val().trim().toLowerCase();
-
-            var currentQuiz = getPendingQuiz();   // an array
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
-
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializePicQuestionInfo(type, question, answer, pictureURL);
@@ -693,14 +668,6 @@
             var question = $('#res_question').val().trim().toLowerCase();
             var answer = $('#res_answer').val().trim().toLowerCase();
 
-            var currentQuiz = getPendingQuiz();   // an array
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
-
             if ( typeof questionInfo === 'undefined' ) {
                 initializeResQuestionInfo(type, question, answer);
             } else {
@@ -721,14 +688,6 @@
             var answer = $('#mr_answer').val().trim().toLowerCase();
             var isOrdered = $('#mr_in_order').is(':checked');
 
-            var currentQuiz = getPendingQuiz();   // an array
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
-
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMRQuestionInfo(type, question, answer, isOrdered);
             } else {
@@ -748,14 +707,6 @@
             var question_header = $('#match_question_header').val().trim().toLowerCase();
             var left_question = $('#match_question').val().trim().toLowerCase();
             var right_answer = $('#match_answer').val().trim().toLowerCase();
-
-            var currentQuiz = getPendingQuiz();   // an array
-            for(var i =0; i < currentQuiz.questions.length; i++) {
-                if ( currentQuiz.questions[i].question === question_header ) {
-                    alert("You cannot have a duplicate question");
-                    return;
-                }
-            }
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMatchQuestionInfo(type, question_header, left_question, right_answer);
