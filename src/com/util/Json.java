@@ -336,43 +336,4 @@ public class Json {
 			index++;
 		}
 	}
-	
-	
-	// To be used for testing purposes only.
-	public static void main( String [] args ) {
-		//String json = "{\"firstName\": \"John\", \"lastName\": \"Smith\", \"age\": 25, \"address\": { \"streetAddress\": \"21 2nd Street\",\"city\": \"New York\", \"state\": \"NY\", \"postalCode\": 10021},\"phoneNumbers\": [{\"type\": \"home\",\"number\": \"212 555-1234\"}, {\"type\": \"fax\", \"number\": \"646 555-4567\"}]}";
-		//String json = "[1,2,3,4,5]";
-		String json = "{\"quizMetaData\":{\"name\":\"Algebra\",\"description\":\"Slopes and Lines\",\"isImmediate\":true,\"isRandom\":true,\"isSinglePage\":false,\"questions\":[]}";
-		//String json = "[]";
-		
-		System.out.println(parseJsonObject(json));
-		
-		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("name", "sam");
-//		map.put("fav number", 22);
-//		map.put("isCoding", true);
-//		map.put("double", 45.987);
-//		List<Object> list = new ArrayList<Object>();
-//		list.add(1);
-//		list.add("hey");
-//		list.add(false);
-//		map.put("list", list);
-//		
-//		Set<Object> set = new HashSet<Object>();
-//		set.add(4);
-//		set.add(true);
-//		set.add(9.8);
-//		set.add("yo");
-//		map.put("set", set);
-//		
-//		Map<String, Object> innerMap = new HashMap<String, Object>();
-//		innerMap.put("inside", 5);
-//		innerMap.put("hello!", "word");
-//
-//		list.add(innerMap);
-//		map.put("innerMap", innerMap);
-//		
-//		System.out.println(getJsonString(map));
-	}
 }

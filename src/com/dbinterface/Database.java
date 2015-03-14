@@ -947,44 +947,6 @@ public class Database implements Constants {
 	}
 	
 	
-//	public static void setValues(String tableName, Map<String, Object> row, String columnToSet, 
-//			Object value) {
-//		
-//		Util.validateObject(row);
-//		Util.validateString(columnToSet);
-//		Util.validateObject(value);
-//		
-//		if (!tableExists(tableName)) {
-//			throw new RuntimeException(tableName + " is not a valid table");
-//		}
-//		
-//		int columnCount = getColumnCount(tableName);
-//		
-//		// each map entry must correspond to a column
-//		if ( row.size() != columnCount ) {
-//			throw new RuntimeException("Wrong number of entries in row");
-//		}
-//		
-//		// Validate each field.
-//		for(String columnName : row.keySet()) {
-//			Object field = row.get(columnName);
-//			String type = getColumnType(tableName, columnName);
-//			Util.validateObjectType(field, type);
-//		}
-//	    
-//	    // Transform map for DB compatibility.
-//	    normalizeObjectMapForDB(row);
-//	    
-//    	String query = "";
-//	    try {
-//			stmt.executeUpdate(query);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("Problem executing query: " + query);
-//		}
-//	}
-	
-	
 	/**
 	 * Returns a list of specified values from the database. (1 specifier)
 	 * 

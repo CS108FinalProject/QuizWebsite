@@ -41,7 +41,6 @@ public class LoginServlet extends HttpServlet {
 		if (AccountManager.accountExists(username)) {
 			try {
 				if(AccountManager.passwordMatches(username, password)) {
-					Account acct = AccountManager.getAccount(username);
 					request.getSession().setAttribute("session_user", username);
 					
 					RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 

@@ -45,27 +45,6 @@ public class RemoveQuiz extends HttpServlet implements Constants {
 		RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 
 		dispatch.forward(request, response);
 		
-//		 //TODO:Find a way to test this
-//		 response.setContentType("application/json");
-//		 PrintWriter out = response.getWriter();
-//		 Map<String, Object> response_map = new HashMap<String, Object>();
-//		 
-//		 //Will receive the quizName as an input
-//		String quizName = (String)request.getParameter(QUIZ_NAME);
-//		
-//		//Only proceed to remove a quiz who's name exists 
-//		if (QuizManager.quizNameInUse(quizName)) {
-//			Quiz qz_to_remove = QuizManager.getQuiz(quizName);
-//			QuizManager.removeQuiz(qz_to_remove);
-//			Util.addStatus(true, "", response_map);
-//		} else {
-//			Util.addStatus(false, "The quiz name does not exist.", response_map);		
-//		}
-//		
-//		//Turn the response_map into a "json" string
-//		String response_str = Json.getJsonString(response_map);
-//		//Give back to method which invoked this servlet
-//		out.write(response_str);
 	}
 
 }

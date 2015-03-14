@@ -308,12 +308,5 @@ public class QuizManager implements Constants {
 		}
 		return counter;
 	}
-	
-	
-	public static void main(String[] args) {
-		new Database();
-		//Quiz quiz = QuizManager.getQuiz("PicAndResponse");
-		//System.out.println(quiz.getDescription());
-	}
 
 }

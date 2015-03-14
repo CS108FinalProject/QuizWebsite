@@ -35,7 +35,6 @@ public class MainMessageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String friend_id = (String)request.getParameter("friend_id");
 		String curr_acct_id = (String)request.getParameter("id");
-		Account curr_acct = AccountManager.getAccount(curr_acct_id);
 		//If friend not found?
 		if (AccountManager.accountExists(friend_id)) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("SendMessageServlet"); 

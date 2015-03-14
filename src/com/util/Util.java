@@ -148,9 +148,4 @@ public class Util implements Constants {
 		return str;
 	}
 	
-	
-	// To be used for testing purposes only.
-	public static void main( String [] args ) {}
-	
-	
 }

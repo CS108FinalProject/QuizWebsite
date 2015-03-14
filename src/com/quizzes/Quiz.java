@@ -539,11 +539,6 @@ public class Quiz implements Constants {
 			throw new IllegalArgumentException("Both questions have to be the same type");
 		}
 		
-//		// Quiz name cannot be modified in a question.
-//		if (!oldQuestion.getQuizName().equals(newQuestion.getQuizName())) {
-//			throw new IllegalArgumentException("The quiz name in a question cannot be modified");
-//		}
-		
 		// If the question prompt was modified, ensure it is not duplicate.
 		if (!oldQuestion.getQuestion().equals(newQuestion.getQuestion())) {
 			if (getQuestionsAsStrings().contains(newQuestion.getQuestion())) {

@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.accounts.AccountManager;
-
 /**
  * Servlet implementation class ReturnToHomepage
  */
@@ -37,9 +35,7 @@ public class ReturnToHomepage extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String username = (String)request.getSession().getAttribute("session_user");
-		RequestDispatcher dispatch = null;
-		dispatch = request.getRequestDispatcher("homepage.jsp"); 	
+		RequestDispatcher dispatch = request.getRequestDispatcher("homepage.jsp"); 	
 		dispatch.forward(request, response);
 	}
 

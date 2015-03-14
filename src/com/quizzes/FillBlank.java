@@ -104,16 +104,6 @@ public class FillBlank extends Question implements Constants {
 	}
 	
 	
-	// Ensures that every blank is a substring of the question.
-	private void validateBlanksAndAnswers(Map<String, List<String>> blanksAndAnswers) {
-		for (String blank : blanksAndAnswers.keySet()) {
-			if (!question.contains(blank)) {
-				throw new IllegalArgumentException(blank + " is not a substring of " + question);
-			}
-		}
-	}
-	
-	
 	/**
 	 * @return a representation of the object as a Map<String, Object>
 	 */

@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.accounts.AccountManager;
 
-import java.util.*;
-
 import com.accounts.*;
 /**
  * Servlet implementation class adminServlet
@@ -36,7 +34,6 @@ public class AdminServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String new_ancmnt =  (String)request.getParameter("new_ancmnt");

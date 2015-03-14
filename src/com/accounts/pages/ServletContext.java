@@ -4,10 +4,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import java.util.*;
-
-import com.accounts.*;
-import com.dbinterface.Database;
 /**
  * Application Lifecycle Listener implementation class servletContext
  *

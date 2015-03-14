@@ -15,7 +15,6 @@ public class UserSession implements HttpSessionListener {
      * Default constructor. 
      */
     public UserSession() {
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -30,7 +29,6 @@ public class UserSession implements HttpSessionListener {
      * @see HttpSessionListener#sessionDestroyed(HttpSessionEvent)
      */
     public void sessionDestroyed(HttpSessionEvent arg0)  { 
-         // TODO Auto-generated method stub
     }
 	
 }
