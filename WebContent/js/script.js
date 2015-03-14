@@ -602,8 +602,7 @@
             var answer = $('#enter_answer').val().trim().toLowerCase();
             var blank = $('#enter_blank').val().trim().toLowerCase();
 
-            var currentQuiz = getPendingQuiz();   // an array
-            
+ 
             if ( validateForm(type, question, answer, blank) ) {
                 if ( typeof questionInfo === 'undefined' ) {
                     initializeFITBQuestionInfo(type, question, answer, blank);
@@ -627,6 +626,8 @@
             var option = $('#mc_option').val().trim().toLowerCase();
             var isAnswer = $('#is_mc_answer').is(':checked');
 
+
+
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMCQuestionInfo(type, question, option, isAnswer);
             } else {
@@ -646,6 +647,7 @@
             var question = $('#pic_question').val().trim().toLowerCase();
             var answer = $('#pic_answer').val().trim().toLowerCase();
             var pictureURL = $('#pic_url').val().trim().toLowerCase();
+
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializePicQuestionInfo(type, question, answer, pictureURL);
@@ -668,6 +670,7 @@
             var question = $('#res_question').val().trim().toLowerCase();
             var answer = $('#res_answer').val().trim().toLowerCase();
 
+
             if ( typeof questionInfo === 'undefined' ) {
                 initializeResQuestionInfo(type, question, answer);
             } else {
@@ -687,6 +690,7 @@
             var question = $('#mr_question').val().trim().toLowerCase();
             var answer = $('#mr_answer').val().trim().toLowerCase();
             var isOrdered = $('#mr_in_order').is(':checked');
+
 
             if ( typeof questionInfo === 'undefined' ) {
                 initializeMRQuestionInfo(type, question, answer, isOrdered);
