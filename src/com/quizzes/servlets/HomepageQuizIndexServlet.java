@@ -86,11 +86,9 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 				List<Activity> acts = account.getRecentFriendActivity(num_records);
 
 				/*If acts has some entry*/
-				if (acts != null ) {
+				if (acts != null && acts.size() > 0) {
 
-					int num_acts = acts.size();
-
-					for (int i = 0; i < num_acts;i++) {
+					for (int i = acts.size() - 1; i >= 0 ;i--) {
 						Activity curr = acts.get(i);
 						String activity = curr.getActivity();
 						String quizName = curr.getQuizName();
@@ -172,11 +170,10 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 			/*All recently created quizzes*/
 		} else if ( type_to_display.equals("recentQuizzes")) {
 			try {
-				List<Quiz> recent_quizzes =  QuizManager.getRecentlyCreatedQuizzes(num_records);
-				int rec_quiz_len = recent_quizzes.size();
-				/*For each Recent Quiz print the quiz data and a link to the quiz Summary page*/
+				List<Quiz> recent_quizzes =  QuizManager.getRecentlyCreatedQuizzes(5);
 
-				for (int i = rec_quiz_len = 1; i <= 0;i--) {
+				/*For each Recent Quiz print the quiz data and a link to the quiz Summary page*/
+				for (int i = recent_quizzes.size() - 1; i >= 0; i--) {
 					Quiz curr = recent_quizzes.get(i);
 					String creator = curr.getCreator().getUserName();
 					String birthdate = curr.getCreationDate();
@@ -187,7 +184,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					request.setAttribute("content_to_display",result_list);
 				} else {
 
-					result_list.add(username+", you don't have any quizzes taken on record.");
+					result_list.add("There are no recently created quizzes");
 					request.setAttribute("content_to_display",result_list);
 
 				}

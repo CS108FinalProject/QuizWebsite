@@ -225,7 +225,6 @@
 											out.println("</table>");
 										}
 										
-									//TODO::Extension to add Sorting mechanisms to table cols					
 									%>				
 								</div>
 							</td>
@@ -240,7 +239,7 @@
 									</tr>
 									<tr>
 										<td><a href = "HomepageQuizIndexServlet?type_to_display=createdQuizzes" class = "btn" id="createdQuizzes">My Created Quizzes</a></td>
-										<td><a  href = "HomepageQuizIndexServlet?type_to_display=recentQuizzes" class = "btn" id="recentQuizzes">All Recently Created Quizzes</a></td>
+										<td><a  href = "HomepageQuizIndexServlet?type_to_display=recentQuizzes" class = "btn" id="recentQuizzes">Recently Created Quizzes</a></td>
 									</tr>
 									<tr>
 										<td><a href = "HomepageQuizIndexServlet?type_to_display=friendActivities" class = "btn" id="friendActivities">Recent Friends' Activities</a></td>		
