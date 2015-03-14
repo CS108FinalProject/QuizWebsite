@@ -151,7 +151,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					double avg_score = perf_map.get("score");
 					double elapsed_time = perf_map.get("elapsed_time");	
 					String quizName =curr.getName();
-					String to_insert = "The popular quiz " + "<a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a>" + "  has an average score of "+formatter.format(avg_score)+" and average time taken of "+formatter.format(elapsed_time)+" mins.";
+					String to_insert = "Quiz " + "<a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a>" + " has avg score "+formatter.format(avg_score)+" and avg completion time "+formatter.format(elapsed_time)+" minutes.";
 					result_list.add(to_insert);
 					if ( i == num_records - 1) i = pop_quizzes_len;
 				}
@@ -178,7 +178,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					String creator = curr.getCreator().getUserName();
 					String birthdate = curr.getCreationDate();
 					String quizname = curr.getName();
-					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by "+creator+" on "+birthdate);
+					result_list.add("The quiz <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizname+"\">"+quizname+"</a> was created by <a href=\"accountProfile.jsp?friend_id="+creator + "\">"+creator+"</a> on "+birthdate);
 				}
 				if (result_list.size() > 0) {
 					request.setAttribute("content_to_display",result_list);
