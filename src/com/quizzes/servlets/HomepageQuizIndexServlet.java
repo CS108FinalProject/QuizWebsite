@@ -96,7 +96,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 						String user = curr.getUser().getUserName();
 						String str;
 						if (QuizManager.quizNameInUse(quizName)) {
-							str = user+" "+activity+": <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> on "+date;
+							str = "<a href=\"accountProfile.jsp?friend_id="+user + "\">" + user+"</a> "+activity+": <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a> on "+date;
 
 						} else {
 							str = user+" "+activity+": "+quizName+"on "+date;
