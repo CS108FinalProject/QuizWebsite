@@ -127,14 +127,14 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 					for (int i = 0; i < num_quizzes;i++) {
 						Quiz curr = usr_quizzes.get(i);
 						String quizName = curr.getName();
-						String str = username+", you created <a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName;						
+						String str = "<a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName + "</a> created on " + curr.getCreationDate();						
 						result_list.add(str);
 						//if (i == num_records- 1) i = num_records;
 					}
 						request.setAttribute("content_to_display",result_list);
 					
 				} else {
-					result_list.add("You haven't created any new quizzes");
+					result_list.add("You haven't created any quizzes");
 					request.setAttribute("content_to_display",result_list);
 				}			
 			/*All popular quizzes*/
