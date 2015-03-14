@@ -65,7 +65,7 @@ public class HomepageQuizIndexServlet extends HttpServlet implements Constants {
 						String quizName = curr.getName();
 						String desc = curr.getDescription();
 						String creator = curr.getCreator().getUserName();
-						String str = "</td><td class = \"homepage-content-headers\">Quiz:</td><td><a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a></td><td class = \"homepage-content-headers\">Created By:</td><td>"+creator+"</td><td></td><td class = \"homepage-content-headers\">Description:</td><td>"+desc+"</td><td>" ;
+						String str = "</td><td class = \"homepage-content-headers\">Quiz:</td><td><a href = \"quizSummary.jsp?"+QUIZ_NAME+"="+quizName+"\">"+quizName+"</a></td><td class = \"homepage-content-headers\">Created By:</td><td><a href=\"accountProfile.jsp?friend_id="+creator + "\">" + creator + "</td><td></td><td class = \"homepage-content-headers\">Description:</td><td>"+desc+"</td><td>" ;
 						result_list.add(str);
 					}
 					request.setAttribute("content_to_display",result_list);		
