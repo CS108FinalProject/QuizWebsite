@@ -1,3 +1,9 @@
+<!-- 
+@author: Kelsey
+path: WebContent/searchFriends
+OverView: This page serves as the viewController 
+for searching for different users on the website.
+ -->
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
 <%@ page import="com.accounts.pages.SearchFriendServlet, com.accounts.Account, com.accounts.AccountManager, com.accounts.Message, com.util.Constants, java.util.*, java.sql.*" %>
