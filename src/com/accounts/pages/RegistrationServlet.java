@@ -1,4 +1,8 @@
-		package com.accounts.pages;
+/**
+@author: Kelsey
+*/
+
+package com.accounts.pages;
 import com.accounts.*;
 
 import java.io.IOException;
