@@ -1,3 +1,7 @@
+<!--  
+@author: Kelsey
+path: /WebContent/showAchievements.jsp
+ -->
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
     <%@ page import = "com.accounts.*"%>
