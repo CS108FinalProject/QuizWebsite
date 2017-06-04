@@ -1,3 +1,7 @@
+/**
+ * Servlet implementation class LoginServlet
+ * @author Kelsey
+ */
 package com.accounts.pages;
 import com.accounts.*;
 import java.security.*;
